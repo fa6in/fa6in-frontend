@@ -1,3 +1,237 @@
 {
-    "" : ""
+  "login": {
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "forget_password": "Mot de passe oublié ?",
+    "enter_password": "Veuillez saisir votre mot de passe!",
+    "enter_username": "Veuillez saisir votre username!"
+  },
+  "sidebar": {
+    "dashboard": "Tableau de Bord",
+    "students": "Étudiants",
+    "teachers": "Enseignants",
+    "courses": "Cours",
+    "classes": "Classes",
+    "subjects": "Matières",
+    "exams": "Examens",
+    "grades": "Notes",
+    "assignments": "Devoirs",
+    "roles": "Rôles & Permissions",
+    "reports": "Rapports",
+    "settings": "Paramètres",
+    "version": "Version",
+    "copyright": "© 2026 Ed-Tech Platform",
+    "logout": "Déconnexion"
+  },
+  "navbar": {
+    "titles": {
+      "dashboard": "Tableau de Bord",
+      "students": "Étudiants",
+      "teachers": "Enseignants",
+      "courses": "Cours",
+      "classes": "Classes",
+      "subjects": "Matières",
+      "exams": "Examens",
+      "grades": "Notes",
+      "assignments": "Devoirs",
+      "roles": "Rôles & Permissions",
+      "reports": "Rapports",
+      "settings": "Paramètres"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "unread": "non lues",
+      "viewAll": "Voir toutes les notifications",
+      "newObjective": "Nouvel objectif assigné",
+      "q2Objective": "Objectif Q2 pour votre équipe",
+      "5minAgo": "5 min",
+      "monthlyReport": "Rapport mensuel",
+      "marchReport": "Rapport de mars disponible",
+      "1hourAgo": "1 heure",
+      "deadlineApproaching": "Échéance approchant",
+      "quarterlyDeadline": "Date limite trimestrielle dans 3 jours",
+      "2hoursAgo": "2 heures"
+    },
+    "profile": {
+      "adminUser": "Admin User",
+      "administrator": "Administrateur",
+      "editProfile": "Modifier le profil",
+      "logout": "Déconnexion"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de Bord Administrateur",
+    "welcome": "Bon retour",
+    "subtitle": "Voici ce qui se passe dans votre plateforme aujourd'hui",
+    "exportReport": "Exporter Rapport",
+    "settings": "Paramètres",
+    "stats": {
+      "totalUsers": "Utilisateurs Totaux",
+      "teachers": "Enseignants",
+      "students": "Étudiants",
+      "courses": "Cours",
+      "activeClasses": "Classes Actives",
+      "revenue": "Revenus"
+    },
+    "charts": {
+      "userGrowth": "Croissance des Utilisateurs",
+      "userDistribution": "Distribution des Utilisateurs",
+      "coursePerformance": "Performance des Cours"
+    },
+    "recentActivity": {
+      "title": "Activités Récentes",
+      "user": "Utilisateur",
+      "action": "Action",
+      "time": "Heure",
+      "status": "Statut",
+      "viewAll": "Voir Tout"
+    },
+    "quickActions": {
+      "title": "Actions Rapides",
+      "addUser": "Ajouter Utilisateur",
+      "createCourse": "Créer Cours",
+      "scheduleExam": "Planifier Examen",
+      "generateReport": "Générer Rapport",
+      "sendNotification": "Envoyer Notification",
+      "systemSettings": "Paramètres Système"
+    },
+    "upcomingEvents": {
+      "title": "Événements à Venir",
+      "mathExam": "Examen de Mathématiques",
+      "physicsAssignment": "Devoir de Physique",
+      "teacherMeeting": "Réunion des Enseignants",
+      "systemMaintenance": "Maintenance Système",
+      "today": "Aujourd'hui",
+      "tomorrow": "Demain",
+      "thisWeek": "Cette Semaine",
+      "viewCalendar": "Voir Calendrier"
+    },
+    "systemStatus": {
+      "title": "État du Système",
+      "servers": "Serveurs",
+      "database": "Base de Données",
+      "api": "API",
+      "storage": "Stockage",
+      "allSystems": "Tous les systèmes fonctionnent normalement",
+      "operational": "Opérationnel",
+      "warning": "Avertissement",
+      "critical": "Critique"
+    }
+  },
+  
+  "students": {
+    "title": "Gestion des Étudiants",
+    "subtitle": "Gérez et suivez les informations de tous vos étudiants",
+    "addStudent": "Ajouter un Étudiant",
+    "import": "Importer",
+    "export": "Exporter",
+    "searchPlaceholder": "Rechercher par nom, email ou ID...",
+    "clearFilters": "Effacer les filtres",
+    
+    "stats": {
+      "total": "Total Étudiants",
+      "active": "Étudiants Actifs",
+      "new": "Nouveaux Étudiants",
+      "averageGPA": "Moyenne GPA",
+      "fromLastMonth": "depuis le mois dernier"
+    },
+    
+    "filters": {
+      "status": {
+        "label": "Statut",
+        "all": "Tous les statuts",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "pending": "En attente"
+      },
+      "year": {
+        "label": "Année",
+        "all": "Toutes les années",
+        "first": "1ère",
+        "second": "2ème",
+        "third": "3ème",
+        "fourth": "4ème"
+      }
+    },
+    
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "pending": "En attente"
+    },
+    
+    "table": {
+      "id": "ID",
+      "student": "Étudiant",
+      "year": "Année",
+      "class": "Classe",
+      "status": "Statut",
+      "gpa": "GPA",
+      "attendance": "Présence",
+      "fees": "Frais",
+      "actions": "Actions",
+      "showing": "Affichage de {from} à {to} sur {total} étudiants"
+    },
+    
+    "tabs": {
+      "all": "Tous",
+      "active": "Actifs",
+      "pending": "En attente"
+    },
+    
+    "actions": {
+      "view": "Voir Détails",
+      "edit": "Modifier",
+      "grades": "Notes",
+      "message": "Envoyer Message",
+      "delete": "Supprimer"
+    },
+    
+    "modal": {
+      "addTitle": "Ajouter un Nouvel Étudiant",
+      "editTitle": "Modifier l'Étudiant",
+      "deleteTitle": "Confirmer la suppression",
+      "deleteContent": "Êtes-vous sûr de vouloir supprimer l'étudiant {name} ?",
+      "addSuccess": "Étudiant ajouté avec succès",
+      "editSuccess": "Étudiant modifié avec succès",
+      "deleteSuccess": "Étudiant supprimé avec succès"
+    },
+    
+    "form": {
+      "name": "Nom Complet",
+      "namePlaceholder": "Entrez le nom complet",
+      "email": "Email",
+      "emailPlaceholder": "Entrez l'adresse email",
+      "phone": "Téléphone",
+      "phonePlaceholder": "Entrez le numéro de téléphone",
+      "year": "Année",
+      "yearPlaceholder": "Sélectionnez l'année",
+      "class": "Classe",
+      "classPlaceholder": "Sélectionnez la classe",
+      "status": "Statut",
+      "notes": "Notes",
+      "notesPlaceholder": "Ajoutez des notes supplémentaires...",
+      "required": "Ce champ est requis",
+      "emailInvalid": "Veuillez entrer un email valide"
+    },
+    
+    "messages": {
+      "created": "Étudiant créé avec succès",
+      "updated": "Étudiant mis à jour avec succès",
+      "deleted": "Étudiant supprimé avec succès"
+    }
+  },
+  
+  "common": {
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
+  },
+  "alert" : {
+    "message_decn" : "Vous avez été déconnecté pour cause d'inactivité"
+  }
+
 }

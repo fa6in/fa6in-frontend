@@ -1,0 +1,226 @@
+{
+  "login": {
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "login": "تسجيل الدخول",
+    "forget_password": "نسيت كلمة المرور ؟",
+    "enter_password": "الرجاء إدخال كلمة المرور!",
+    "enter_username": "الرجاء إدخال اسم المستخدم !"
+  },
+  "sidebar": {
+    "dashboard": "الرئيسية",
+    "students": "الطلاب",
+    "teachers": "المعلمين",
+    "courses": "الدروس",
+    "classes": "الفصول",
+    "subjects": "المواد",
+    "exams": "الامتحانات",
+    "grades": "الدرجات",
+    "assignments": "الواجبات",
+    "roles": "الأدوار والصلاحيات",
+    "reports": "التقارير",
+    "settings": "الإعدادات",
+    "version": "الإصدار",
+    "copyright": "© 2026 منصة التعليم الإلكتروني",
+    "logout": "تسجيل الخروج",
+    "admins": "المسؤولون"
+  },
+  "navbar": {
+    "titles": {
+      "dashboard": "لوحة التحكم",
+      "students": "الطلاب",
+      "teachers": "المعلمين",
+      "courses": "الدروس",
+      "classes": "الفصول",
+      "subjects": "المواد",
+      "exams": "الامتحانات",
+      "grades": "الدرجات",
+      "assignments": "الواجبات",
+      "roles": "الأدوار والصلاحيات",
+      "reports": "التقارير",
+      "settings": "الإعدادات"
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "unread": "غير مقروءة",
+      "viewAll": "عرض جميع الإشعارات",
+      "newObjective": "تم تعيين هدف جديد",
+      "q2Objective": "الهدف الربع الثاني لفريقك",
+      "5minAgo": "منذ 5 دقائق",
+      "monthlyReport": "التقرير الشهري",
+      "marchReport": "تقرير مارس متاح",
+      "1hourAgo": "منذ ساعة",
+      "deadlineApproaching": "موعد التسليم يقترب",
+      "quarterlyDeadline": "موعد التسليم الربعي بعد 3 أيام",
+      "2hoursAgo": "منذ ساعتين"
+    },
+    "profile": {
+      "adminUser": "مستخدم الإدارة",
+      "administrator": "مدير النظام",
+      "editProfile": "تعديل الملف الشخصي",
+      "logout": "تسجيل الخروج"
+    }
+  },
+  "dashboard": {
+    "title": "لوحة تحكم المدير",
+    "welcome": "مرحبًا بعودتك",
+    "subtitle": "إليك ما يحدث في منصتك اليوم",
+    "exportReport": "تصدير التقرير",
+    "settings": "الإعدادات",
+    "stats": {
+      "totalUsers": " المستخدمين",
+      "teachers": "المعلمين",
+      "students": "الطلاب",
+      "courses": "الدروس",
+      "activeClasses": "الفصول ",
+      "revenue": "الإيرادات"
+    },
+    "charts": {
+      "userGrowth": "نمو المستخدمين",
+      "userDistribution": "توزيع المستخدمين",
+      "coursePerformance": "أداء الدروس"
+    },
+    "recentActivity": {
+      "title": "النشاطات الأخيرة",
+      "user": "المستخدم",
+      "action": "الإجراء",
+      "time": "الوقت",
+      "status": "الحالة",
+      "viewAll": "عرض الكل"
+    },
+    "quickActions": {
+      "title": "إجراءات سريعة",
+      "addUser": "إضافة مستخدم",
+      "createCourse": "إنشاء درس",
+      "scheduleExam": "جدولة امتحان",
+      "generateReport": "إنشاء تقرير",
+      "sendNotification": "إرسال إشعار",
+      "systemSettings": "إعدادات النظام"
+    },
+    "upcomingEvents": {
+      "title": "الأحداث القادمة",
+      "mathExam": "امتحان الرياضيات",
+      "physicsAssignment": "واجب الفيزياء",
+      "teacherMeeting": "اجتماع المعلمين",
+      "systemMaintenance": "صيانة النظام",
+      "today": "اليوم",
+      "tomorrow": "غدًا",
+      "thisWeek": "هذا الأسبوع",
+      "viewCalendar": "عرض التقويم"
+    },
+    "systemStatus": {
+      "title": "حالة النظام",
+      "servers": "الخوادم",
+      "database": "قاعدة البيانات",
+      "api": "واجهة البرمجة",
+      "storage": "التخزين",
+      "allSystems": "جميع الأنظمة تعمل بشكل طبيعي",
+      "operational": "تشغيلي",
+      "warning": "تحذير",
+      "critical": "حرج"
+    }
+  },
+  "students": {
+    "title": "إدارة الطلاب",
+    "subtitle": "إدارة ومتابعة معلومات جميع طلابك",
+    "addStudent": "إضافة طالب",
+    "import": "استيراد",
+    "export": "تصدير",
+    "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني أو المعرف...",
+    "clearFilters": "مسح الفلاتر",
+    "stats": {
+      "total": "إجمالي الطلاب",
+      "active": "طلاب نشطين",
+      "new": "طلاب جدد",
+      "averageGPA": "متوسط المعدل",
+      "fromLastMonth": "من الشهر الماضي"
+    },
+    "filters": {
+      "status": {
+        "label": "الحالة",
+        "all": "جميع الحالات",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "pending": "قيد الانتظار"
+      },
+      "year": {
+        "label": "السنة",
+        "all": "جميع السنوات",
+        "first": "الأولى",
+        "second": "الثانية",
+        "third": "الثالثة",
+        "fourth": "الرابعة"
+      }
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "pending": "قيد الانتظار"
+    },
+    "table": {
+      "id": "المعرف",
+      "student": "الطالب",
+      "year": "السنة",
+      "class": "الصف",
+      "status": "الحالة",
+      "gpa": "المعدل",
+      "attendance": "الحضور",
+      "fees": "الرسوم",
+      "actions": "الإجراءات",
+      "showing": "عرض من {from} إلى {to} من إجمالي {total} طالب"
+    },
+    "tabs": {
+      "all": "الكل",
+      "active": "النشطين",
+      "pending": "قيد الانتظار"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "grades": "الدرجات",
+      "message": "إرسال رسالة",
+      "delete": "حذف"
+    },
+    "modal": {
+      "addTitle": "إضافة طالب جديد",
+      "editTitle": "تعديل الطالب",
+      "deleteTitle": "تأكيد الحذف",
+      "deleteContent": "هل أنت متأكد من رغبتك في حذف الطالب {name}؟",
+      "addSuccess": "تم إضافة الطالب بنجاح",
+      "editSuccess": "تم تعديل الطالب بنجاح",
+      "deleteSuccess": "تم حذف الطالب بنجاح"
+    },
+    "form": {
+      "name": "الاسم الكامل",
+      "namePlaceholder": "أدخل الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل عنوان البريد الإلكتروني",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "year": "السنة",
+      "yearPlaceholder": "اختر السنة",
+      "class": "الصف",
+      "classPlaceholder": "اختر الصف",
+      "status": "الحالة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أضف ملاحظات إضافية...",
+      "required": "هذا الحقل مطلوب",
+      "emailInvalid": "الرجاء إدخال بريد إلكتروني صحيح"
+    },
+    "messages": {
+      "created": "تم إنشاء الطالب بنجاح",
+      "updated": "تم تحديث الطالب بنجاح",
+      "deleted": "تم حذف الطالب بنجاح"
+    }
+  },
+  "common": {
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "alert" : {
+    "message_decn" : "تم تسجيل خروجك بسبب عدم النشاط"
+  }
+}

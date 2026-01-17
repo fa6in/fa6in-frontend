@@ -8,8 +8,8 @@ const queryClient = new QueryClient();
 // import '@ant-design/v5-patch-for-react-19';
 import { SnackbarProvider } from "notistack";
 
-import Router from "./router/router";
 import i18n from "./i18n";
+import Router from "./router/router";
 // import { QueryClientProvider } from "@tanstack/react-query";
 function App() {
   return (

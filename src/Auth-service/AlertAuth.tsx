@@ -1,15 +1,17 @@
 
 import Swal, { type SweetAlertResult } from 'sweetalert2'
 import AuthService from './AuthService';
+import { useTranslation } from 'react-i18next';
 
 
 
 export const ALert_Retourne_Login = (): Promise<SweetAlertResult> => {
+  const {t} = useTranslation()
     return new Promise((resolve) => {
       const timeoutDuration = 500;
   
       const swalPromise = Swal.fire({
-        title: "Vous avez été déconnecté pour cause d'inactivité",
+        title: t('alert.message_decn'),
         color: "#141317",
         customClass: {
           loader: "Is Loading",

@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import fr from "./locales/fr.json";
 import en from "./locales/en.json";
+import ar from "./locales/ar.json";
 
 const LangeParDefaut = localStorage.getItem("languegChanger");
 
@@ -15,9 +16,12 @@ i18n
       en: {
         translation: en,
       },
+       ar: {
+        translation: ar,
+      },
     },
-    lng: LangeParDefaut || "fr", 
-    fallbackLng: "fr",
+    lng: LangeParDefaut || "ar", 
+    fallbackLng: "ar",
     interpolation: {
       escapeValue: false,
     },
