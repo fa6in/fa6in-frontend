@@ -4,6 +4,7 @@ import fr from "./locales/fr.json";
 import en from "./locales/en.json";
 import ar from "./locales/ar.json";
 
+
 const LangeParDefaut = localStorage.getItem("languegChanger");
 
 i18n
