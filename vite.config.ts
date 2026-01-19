@@ -19,9 +19,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://24.199.106.40",
+        target: "https://newat.ai/",
         changeOrigin: true,
-        secure: false, // ← clé importante
+        secure: false, 
       },
     },
   },
