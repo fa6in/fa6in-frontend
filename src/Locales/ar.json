@@ -58,7 +58,9 @@
       "adminUser": "مستخدم الإدارة",
       "administrator": "مدير النظام",
       "editProfile": "تعديل الملف الشخصي",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "buttn_confirm" : "تأكيد",
+      "btn_annuler" : "إلغاء"
     }
   },
   "dashboard": {
@@ -222,5 +224,66 @@
   },
   "alert" : {
     "message_decn" : "تم تسجيل خروجك بسبب عدم النشاط"
+  },
+
+
+
+
+
+
+
+  
+  "users": {
+    "form": {
+      "username": "اسم المستخدم",
+      "usernamePlaceholder": "أدخل اسم المستخدم",
+      "required": "هذا الحقل مطلوب",
+      "usernameMinLength": "يجب أن يكون اسم المستخدم على الأقل 3 أحرف",
+      "role": "الدور",
+      "firstName": "الاسم الأول",
+      "firstNamePlaceholder": "أدخل الاسم الأول",
+      "lastName": "اسم العائلة",
+      "lastNamePlaceholder": "أدخل اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "emailInvalid": "الرجاء إدخال بريد إلكتروني صحيح",
+      "phoneNumber": "رقم الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "phoneInvalid": "الرجاء إدخال رقم هاتف صحيح",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "passwordMinLength": "يجب أن تكون كلمة المرور على الأقل 6 أحرف",
+      "passwordComplexity": "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم وحرف خاص على الأقل",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+      "passwordMismatch": "كلمات المرور غير متطابقة",
+      "school": "المدرسة",
+      "schoolPlaceholder": "أدخل اسم المدرسة"
+    },
+    "roles": {
+      "student": "طالب",
+      "teacher": "مدرس"
+    }
+  },
+  "students1": {
+    "form": {
+      "grade": "الصف",
+      "gradePlaceholder": "اختر الصف"
+    },
+    "grades": {
+      "grade": "الصف"
+    },
+    "messages": {
+      "created": "تم إنشاء الطالب بنجاح"
+    }
+  },
+  "common1": {
+    "cancel": "إلغاء",
+    "create": "إنشاء"
   }
 }
+
+
+
+
+

@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { message } from "antd";
 import { userKey, type UserInfo } from "./useGetProfile";
@@ -15,14 +8,18 @@ import { handleError } from "../../Auth-service/handleError";
 export const useUpdateUser  = () => {
   const querClient = useQueryClient()
     async function updateuser (user : UserInfo){
-    // const formData = new FormData();
-    // formData.append("full_name", user?.first_name!);
-    // formData.append("email", user?.email!);
+    const formData = new FormData();
+    formData.append("username", user?.username!);
+    formData.append("first_name", user?.first_name!);
+    formData.append("last_name", user?.last_name!);
+    formData.append("phone_number", user?.phone_number!);
+    // formData.append("grade", String(user?.grade!));
     // formData.append("phone_number", user?.phone_number!);
-    // if (user.image) {
-    //     formData.append("image", user?.image);
-    // }
-    const res = await api.put(`api/auth/profile/`, user)
+
+    if (user?.profile_image) {
+        formData.append("profile_image", user?.profile_image);
+    }
+    const res = await api.put(`api/auth/profile/`, formData)
     return res.data
     
     }

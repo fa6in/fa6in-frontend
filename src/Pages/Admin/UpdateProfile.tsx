@@ -22,6 +22,7 @@ export const validateEmail = (email: string) => {
 export function UpdateProfileAdmin({ handleCancel }: Props) {
     const { data: clients, isPending: isPendingClient } = useGetProfile()
     const [images, setImages] = useState<ImageListType>([]);
+    const {t} = useTranslation()
     const { i18n } = useTranslation()
 
     const [username, setUsername] = useState("")
@@ -40,11 +41,11 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
             setLastName(clients.last_name || "");
             setPhone(clients.phone_number || "");
 
-            //   if (clients.image) {
-            //     // setImages([{ data_url: BaseUrl + clients.image }]);
-            //   } else {
-            //     setImages([]);
-            //   }
+            if (clients.profile_image) {
+                setImages([{ data_url: clients.profile_image }]);
+            } else {
+                setImages([]);
+            }
         }
     }, [clients])
 
@@ -61,15 +62,15 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
         //     message.error("please select the image !")
         // }
         else {
-            //   const file = images[0]?.file;
+            const file = images[0]?.file;
 
             const params: UserInfo = {
                 // email: email,
                 phone_number: phone,
                 first_name: firstName,
                 last_name: lastname,
-                username: clients?.username
-                // image: file!
+                username: clients?.username,
+                profile_image: file!
 
             }
             UpdateProfile(params, {
@@ -156,9 +157,11 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
 
             </div>
             <div className="grid grid-cols-2 items-center gap-x-4 mt-4 md:mt-5">
-                <Button className=" h-[50.6px]   mt-2 !border-main-color !text-main-color" onClick={handleCancel}>Annuler </Button>
+                <Button className=" h-[50.6px]   mt-2 !border-main-color !text-main-color" onClick={handleCancel}>{t("navbar.profile.btn_annuler")} </Button>
                 <Button loading={isPendingProfile} className=" h-[50.6px] mt-2 !bg-main-color !text-white" onClick={handleUpdate}
-                >Confirmer</Button>
+                >
+                    {t("navbar.profile.buttn_confirm")}
+                </Button>
 
             </div>
         </div>

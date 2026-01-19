@@ -2,8 +2,6 @@ import { useState } from "react";
 import {
     Table,
     Card,
-    Row,
-    Col,
     Button,
     Tag,
     Input,
@@ -15,8 +13,7 @@ import {
     Badge,
     Dropdown,
     Menu,
-    Progress,
-    message
+    Progress
 } from "antd";
 import {
     SearchOutlined,
@@ -27,7 +24,6 @@ import {
     EyeOutlined,
     UserOutlined,
     MailOutlined,
-    PhoneOutlined,
     TeamOutlined,
     CheckCircleOutlined,
     MoreOutlined,
@@ -36,6 +32,7 @@ import {
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import AddNewStudent from "./AddNewStudent";
 
 const { Option } = Select;
 
@@ -77,7 +74,7 @@ const StudentView = () => {
     const [searchText, setSearchText] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [yearFilter, setYearFilter] = useState("all");
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
     const isRTL = i18n.language === "ar";
@@ -286,7 +283,7 @@ const StudentView = () => {
             ),
             sorter: (a: any, b: any) => a.attendance - b.attendance,
         },
-        
+
         {
             title: t("students.table.actions"),
             key: "actions",
@@ -343,25 +340,6 @@ const StudentView = () => {
         setSelectedStudent(null);
         form.resetFields();
         setIsModalVisible(true);
-    };
-
-
-
-    const handleModalOk = () => {
-        form.validateFields().then((values) => {
-            console.log("values : ", values)
-            setLoading(true);
-            // Simuler une requête API
-            setTimeout(() => {
-                setLoading(false);
-                setIsModalVisible(false);
-                message.success(
-                    selectedStudent
-                        ? t("students.messages.updated")
-                        : t("students.messages.created")
-                );
-            }, 1000);
-        });
     };
 
     const handleModalCancel = () => {
@@ -512,146 +490,32 @@ const StudentView = () => {
 
                         }}
                         scroll={{ x: true }}
-                        loading={loading}
+                        // loading={loading}
                         rowClassName="hover:bg-gray-50"
                     />
 
-                    
                 </Card>
             </motion.div>
 
             {/* Modal d'ajout/édition d'étudiant */}
             <Modal
+                footer={null}
                 title={
                     selectedStudent
                         ? t("students.modal.editTitle")
                         : t("students.modal.addTitle")
                 }
                 open={isModalVisible}
-                onOk={handleModalOk}
+                // onOk={handleModalOk}
                 onCancel={handleModalCancel}
-                confirmLoading={loading}
+                // confirmLoading={loading}
                 width={600}
-                okText={selectedStudent ? t("common.update") : t("common.create")}
                 cancelText={t("common.cancel")}
                 className="rounded-2xl"
-                maskClosable={true}
+                maskClosable={false}
             >
-                <Form
-                    form={form}
-                    layout="vertical"
-                    className="mt-6"
-                    initialValues={{ status: "active" }}
-                >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="name"
-                                label={t("students.form.name")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                ]}
-                            >
-                                <Input
-                                    size="large"
-                                    placeholder={t("students.form.namePlaceholder")}
-                                    prefix={<UserOutlined className="text-gray-400" />}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="email"
-                                label={t("students.form.email")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                    { type: "email", message: t("students.form.emailInvalid") },
-                                ]}
-                            >
-                                <Input
-                                    size="large"
-                                    placeholder={t("students.form.emailPlaceholder")}
-                                    prefix={<MailOutlined className="text-gray-400" />}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="phone"
-                                label={t("students.form.phone")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                ]}
-                            >
-                                <Input
-                                    size="large"
-                                    placeholder={t("students.form.phonePlaceholder")}
-                                    prefix={<PhoneOutlined className="text-gray-400" />}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="year"
-                                label={t("students.form.year")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                ]}
-                            >
-                                <Select size="large" placeholder={t("students.form.yearPlaceholder")}>
-                                    <Option value="1st Year">{t("students.filters.year.first")} Year</Option>
-                                    <Option value="2nd Year">{t("students.filters.year.second")} Year</Option>
-                                    <Option value="3rd Year">{t("students.filters.year.third")} Year</Option>
-                                    <Option value="4th Year">{t("students.filters.year.fourth")} Year</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="class"
-                                label={t("students.form.class")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                ]}
-                            >
-                                <Select size="large" placeholder={t("students.form.classPlaceholder")}>
-                                    <Option value="Computer Science">Computer Science</Option>
-                                    <Option value="Software Engineering">Software Engineering</Option>
-                                    <Option value="Information Technology">Information Technology</Option>
-                                    <Option value="Data Science">Data Science</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="status"
-                                label={t("students.form.status")}
-                                rules={[
-                                    { required: true, message: t("students.form.required") },
-                                ]}
-                            >
-                                <Select size="large">
-                                    <Option value="active">{t("students.status.active")}</Option>
-                                    <Option value="inactive">{t("students.status.inactive")}</Option>
-                                    <Option value="pending">{t("students.status.pending")}</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Form.Item
-                        name="notes"
-                        label={t("students.form.notes")}
-                    >
-                        <Input.TextArea
-                            rows={3}
-                            placeholder={t("students.form.notesPlaceholder")}
-                        />
-                    </Form.Item>
-                </Form>
+                <AddNewStudent handleModalCancel={handleModalCancel} />
+
             </Modal>
         </motion.div>
     );

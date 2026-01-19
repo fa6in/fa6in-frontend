@@ -35,7 +35,8 @@ api.interceptors.response.use(
   
         try {
             const refresh = AuthService.getRefreshToken()
-        const res = await axios.post(`${BaseUrl}auth/token/refresh/`,  {
+        const res = await axios.post(`${BaseUrl}api/token/refresh/`,  {
+          
           refresh : refresh
         } )
            sessionStorage.setItem("access", res.data.access)

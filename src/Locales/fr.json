@@ -57,7 +57,9 @@
       "adminUser": "Admin User",
       "administrator": "Administrateur",
       "editProfile": "Modifier le profil",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+       "buttn_confirm" : "Confirmer",
+      "btn_annuler" : "Annuler"
     }
   },
   "dashboard": {
@@ -232,6 +234,63 @@
   },
   "alert" : {
     "message_decn" : "Vous avez été déconnecté pour cause d'inactivité"
+  },
+
+  
+
+
+
+
+
+  
+  "users": {
+    "form": {
+      "username": "Nom d'utilisateur",
+      "usernamePlaceholder": "Entrez le nom d'utilisateur",
+      "required": "Ce champ est obligatoire",
+      "usernameMinLength": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "role": "Rôle",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Entrez le prénom",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Entrez le nom",
+      "email": "Email",
+      "emailPlaceholder": "Entrez l'email",
+      "emailInvalid": "Veuillez entrer un email valide",
+      "phoneNumber": "Numéro de téléphone",
+      "phonePlaceholder": "Entrez le numéro de téléphone",
+      "phoneInvalid": "Veuillez entrer un numéro de téléphone valide",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Entrez le mot de passe",
+      "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordComplexity": "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Confirmez le mot de passe",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "school": "École",
+      "schoolPlaceholder": "Entrez le nom de l'école"
+    },
+    "roles": {
+      "student": "Étudiant",
+      "teacher": "Professeur"
+    }
+  },
+  "students1": {
+    "form": {
+      "grade": "Niveau",
+      "gradePlaceholder": "Sélectionnez le niveau"
+    },
+    "grades": {
+      "grade": "Niveau"
+    },
+    "messages": {
+      "created": "Étudiant créé avec succès"
+    }
+  },
+  "common1": {
+    "cancel": "Annuler",
+    "create": "Créer"
   }
+
 
 }

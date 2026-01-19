@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  UserOutlined,
-  DownOutlined,
-  ProfileOutlined,
-} from "@ant-design/icons";
+// import {
+//   UserOutlined,
+//   DownOutlined,
+//   ProfileOutlined,
+// } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import LanguageSite from "../LanguageSite";
 import { useGetProfile } from "../../Services/Profile/useGetProfile";
 import SpinnerLoader from "../../ui/SpinnerLoader";
-import { Modal } from "antd";
+import { Avatar, Dropdown, Modal, type MenuProps } from "antd";
 import { UpdateProfileAdmin } from "../../Pages/Admin/UpdateProfile";
 
 interface NavbarProps {
@@ -66,6 +66,18 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
     return "Ed-Tech";
   };
 
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: t("navbar.profile.editProfile"),
+      onClick: () => showModalProfile(),
+
+
+    },
+  ];
+
+
   const navbarVariants = {
     initial: {
       y: -100,
@@ -89,24 +101,24 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
     },
   };
 
-  const dropdownVariants = {
-    closed: {
-      opacity: 0,
-      scale: 0.95,
-      y: -10,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    open: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
+  // const dropdownVariants = {
+  //   closed: {
+  //     opacity: 0,
+  //     scale: 0.95,
+  //     y: -10,
+  //     transition: {
+  //       duration: 0.2,
+  //     },
+  //   },
+  //   open: {
+  //     opacity: 1,
+  //     scale: 1,
+  //     y: 0,
+  //     transition: {
+  //       duration: 0.2,
+  //     },
+  //   },
+  // };
 
   if (isPending) {
     return <SpinnerLoader />
@@ -114,7 +126,7 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
 
   return (
     <motion.nav
-      className="fixed top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200/60"
+      className="fixed top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200/60  "
       variants={{ navbarVariants }}
       initial="initial"
       animate={isScrolled ? ["animate", "scrolled"] : "animate"}
@@ -128,7 +140,7 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
         transition: 'left 0.3s ease-in-out'
       }}
     >
-      <div className="px-6 py-3">
+      <div className="px-6 py-3 ">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <motion.div
@@ -159,71 +171,25 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
             </div> */}
 
             {/* Profil Utilisateur */}
-            <div className="relative">
-              <motion.button
-                className="flex items-center space-x-3 bg-white/90 border border-gray-200 rounded-2xl pl-3 pr-2 py-2 shadow-sm hover:shadow-md transition-all duration-200 hover:border-main-color/30"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-br !bg-main-color rounded-full flex items-center justify-center shadow-md">
-                    <UserOutlined className="text-white text-sm" />
-                  </div>
-                  <div className="text-left hidden lg:block">
-                    <div className="text-sm font-medium text-gray-900 leading-none">
-                      {dataProfile?.first_name} {dataProfile?.last_name}
-                    </div>
-                    <div className="text-xs text-gray-500 leading-none mt-1">
-                      {dataProfile?.role}
-                    </div>
-                  </div>
+            <Dropdown menu={{ items }} placement="bottom" arrow>
+
+              <div className="flex items-center justify-center space-x-3 cursor-pointer gap-2">
+
+                <div className="flex flex-col items-center justify-center">
+                  <span className="text-[14px]">{dataProfile?.first_name} - {dataProfile?.role === "admin" ? "مشرف" : dataProfile?.role === "student" ? "تلميذ" : dataProfile?.role === "teacher" ? "أستاذ" : ""}</span>
+                  {/* <span className="text-[12px] text-green-600" > {t("component.navbar.balance")} : {UserData?.sold?.toLocaleString()} MRU</span> */}
                 </div>
-                <motion.div
-                  animate={{ rotate: userMenuOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <DownOutlined className="text-xs text-gray-400" />
-                </motion.div>
-              </motion.button>
+                <div>
+                  <Avatar size={40}
+                    src={<img src={(String(dataProfile?.profile_image!))}
 
-              <AnimatePresence>
-                {userMenuOpen && (
-                  <motion.div
-                    className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-200 py-2 z-50"
-                    variants={dropdownVariants}
-                    initial="closed"
-                    animate="open"
-                    exit="closed"
-                  >
-                    <div className="px-4 py-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-main-color to-blue-600 rounded-xl flex items-center justify-center shadow-md">
-                          <UserOutlined className="text-white text-lg" />
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900">
-                            {dataProfile?.first_name || ""} {dataProfile?.last_name || ""}
-                          </div>
-                          <div className="text-sm text-gray-500 mt-1">
-                            {dataProfile?.role || ""}
-                          </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            {dataProfile?.email || ""}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center justify-center !gap-5 m-2 cursor-pointer" onClick={showModalProfile}>
-                      <span className="text-sm font-medium">
-                        <ProfileOutlined /> {t("navbar.profile.editProfile")}
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+
+                      className="text-black text-[11px]" alt="logo-profile" />} />
+
+                </div>
+              </div>
+            </Dropdown>
           </div>
         </div>
       </div>
