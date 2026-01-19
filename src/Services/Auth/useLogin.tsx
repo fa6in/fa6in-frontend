@@ -16,7 +16,6 @@ async function login(params: LoginParams) {
         headers: { "Content-Type": "application/json" },
     });
 
-    // Utiliser la nouvelle méthode pour stocker toutes les données
     AuthService.setLoginData(res.data);
 
     return res.data;
@@ -56,7 +55,6 @@ export const useLogin = () => {
                 return enqueueSnackbar(err || "Erreur lors de la connexion", { variant: "error" });
             }
 
-            // Récupérer les informations utilisateur depuis AuthService
             const userInfo = AuthService.getUserInfo();
             const fullName = userInfo.full_name || userInfo.first_name || userInfo.username || "Utilisateur";
             const message = "Bienvenue " + fullName;

@@ -70,7 +70,7 @@ const cardHover = {
 /* =======================
    Component
 ======================= */
-const StudentsPage = () => {
+const StudentView = () => {
     const { t, i18n } = useTranslation();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -657,4 +657,5 @@ const StudentsPage = () => {
     );
 };
 
-export default StudentsPage;
+export default StudentView;
+

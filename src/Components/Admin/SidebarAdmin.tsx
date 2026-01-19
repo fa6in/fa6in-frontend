@@ -298,7 +298,7 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                                 w-full flex items-center px-4 py-3 rounded-xl font-medium text-sm
                                 bg-red-50 text-red-600 hover:bg-red-100
                                 transition-all duration-200
-                                ${i18n.language === "ar" ? "flex-row-reverse justify-end" : ""}
+                                ${i18n.language === "ar" ? "" : ""}
                             `}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}

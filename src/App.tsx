@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { I18nextProvider } from "react-i18next";
 // import '@ant-design/v5-patch-for-react-19';
 
@@ -19,10 +19,10 @@ function App() {
        anchorOrigin={{ vertical: "top", horizontal: "center" }}
        autoHideDuration={3000}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools
+        {/* <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition="bottom-right"
-        />
+        /> */}
         <Router />
         <ToastContainer />
       </QueryClientProvider>

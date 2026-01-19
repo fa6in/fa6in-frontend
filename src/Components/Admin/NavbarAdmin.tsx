@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import LanguageSite from "../LanguageSite";
+// import LanguageSite from "../LanguageSite";
 import { useGetProfile } from "../../Services/Profile/useGetProfile";
 import SpinnerLoader from "../../ui/SpinnerLoader";
 import { Modal } from "antd";
@@ -152,13 +152,11 @@ const NavbarAdmin: React.FC<NavbarProps> = ({ collapsed }) => {
 
           <div className="flex items-center gap-3 ">
             {/* Dropdown de langue */}
-            <div className="relative">
+            {/* <div className="relative">
               <AnimatePresence>
                 <LanguageSite />
               </AnimatePresence>
-            </div>
-
-
+            </div> */}
 
             {/* Profil Utilisateur */}
             <div className="relative">

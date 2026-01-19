@@ -6,8 +6,8 @@ import ErrorPage from "../Pages/ErrorPage";
 import type { RouteType } from "./type";
 
 // Admin Components
-const HomeAdmin = lazy(() => import("../Pages/Admin/HomeAdmin"));
-const StudentAdmin = lazy(() => import("../Pages/Admin/Student"));
+const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
+const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 
 // Student Components
