@@ -4,7 +4,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from "@ant-design/icons";
-import logo from "../../assets/images/logo.png"
+import logo from "../../assets/images/logo1.jpeg"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "../../Services/Auth/useLogout";
@@ -117,7 +117,6 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 <motion.div
                     className={`flex items-center justify-between p-6 border-b border-gray-100 bg-white/90 backdrop-blur-sm ${i18n.language === "ar" ? "flex-row-reverse" : ""
                         }`}
-                    layout
                 >
                     <motion.div
                         className={`flex items-center cursor-pointer ${i18n.language === "ar" ? "flex-row-reverse space-x-reverse" : "space-x-2"
@@ -125,7 +124,8 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <img src={logo} className="" alt="Logo" />
+                        {/* <img src={logo} className="h-[80px]" alt="Logo" /> */}
+                        <img src={logo} alt="Logo" />
                     </motion.div>
 
                     <motion.button
