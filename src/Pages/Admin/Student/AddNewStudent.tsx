@@ -7,7 +7,8 @@ import {
     SafetyOutlined
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useAddStudent } from "../../../Services/Admin/Student/useAddStudent";
+import type { AddPersonne } from "../../../Services/Admin/Student/typeStudent";
 
 const { Option } = Select;
 
@@ -20,7 +21,7 @@ type FormValues = {
     email: string;
     first_name: string;
     last_name: string;
-    role: "student" | "teacher";
+    role: string
     password: string;
     password_confirm: string;
     phone_number: string;
@@ -30,31 +31,38 @@ type FormValues = {
 
 export default function AddNewStudent({ handleModalCancel }: Props) {
     const { t } = useTranslation();
-    const [loading, setLoading] = useState(false);
     const [form] = Form.useForm<FormValues>();
-    const [role, setRole] = useState<"student" | "teacher">("student");
+    const { mutate: addStudent, isPending } = useAddStudent()
 
     const handleModalOk = () => {
         form.validateFields().then((values) => {
-            console.log("Form values:", values);
-            setLoading(true);
-            
-            // Simuler une requête API
-            setTimeout(() => {
-                setLoading(false);
-                handleModalCancel();
-                // message.success(t("students1.messages.created"));
-            }, 1000);
+            const params: AddPersonne = {
+                username: values?.username,
+                email: values?.email,
+                first_name: values?.first_name,
+                last_name: values?.last_name,
+                role: "student",
+                password: values?.password,
+                password_confirm: values?.password_confirm,
+                phone_number: values?.phone_number,
+                grade: values?.grade,
+                school: values?.school
+            }
+
+            addStudent(params, {
+                onSuccess: () => {
+                    handleModalCancel();
+                }
+            })
+
         });
     };
 
-    const handleRoleChange = (value: "student" | "teacher") => {
-        setRole(value);
-        // Réinitialiser le champ grade si on passe de student à teacher
-        if (value === "teacher") {
-            form.setFieldValue("grade", undefined);
-        }
-    };
+    const handleClose = () => {
+        form.resetFields();
+        handleModalCancel()
+
+    }
 
     return (
         <div>
@@ -62,9 +70,9 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                 form={form}
                 layout="vertical"
                 className="mt-6"
-                initialValues={{ 
+                initialValues={{
                     role: "student",
-                    status: "active" 
+                    status: "active"
                 }}
             >
                 <Row gutter={16}>
@@ -86,19 +94,16 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            name="role"
-                            label={t("users.form.role")}
+                            name="school"
+                            label={t("users.form.school")}
                             rules={[
                                 { required: true, message: t("users.form.required") },
                             ]}
                         >
-                            <Select 
-                                size="large" 
-                                onChange={handleRoleChange}
-                            >
-                                <Option value="student">{t("users.roles.student")}</Option>
-                                <Option value="teacher">{t("users.roles.teacher")}</Option>
-                            </Select>
+                            <Input
+                                size="large"
+                                placeholder={t("users.form.schoolPlaceholder")}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -177,10 +182,10 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                             rules={[
                                 { required: true, message: t("users.form.required") },
                                 { min: 6, message: t("users.form.passwordMinLength") },
-                                { 
-                                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                                    message: t("users.form.passwordComplexity")
-                                }
+                                // { 
+                                //     pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                                //     message: t("users.form.passwordComplexity")
+                                // }
                             ]}
                         >
                             <Input.Password
@@ -216,75 +221,42 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                     </Col>
                 </Row>
 
-                {role === "student" && (
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="grade"
-                                label={t("students1.form.grade")}
-                                rules={[
-                                    { required: true, message: t("users.form.required") },
-                                ]}
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item
+                            name="grade"
+                            label={t("students1.form.grade")}
+                            rules={[
+                                { required: true, message: t("users.form.required") },
+                            ]}
+                        >
+                            <Select
+                                size="large"
+                                placeholder={t("students1.form.gradePlaceholder")}
                             >
-                                <Select 
-                                    size="large" 
-                                    placeholder={t("students1.form.gradePlaceholder")}
-                                >
-                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(grade => (
-                                        <Option key={grade} value={grade}>
-                                            {t("students1.grades.grade")} {grade}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="school"
-                                label={t("users.form.school")}
-                                rules={[
-                                    { required: true, message: t("users.form.required") },
-                                ]}
-                            >
-                                <Input
-                                    size="large"
-                                    placeholder={t("users.form.schoolPlaceholder")}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                )}
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(grade => (
+                                    <Option key={grade} value={grade}>
+                                        {t("students1.grades.grade")} {grade}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
 
-                {role === "teacher" && (
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                name="school"
-                                label={t("users.form.school")}
-                                rules={[
-                                    { required: true, message: t("users.form.required") },
-                                ]}
-                            >
-                                <Input
-                                    size="large"
-                                    placeholder={t("users.form.schoolPlaceholder")}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                )}
+                </Row>
+
             </Form>
-            
+
             <div className="grid grid-cols-2 gap-3 mt-6">
-                <Button 
-                    onClick={handleModalCancel} 
+                <Button
+                    onClick={handleClose}
                     className="!text-main-color !border-main-color"
                 >
                     {t("common.cancel")}
                 </Button>
-                <Button 
-                    loading={loading} 
-                    onClick={handleModalOk} 
+                <Button
+                    loading={isPending}
+                    onClick={handleModalOk}
                     className="!bg-main-color !text-white"
                 >
                     {t("common.create")}

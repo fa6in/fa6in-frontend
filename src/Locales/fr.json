@@ -58,8 +58,8 @@
       "administrator": "Administrateur",
       "editProfile": "Modifier le profil",
       "logout": "Déconnexion",
-       "buttn_confirm" : "Confirmer",
-      "btn_annuler" : "Annuler"
+      "buttn_confirm": "Confirmer",
+      "btn_annuler": "Annuler"
     }
   },
   "dashboard": {
@@ -121,8 +121,39 @@
       "critical": "Critique"
     }
   },
-  
   "students": {
+    "details": {
+      "title": "Détails de l'Étudiant",
+      "subtitle": "Informations détaillées et performance académique",
+      "personalInfo": "Informations Personnelles",
+      "performance": "Performance",
+      "activity": "Activité Récente",
+      "personalDetails": "Détails Personnels",
+      "fullName": "Nom Complet",
+      "username": "Nom d'utilisateur",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "noAddress": "Aucune adresse fournie",
+      "registrationDate": "Date d'inscription",
+      "parentInfo": "Informations des Parents",
+      "parentName": "Nom du Parent",
+      "parentPhone": "Téléphone du Parent",
+      "notSpecified": "Non spécifié",
+      "enrollmentDate": "Date d'admission",
+      "lastLogin": "Dernière connexion",
+      "neverLoggedIn": "Jamais connecté",
+      "quickStats": "Statistiques Rapides",
+      "averageScore": "Moyenne Générale",
+      "attendance": "Taux de Présence",
+      "completion": "Taux d'Achèvement",
+      "subjectsPerformance": "Performance par Matière",
+      "sendEmail": "Envoyer un Email",
+      "call": "Appeler",
+      "grade": "Classe",
+      "school": "École"
+    
+  },
     "title": "Gestion des Étudiants",
     "subtitle": "Gérez et suivez les informations de tous vos étudiants",
     "addStudent": "Ajouter un Étudiant",
@@ -130,7 +161,6 @@
     "export": "Exporter",
     "searchPlaceholder": "Rechercher par nom, email ou ID...",
     "clearFilters": "Effacer les filtres",
-    
     "stats": {
       "total": "Total Étudiants",
       "active": "Étudiants Actifs",
@@ -138,7 +168,6 @@
       "averageGPA": "Moyenne GPA",
       "fromLastMonth": "depuis le mois dernier"
     },
-    
     "filters": {
       "status": {
         "label": "Statut",
@@ -156,13 +185,11 @@
         "fourth": "4ème"
       }
     },
-    
     "status": {
       "active": "Actif",
       "inactive": "Inactif",
       "pending": "En attente"
     },
-    
     "table": {
       "id": "ID",
       "student": "Étudiant",
@@ -175,13 +202,11 @@
       "actions": "Actions",
       "showing": "Affichage de {from} à {to} sur {total} étudiants"
     },
-    
     "tabs": {
       "all": "Tous",
       "active": "Actifs",
       "pending": "En attente"
     },
-    
     "actions": {
       "view": "Voir Détails",
       "edit": "Modifier",
@@ -189,7 +214,6 @@
       "message": "Envoyer Message",
       "delete": "Supprimer"
     },
-    
     "modal": {
       "addTitle": "Ajouter un Nouvel Étudiant",
       "editTitle": "Modifier l'Étudiant",
@@ -199,7 +223,6 @@
       "editSuccess": "Étudiant modifié avec succès",
       "deleteSuccess": "Étudiant supprimé avec succès"
     },
-    
     "form": {
       "name": "Nom Complet",
       "namePlaceholder": "Entrez le nom complet",
@@ -217,14 +240,119 @@
       "required": "Ce champ est requis",
       "emailInvalid": "Veuillez entrer un email valide"
     },
-    
     "messages": {
       "created": "Étudiant créé avec succès",
       "updated": "Étudiant mis à jour avec succès",
       "deleted": "Étudiant supprimé avec succès"
     }
   },
-  
+  "teachers": {
+    "table" : {
+       "title": "Enseignants",
+    "table": {
+      "id": "ID",
+      "teacher": "Enseignant",
+      "email": "Email",
+      "phone": "Téléphone",
+      "experience": "Expérience",
+      "subjects": "Matières",
+      "qualification": "Qualification",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "buttons": {
+      "add": "Ajouter enseignant",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "view": "Voir"
+    }
+    },
+    "title": "Gestion des Enseignants",
+    "subtitle": "Gérez et suivez les informations de tous vos Enseignants",
+    "addStudent": "Ajouter un Enseignant",
+    "import": "Importer",
+    "export": "Exporter",
+    "searchPlaceholder": "Rechercher par nom, email ou ID...",
+    "clearFilters": "Effacer les filtres",
+    "stats": {
+      "total": "Total Enseignants",
+      "active": "Enseignants Actifs",
+      "new": "Nouveaux Enseignants",
+      "averageGPA": "Moyenne GPA",
+      "fromLastMonth": "depuis le mois dernier"
+    },
+    "filters": {
+      "status": {
+        "label": "Statut",
+        "all": "Tous les statuts",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "pending": "En attente"
+      },
+      "year": {
+        "label": "Année",
+        "all": "Toutes les années",
+        "first": "1ère",
+        "second": "2ème",
+        "third": "3ème",
+        "fourth": "4ème"
+      }
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "pending": "En attente"
+    },
+    
+    "tabs": {
+      "all": "Tous",
+      "active": "Actifs",
+      "pending": "En attente"
+    },
+    "actions": {
+      "view": "Voir Détails",
+      "edit": "Modifier",
+      "grades": "Notes",
+      "message": "Envoyer Message",
+      "delete": "Supprimer"
+    },
+    "modal": {
+      "addTitle": "Ajouter un Nouvel Enseignant",
+      "editTitle": "Modifier l'Enseignant",
+      "deleteTitle": "Confirmer la suppression",
+      "deleteContent": "Êtes-vous sûr de vouloir supprimer l'Enseignant {name} ?",
+      "addSuccess": "Enseignant ajouté avec succès",
+      "editSuccess": "Enseignant modifié avec succès",
+      "deleteSuccess": "Enseignant supprimé avec succès"
+    },
+    "form": {
+      "name": "Nom Complet",
+      "namePlaceholder": "Entrez le nom complet",
+      "email": "Email",
+      "emailPlaceholder": "Entrez l'adresse email",
+      "phone": "Téléphone",
+      "phonePlaceholder": "Entrez le numéro de téléphone",
+      "year": "Année",
+      "yearPlaceholder": "Sélectionnez l'année",
+      "class": "Classe",
+      "classPlaceholder": "Sélectionnez la classe",
+      "status": "Statut",
+      "notes": "Notes",
+      "notesPlaceholder": "Ajoutez des notes supplémentaires...",
+      "required": "Ce champ est requis",
+      "emailInvalid": "Veuillez entrer un email valide"
+    },
+    "messages": {
+      "created": "Enseignant créé avec succès",
+      "updated": "Enseignant mis à jour avec succès",
+      "deleted": "Enseignant supprimé avec succès"
+    }
+  },
   "common": {
     "create": "Créer",
     "update": "Mettre à jour",
@@ -232,17 +360,9 @@
     "cancel": "Annuler",
     "save": "Enregistrer"
   },
-  "alert" : {
-    "message_decn" : "Vous avez été déconnecté pour cause d'inactivité"
+  "alert": {
+    "message_decn": "Vous avez été déconnecté pour cause d'inactivité"
   },
-
-  
-
-
-
-
-
-  
   "users": {
     "form": {
       "username": "Nom d'utilisateur",
@@ -287,10 +407,292 @@
       "created": "Étudiant créé avec succès"
     }
   },
+  "students2" : {  "table": {
+      "id": "ID",
+      "student": "Étudiant",
+      "phone": "Téléphone",
+      "grade": "Niveau",
+      "school": "École",
+      "status": "Statut",
+      "enrollmentDate": "Date d'inscription",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif"
+    }
+  },
   "common1": {
     "cancel": "Annuler",
     "create": "Créer"
+  },
+  "matieres": {
+    "delete": {
+      "title": "Supprimer la matière",
+      "message": "Êtes-vous sûr de vouloir supprimer définitivement cette matière ?",
+      "thisItem": "cet élément",
+      "warning": "Cette action est irréversible. Toutes les données associées seront perdues."
+    },
+    "grades": {
+      "grade": "Niveau"
+    },
+    "common1": {
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    },
+    "title": "Gestion des Matières",
+    "subtitle": "Administration et suivi des modules académiques",
+    "add": "Ajouter une matière",
+    "stats": {
+      "total": "Total Matières",
+      "active": "Matières Actives",
+      "inactive": "Matières Inactives",
+      "students": "Étudiants Inscrits",
+      "credits": "Crédits Moyens"
+    },
+    "search": "Rechercher une matière...",
+    "filters": {
+      "semester": "Semestre",
+      "status": "Statut",
+      "all": "Tous",
+      "active": "Active",
+      "inactive": "Inactive",
+      "reset": "Réinitialiser"
+    },
+    "table": {
+      "code": "Code",
+      "matiere": "Matière",
+      "teacher": "Enseignant",
+      "semester": "Semestre",
+      "credits": "Crédits",
+      "students": "Étudiants",
+      "progress": "Avancement",
+      "status": "Statut",
+      "actions": "Actions",
+      "description": "Description"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "view": "Voir",
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "modal": {
+      "addTitle": "Ajouter une matière",
+      "editTitle": "Modifier la matière"
+    },
+    "common": {
+      "reset": "Réinitialiser"
+    }
+  },
+  "matieresAdd": {
+    "modal": {
+      "addTitle": "Nouvelle Matière"
+    },
+    "form": {
+      "name": "Nom de la matière",
+      "namePlaceholder": "Ex: Mathématiques Avancées",
+      "grade": "Niveau",
+      "gradePlaceholder": "Sélectionnez le niveau",
+      "icon": "Icône",
+      "iconPlaceholder": "Choisissez une icône",
+      "iconPreview": "Aperçu des icônes",
+      "description": "Description",
+      "descriptionPlaceholder": "Décrivez la matière en détail...",
+      "color": "Couleur de la matière",
+      "presetColors": "Couleurs prédéfinies",
+      "status": "Statut",
+      "activeStatus": "Activer la matière",
+      "activeDescription": "La matière sera visible pour les enseignants et étudiants",
+      "preview": "Aperçu de la matière",
+      "sampleName": "Exemple de matière",
+      "sampleGrade": "Exemple de niveau"
+    },
+    "validation": {
+      "nameRequired": "Veuillez saisir le nom de la matière",
+      "nameMinLength": "Le nom doit contenir au moins 3 caractères",
+      "nameMaxLength": "Le nom ne peut pas dépasser 100 caractères",
+      "gradeRequired": "Veuillez sélectionner un niveau",
+      "iconRequired": "Veuillez sélectionner une icône",
+      "descriptionRequired": "Veuillez saisir une description",
+      "descriptionMinLength": "La description doit contenir au moins 10 caractères",
+      "descriptionMaxLength": "La description ne peut pas dépasser 500 caractères"
+    },
+    "steps": {
+      "basicInfo": "Informations de base",
+      "appearance": "Apparence"
+    },
+    "icons": {
+      "calculator": "Calculatrice",
+      "book": "Livre",
+      "science": "Science",
+      "code": "Code",
+      "history": "Histoire",
+      "language": "Langue",
+      "music": "Musique",
+      "chart": "Graphique"
+    },
+    "grades": {
+      "grade": "Niveau",
+      "grade1": "Niveau 1",
+      "grade2": "Niveau 2",
+      "grade3": "Niveau 3",
+      "grade4": "Niveau 4",
+      "grade5": "Niveau 5",
+      "grade6": "Niveau 6"
+    },
+    "messages": {
+      "addSuccess": "Matière créée avec succès !",
+      "addError": "Erreur lors de la création de la matière"
+    },
+    "common": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "back": "Retour",
+      "next": "Suivant",
+      "cancel": "Annuler",
+      "create": "Créer"
+    }
+  },
+  "chapitres": {
+    "title": "Gestion des Chapitres",
+    "subtitle": "Créez et gérez les chapitres de vos cours",
+    "addNew": "Nouveau Chapitre",
+    "addTitle": "Ajouter un Nouveau Chapitre",
+    "editTitle": "Modifier le Chapitre",
+    "deleteConfirm": {
+      "title": "Confirmer la suppression",
+      "content": "Êtes-vous sûr de vouloir supprimer ce chapitre ? Cette action est irréversible."
+    },
+    "search": {
+      "placeholder": "Rechercher par titre ou description..."
+    },
+    "filter": {
+      "difficulty": "Difficulté",
+      "status": "Statut",
+      "allDifficulties": "Toutes les difficultés",
+      "allStatus": "Tous les statuts"
+    },
+    "difficulty": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile"
+    },
+    "steps": {
+      "basicInfo": "Informations de base",
+      "media": "Médias",
+      "settings": "Paramètres"
+    },
+    "form": {
+      "title": "Titre du chapitre",
+      "titlePlaceholder": "Ex: Introduction aux fractions",
+      "subject": "Matière",
+      "subjectPlaceholder": "Sélectionner une matière",
+      "order": "Ordre",
+      "orderPlaceholder": "1, 2, 3...",
+      "description": "Description",
+      "descriptionPlaceholder": "Décrivez le contenu du chapitre...",
+      "learningObjective": "Objectif d'apprentissage",
+      "learningObjectivePlaceholder": "Ce que l'étudiant va apprendre...",
+      "thumbnail": "Miniature",
+      "videoUrl": "URL de la vidéo",
+      "audioUrl": "URL de l'audio",
+      "duration": "Durée",
+      "minutes": "minutes",
+      "selectDifficulty": "Sélectionner la difficulté",
+      "publishNow": "Publier maintenant",
+      "publishDescription": "Rendre ce chapitre accessible aux étudiants",
+      "status": "Statut"
+    },
+    "validation": {
+      "titleRequired": "Le titre est requis",
+      "titleMinLength": "Le titre doit contenir au moins 5 caractères",
+      "subjectRequired": "La matière est requise",
+      "orderRequired": "L'ordre est requis",
+      "descriptionRequired": "La description est requise",
+      "descriptionMinLength": "La description doit contenir au moins 10 caractères",
+      "learningObjectiveRequired": "L'objectif d'apprentissage est requis",
+      "thumbnailRequired": "La miniature est requise",
+      "durationRequired": "La durée est requise",
+      "difficultyRequired": "La difficulté est requise"
+    },
+    "table": {
+      "order": "Ordre",
+      "title": "Titre",
+      "subject": "Matière",
+      "difficulty": "Difficulté",
+      "duration": "Durée",
+      "minutes": "min",
+      "activities": "Activités",
+      "status": "Statut",
+      "createdAt": "Créé le",
+      "items": "chapitres"
+    },
+    "history": {
+      "title": "Historique",
+      "createdBy": "Créé par",
+      "createdAt": "Créé le",
+      "updatedAt": "Mis à jour le",
+      "activities": "Activités associées"
+    },
+    "messages": {
+      "addSuccess": "Chapitre ajouté avec succès",
+      "addError": "Erreur lors de l'ajout du chapitre",
+      "updateSuccess": "Chapitre mis à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour",
+      "deleteSuccess": "Chapitre supprimé avec succès",
+      "publishedSuccess": "Chapitre publié avec succès",
+      "unpublishedSuccess": "Chapitre retiré avec succès"
+    },
+    "sort": {
+      "order": "Trier par ordre"
+    },
+    "common": {
+      "change_image" : "Changer l'image",
+      "img_actuelle" : "Image actuelle",
+      "click" : "Cliquez sur 'Changer l'image' pour modifier",
+      "delete_img" : "Supprimer la nouvelle image",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "view": "Voir",
+      "back": "Retour",
+      "next": "Suivant",
+      "upload": "Télécharger",
+      "published": "Publié",
+      "draft": "Brouillon",
+      "total": "Total",
+      "actions": "Actions",
+      "preview": "Aperçu",
+      "yes": "Oui",
+      "no": "Non",
+      "confirm": "Confirmer",
+      "success": "Succès",
+      "error": "Erreur",
+      "loading": "Chargement...",
+      "select": "Sélectionner",
+      "search": "Rechercher",
+      "filter": "Filtrer",
+      "reset": "Réinitialiser",
+      "apply": "Appliquer",
+      "close": "Fermer",
+      "open": "Ouvrir",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "all": "Tous",
+      "none": "Aucun",
+      "required": "Requis",
+      "optional": "Optionnel",
+      "download": "Télécharger",
+      "print": "Imprimer",
+      "export": "Exporter",
+      "import": "Importer",
+      "refresh": "Rafraîchir"
+    }
   }
-
-
 }

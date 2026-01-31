@@ -9,30 +9,29 @@ import {
     Space,
     Modal,
     Form,
-    Avatar,
     Badge,
-    Dropdown,
-    Menu,
-    Progress
 } from "antd";
+import { VscError } from "react-icons/vsc";
 import {
     SearchOutlined,
     PlusOutlined,
     FilterOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    EyeOutlined,
-    UserOutlined,
-    MailOutlined,
     TeamOutlined,
     CheckCircleOutlined,
-    MoreOutlined,
-    StarOutlined,
-    BarChartOutlined
 } from "@ant-design/icons";
+
+import type { ColumnsType } from "antd/es/table";
+import type { Student } from "../../../Services/Admin/Student/typeStudent";
+
+
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import AddNewStudent from "./AddNewStudent";
+import { useGetStudents } from "../../../Services/Admin/Student/useGetStudents";
+import SpinnerLoader from "../../../ui/SpinnerLoader";
+import { FcViewDetails } from "react-icons/fc";
+import DetailsStudent from "./DetailsStudent";
+import AuthService from "../../../Auth-service/AuthService";
 
 const { Option } = Select;
 
@@ -74,75 +73,26 @@ const StudentView = () => {
     const [searchText, setSearchText] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [yearFilter, setYearFilter] = useState("all");
+    const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
+
+        const post = AuthService.getRole()
+
+    // Ajoutez cette fonction pour gérer l'ouverture du modal
+    const handleViewStudent = (record: any) => {
+        setSelectedStudent(record);
+        setIsDetailsModalVisible(true);
+    };
     // const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
+    const { data: getStudent, isPending } = useGetStudents()
+
     const isRTL = i18n.language === "ar";
 
-    // Données des étudiants
-    const studentsData = [
-        {
-            key: "1",
-            id: "ST001",
-            name: "Med ahmedou",
-            email: "med@gmail.com",
-            phone: "483354773",
-            avatar: "AA",
-            status: "active",
-            year: "3rd Year",
-            grade: "A",
-            courses: 6,
-            attendance: 95,
-            gpa: 3.8,
-            joinDate: "2022-09-15",
-            class: "Computer Science",
-            fees: "Paid",
-            lastActive: "2 hours ago"
-        },
-        {
-            key: "2",
-            id: "ST002",
-            name: "Mbare salem",
-            email: "mbare@gmail.com",
-            phone: "24243434",
-            avatar: "FZ",
-            status: "active",
-            year: "2nd Year",
-            grade: "A+",
-            courses: 5,
-            attendance: 98,
-            gpa: 3.9,
-            joinDate: "2023-09-10",
-            class: "Software Engineering",
-            fees: "Paid",
-            lastActive: "1 day ago"
-        },
-        {
-            key: "3",
-            id: "ST003",
-            name: "Mohamed tichiti",
-            email: "medtichiti@gmail.com",
-            phone: "+216 22 456 789",
-            avatar: "MS",
-            status: "pending",
-            year: "4th Year",
-            grade: "B+",
-            courses: 7,
-            attendance: 85,
-            gpa: 3.4,
-            joinDate: "2021-09-20",
-            class: "Information Technology",
-            fees: "Pending",
-            lastActive: "3 days ago"
-        },
-
-    ];
-
-    // Options de filtres
     const statusOptions = [
         { value: "all", label: t("students.filters.status.all") },
-        { value: "active", label: t("students.filters.status.active") },
-        { value: "inactive", label: t("students.filters.status.inactive") },
+        { value: "true", label: t("students.filters.status.active") },
+        { value: "false", label: t("students.filters.status.inactive") },
         { value: "pending", label: t("students.filters.status.pending") }
     ];
 
@@ -154,157 +104,106 @@ const StudentView = () => {
         { value: "4th", label: t("students.filters.year.fourth") }
     ];
 
-    // Menu d'actions pour chaque étudiant
-    const getActionsMenu = () => (
-        <Menu>
-            <Menu.Item key="view" icon={<EyeOutlined />}>
-                {t("students.actions.view")}
-            </Menu.Item>
-            <Menu.Item key="edit" icon={<EditOutlined />}>
-                {t("students.actions.edit")}
-            </Menu.Item>
-            <Menu.Item key="grades" icon={<BarChartOutlined />}>
-                {t("students.actions.grades")}
-            </Menu.Item>
-            <Menu.Item key="message" icon={<MailOutlined />}>
-                {t("students.actions.message")}
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item key="delete" icon={<DeleteOutlined />} danger>
-                {t("students.actions.delete")}
-            </Menu.Item>
-        </Menu>
-    );
-
-    // Colonnes du tableau
-    const columns = [
+    const columns: ColumnsType<Student> = [
         {
-            title: t("students.table.id"),
+            title: t("students2.table.id"),
             dataIndex: "id",
             key: "id",
-            sorter: (a: any, b: any) => a.id.localeCompare(b.id),
+            sorter: (a, b) => a.id - b.id,
         },
+
         {
             title: t("students.table.student"),
-            dataIndex: "name",
-            key: "name",
-            render: (text: string, record: any) => (
+            key: "student",
+            render: (_, record) => (
                 <div className="flex items-center space-x-3">
-                    <Avatar size="large" className="bg-blue-500">
-                        {record.avatar}
-                    </Avatar>
                     <div>
-                        <div className="font-semibold text-gray-900">{text}</div>
-                        <div className="text-sm text-gray-500">{record.email}</div>
+                        <div className="font-semibold text-gray-900">
+                            {record.user.first_name} {record.user.last_name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            {record.user.email}
+                        </div>
                     </div>
                 </div>
             ),
         },
+
         {
-            title: t("students.table.year"),
-            dataIndex: "year",
-            key: "year",
-            render: (year: string) => (
+            title: t("students2.table.phone"),
+            key: "phone",
+            render: (_, record) => record.user.phone_number,
+        },
+
+        {
+            title: t("students2.table.grade"),
+            key: "grade",
+            render: (_, record) => (
                 <Tag color="blue" className="rounded-full px-3">
-                    {year}
+                    {record.user.grade}
                 </Tag>
             ),
+            sorter: (a, b) => a.user.grade - b.user.grade,
         },
+
         {
-            title: t("students.table.class"),
-            dataIndex: "class",
-            key: "class",
+            title: t("students2.table.school"),
+            key: "school",
+            render: (_, record) => record.user.school,
         },
+
         {
             title: t("students.table.status"),
-            dataIndex: "status",
             key: "status",
-            render: (status: string) => {
-                const statusConfig: any = {
-                    active: { color: "green", text: t("students.status.active") },
-                    inactive: { color: "red", text: t("students.status.inactive") },
-                    pending: { color: "orange", text: t("students.status.pending") }
-                };
-                const config = statusConfig[status] || { color: "gray", text: status };
-                return (
-                    <Badge
-                        status={config.color as any}
-                        text={config.text}
-                        className="font-medium"
-                    />
-                );
-            },
+            render: (_, record) => (
+                <Badge
+                    status={record.user.is_active ? "success" : "error"}
+                    text={
+                        record.user.is_active
+                            ? t("students.status.active")
+                            : t("students.status.inactive")
+                    }
+                />
+            ),
             filters: [
-                { text: t("students.status.active"), value: "active" },
-                { text: t("students.status.inactive"), value: "inactive" },
-                { text: t("students.status.pending"), value: "pending" }
+                { text: t("students.status.active"), value: true },
+                { text: t("students.status.inactive"), value: false },
             ],
-            onFilter: (value: any, record: any) => record.status === value,
+            onFilter: (value, record) => record.user.is_active === value,
         },
+
         {
-            title: t("students.table.gpa"),
-            dataIndex: "gpa",
-            key: "gpa",
-            render: (gpa: number) => (
-                <div className="flex items-center">
-                    <Progress
-                        percent={(gpa / 4) * 100}
-                        size="small"
-                        showInfo={false}
-                        strokeColor={
-                            gpa >= 3.5 ? "#10b981" :
-                                gpa >= 3.0 ? "#f59e0b" :
-                                    "#ef4444"
-                        }
-                    />
-                    <span className="ml-2 font-semibold">{gpa.toFixed(1)}</span>
-                </div>
-            ),
-            sorter: (a: any, b: any) => a.gpa - b.gpa,
-        },
-        {
-            title: t("students.table.attendance"),
-            dataIndex: "attendance",
-            key: "attendance",
-            render: (attendance: number) => (
-                <div className="flex items-center">
-                    <Progress
-                        percent={attendance}
-                        size="small"
-                        showInfo={false}
-                        strokeColor={
-                            attendance >= 90 ? "#10b981" :
-                                attendance >= 75 ? "#f59e0b" :
-                                    "#ef4444"
-                        }
-                    />
-                    <span className="ml-2">{attendance}%</span>
-                </div>
-            ),
-            sorter: (a: any, b: any) => a.attendance - b.attendance,
+            title: t("students2.table.enrollmentDate"),
+            dataIndex: "enrollment_date",
+            key: "enrollment_date",
+            sorter: (a, b) =>
+                new Date(a.enrollment_date).getTime() -
+                new Date(b.enrollment_date).getTime(),
         },
 
         {
             title: t("students.table.actions"),
             key: "actions",
-            render: (_: any) => (
-                <Dropdown overlay={getActionsMenu()} trigger={["click"]}>
-                    <Button
-                        type="text"
-                        icon={<MoreOutlined />}
-                        className="text-gray-500 hover:text-gray-700"
-                    />
-                </Dropdown>
+            render: (_, record) => (
+                <Button
+                    type="text"
+                    icon={<FcViewDetails />}
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => handleViewStudent(record)}
+                >
+                    {t("students.actions.view")}
+                </Button>
             ),
         },
     ];
+
 
     // Statistiques
     const stats = [
         {
             key: "total",
             title: t("students.stats.total"),
-            value: 2543,
+            value: getStudent?.count!,
             icon: <TeamOutlined />,
             color: "from-blue-500 to-blue-600",
             change: "+12.5%",
@@ -312,27 +211,25 @@ const StudentView = () => {
         {
             key: "active",
             title: t("students.stats.active"),
-            value: 2310,
+            // value: getStudent ? getStudent?.results.filter((student) => student.user.is_active === true).length! : 0,
+            value: getStudent?.results
+                ?.filter(student => student?.user?.is_active)
+                .length ?? 0,
             icon: <CheckCircleOutlined />,
             color: "from-green-500 to-green-600",
             change: "+8.2%",
         },
         {
             key: "new",
-            title: t("students.stats.new"),
-            value: 148,
-            icon: <UserOutlined />,
-            color: "from-purple-500 to-purple-600",
+            title: t("students.stats.no_active"),
+            value: getStudent?.results
+                ?.filter(student => student.user?.is_active === false)
+                .length ?? 0,
+            icon: <VscError />,
+            color: "text-white bg-red-500 font-bold",
             change: "+15.3%",
         },
-        {
-            key: "averageGPA",
-            title: t("students.stats.averageGPA"),
-            value: 3.4,
-            icon: <StarOutlined />,
-            color: "from-orange-500 to-orange-600",
-            change: "+0.2",
-        },
+
     ];
 
     // Gestion des événements
@@ -347,16 +244,20 @@ const StudentView = () => {
     };
 
     // Filtrage des données
-    const filteredData = studentsData.filter((student) => {
-        const matchesSearch = student.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            student.email.toLowerCase().includes(searchText.toLowerCase()) ||
-            student.id.toLowerCase().includes(searchText.toLowerCase());
+    const filteredData = getStudent?.results?.filter((student) => {
+        const matchesSearch = student?.user?.first_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+            student?.user?.last_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+            student?.user?.phone_number?.toLowerCase().includes(searchText.toLowerCase());
 
-        const matchesStatus = statusFilter === "all" || student.status === statusFilter;
-        const matchesYear = yearFilter === "all" || student.year.includes(yearFilter);
+        const matchesStatus = statusFilter === "all" || String(student?.user?.is_active) === statusFilter;
+        // const matchesYear = yearFilter === "all" || student.year.includes(yearFilter);
 
-        return matchesSearch && matchesStatus && matchesYear;
+        return matchesSearch && matchesStatus;
     });
+
+    if (isPending) {
+        return <SpinnerLoader />
+    }
 
     return (
         <motion.div
@@ -377,7 +278,8 @@ const StudentView = () => {
                             {t("students.subtitle")}
                         </p>
                     </div>
-                    <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+                    {post === "admin" && (
+                        <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
 
                         <Button
                             icon={<PlusOutlined />}
@@ -387,11 +289,12 @@ const StudentView = () => {
                             {t("students.addStudent")}
                         </Button>
                     </div>
+                    )}
                 </div>
             </motion.div>
 
             {/* Statistiques */}
-            <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stats.map((stat) => (
                     <div key={stat.key}>
                         <motion.div variants={{ item }} whileHover="hover">
@@ -478,21 +381,18 @@ const StudentView = () => {
             <motion.div variants={{ item }}>
                 <Card className="rounded-2xl shadow-sm border-0">
                     <Table
-                        columns={columns.map(col => ({
-                            ...col,
-                            responsive: ['md'], // Cette colonne apparaît seulement sur md et plus
-                        }))}
+                        rowKey="id"
+                        loading={isPending}
+                        columns={columns}
                         dataSource={filteredData}
                         pagination={{
                             pageSize: 10,
                             showSizeChanger: true,
                             showQuickJumper: true,
-
                         }}
                         scroll={{ x: true }}
-                        // loading={loading}
-                        rowClassName="hover:bg-gray-50"
                     />
+
 
                 </Card>
             </motion.div>
@@ -513,10 +413,20 @@ const StudentView = () => {
                 cancelText={t("common.cancel")}
                 className="rounded-2xl"
                 maskClosable={false}
+                closeIcon={false}
             >
                 <AddNewStudent handleModalCancel={handleModalCancel} />
 
             </Modal>
+
+
+
+            <DetailsStudent
+                student={selectedStudent}
+                visible={isDetailsModalVisible}
+                onClose={() => setIsDetailsModalVisible(false)}
+            />
+
         </motion.div>
     );
 };

@@ -18,6 +18,7 @@ export default {
         // 'main-color' : "#2A3A6E",
         // 'main-color' : "#f89b22",
         'main-color' : "#17ab5b",
+        'secondary-color' : "#f89b22"
 
       }
     },

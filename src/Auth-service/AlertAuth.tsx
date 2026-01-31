@@ -40,13 +40,13 @@ export const ALert_Retourne_Login = (): Promise<SweetAlertResult> => {
     return new Promise((resolve) => {
   
       const swalPromise = Swal.fire({
-        title: 'Vérifiez votre connexion Internet !',
-        color: "#141317",
+        title: '! تحقق من اتصالك بالإنترنت',
+        color: "#17ab5b",
         customClass: {
           loader: "Is Loading",
           confirmButton: 'custom-button'
         },
-        confirmButtonColor: "#141317",
+        confirmButtonColor: "#17ab5b",
       });
   
       swalPromise.then((result) => {

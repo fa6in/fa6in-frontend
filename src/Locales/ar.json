@@ -14,7 +14,7 @@
     "courses": "الدروس",
     "classes": "الفصول",
     "subjects": "المواد",
-    "exams": "الامتحانات",
+    "exams": "الوحدات",
     "grades": "الدرجات",
     "assignments": "الواجبات",
     "roles": "الأدوار والصلاحيات",
@@ -59,8 +59,8 @@
       "administrator": "مدير النظام",
       "editProfile": "تعديل الملف الشخصي",
       "logout": "تسجيل الخروج",
-      "buttn_confirm" : "تأكيد",
-      "btn_annuler" : "إلغاء"
+      "buttn_confirm": "تأكيد",
+      "btn_annuler": "إلغاء"
     }
   },
   "dashboard": {
@@ -123,6 +123,37 @@
     }
   },
   "students": {
+    "details": {
+      "title": "تفاصيل الطالب",
+      "subtitle": "معلومات تفصيلية والأداء الأكاديمي",
+      "personalInfo": "معلومات شخصية",
+      "performance": "الأداء",
+      "activity": "النشاط الأخير",
+      "personalDetails": "تفاصيل شخصية",
+      "fullName": "الاسم الكامل",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "address": "العنوان",
+      "noAddress": "لم يتم تقديم عنوان",
+      "registrationDate": "تاريخ التسجيل",
+      "parentInfo": "معلومات الوالدين",
+      "parentName": "اسم الوالد",
+      "parentPhone": "هاتف الوالد",
+      "notSpecified": "غير محدد",
+      "enrollmentDate": "تاريخ القبول",
+      "lastLogin": "آخر دخول",
+      "neverLoggedIn": "لم يسجل الدخول مطلقًا",
+      "quickStats": "إحصائيات سريعة",
+      "averageScore": "المعدل العام",
+      "attendance": "معدل الحضور",
+      "completion": "معدل الإنجاز",
+      "subjectsPerformance": "الأداء حسب المادة",
+      "sendEmail": "إرسال بريد إلكتروني",
+      "call": "اتصال",
+      "grade": "الصف",
+      "school": "المدرسة"
+    },
     "title": "إدارة الطلاب",
     "subtitle": "إدارة ومتابعة معلومات جميع طلابك",
     "addStudent": "إضافة طالب",
@@ -133,6 +164,7 @@
     "stats": {
       "total": "إجمالي الطلاب",
       "active": "طلاب نشطين",
+      "no_active": " طلاب غير نشطين ",
       "new": "طلاب جدد",
       "averageGPA": "متوسط المعدل",
       "fromLastMonth": "من الشهر الماضي"
@@ -215,6 +247,170 @@
       "deleted": "تم حذف الطالب بنجاح"
     }
   },
+  "students2": {
+    "table": {
+      "id": "المعرّف",
+      "student": "الطالب",
+      "phone": "رقم الهاتف",
+      "grade": "المستوى",
+      "school": "المدرسة",
+      "status": "الحالة",
+      "enrollmentDate": "تاريخ التسجيل",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    }
+  },
+  "teachers": {
+    "common": {
+      "close": "إغلاق",
+      "edit": "تعديل",
+      "downloadProfile": "تحميل الملف الشخصي",
+      "notSpecified": "غير محدد",
+      "viewDetails": "عرض التفاصيل"
+    },
+    "actions1": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "deactivate": "إلغاء التفعيل"
+    },
+    "status1": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "yearsOfExperience": "سنوات خبرة",
+    "years": "سنة",
+    "days": "يوم",
+    "details": {
+      "personalInfo": "المعلومات الشخصية",
+      "professionalInfo": "المعلومات المهنية",
+      "accountHistory": "سجل الحساب",
+      "experienceYears": "سنوات الخبرة",
+      "accountAge": "عمر الحساب",
+      "status": "الحالة",
+      "fullName": "الاسم الكامل",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "role": "الدور",
+      "school": "المدرسة",
+      "grade": "المستوى",
+      "qualification": "المؤهل",
+      "experience": "الخبرة",
+      "subjects": "المواد التي يدرسها",
+      "teacherStatus": "حالة المعلم",
+      "accountCreated": "تم إنشاء الحساب",
+      "lastLogin": "آخر تسجيل دخول",
+      "currentStatus": "الحالة الحالية",
+      "neverLoggedIn": "لم يسجل دخول مطلقاً",
+      "biography": "السيرة الذاتية"
+    },
+    "table": {
+      "title": "المعلمين",
+      "table": {
+        "id": "المعرف",
+        "teacher": "المعلم",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "experience": "سنوات الخبرة",
+        "subjects": "المواد",
+        "qualification": "المؤهل",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "buttons": {
+        "add": "إضافة معلم",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "view": "عرض"
+      }
+    },
+    "title": "إدارة المدرسين",
+    "subtitle": "إدارة ومتابعة معلومات جميع مدرسينك",
+    "addStudent": "إضافة مدرس",
+    "import": "استيراد",
+    "export": "تصدير",
+    "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني أو المعرف...",
+    "clearFilters": "مسح الفلاتر",
+    "stats": {
+      "total": "إجمالي المدرسين",
+      "active": "مدرسين نشطين",
+      "new": "مدرسين غير نشطين",
+      "averageGPA": "متوسط المعدل",
+      "fromLastMonth": "من الشهر الماضي"
+    },
+    "filters": {
+      "status": {
+        "label": "الحالة",
+        "all": "جميع الحالات",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "pending": "قيد الانتظار"
+      },
+      "year": {
+        "label": "السنة",
+        "all": "جميع السنوات",
+        "first": "الأولى",
+        "second": "الثانية",
+        "third": "الثالثة",
+        "fourth": "الرابعة"
+      }
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "pending": "قيد الانتظار"
+    },
+    "tabs": {
+      "all": "الكل",
+      "active": "النشطين",
+      "pending": "قيد الانتظار"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "grades": "الدرجات",
+      "message": "إرسال رسالة",
+      "delete": "حذف"
+    },
+    "modal": {
+      "addTitle": "إضافة مدرس جديد",
+      "editTitle": "تعديل المدرس",
+      "deleteTitle": "تأكيد الحذف",
+      "deleteContent": "هل أنت متأكد من رغبتك في حذف المدرس {name}؟",
+      "addSuccess": "تم إضافة المدرس بنجاح",
+      "editSuccess": "تم تعديل المدرس بنجاح",
+      "deleteSuccess": "تم حذف المدرس بنجاح"
+    },
+    "form": {
+      "name": "الاسم الكامل",
+      "namePlaceholder": "أدخل الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل عنوان البريد الإلكتروني",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "year": "السنة",
+      "yearPlaceholder": "اختر السنة",
+      "class": "الصف",
+      "classPlaceholder": "اختر الصف",
+      "status": "الحالة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أضف ملاحظات إضافية...",
+      "required": "هذا الحقل مطلوب",
+      "emailInvalid": "الرجاء إدخال بريد إلكتروني صحيح"
+    },
+    "messages": {
+      "created": "تم إنشاء المدرس بنجاح",
+      "updated": "تم تحديث المدرس بنجاح",
+      "deleted": "تم حذف المدرس بنجاح"
+    }
+  },
   "common": {
     "create": "إنشاء",
     "update": "تحديث",
@@ -222,17 +418,9 @@
     "cancel": "إلغاء",
     "save": "حفظ"
   },
-  "alert" : {
-    "message_decn" : "تم تسجيل خروجك بسبب عدم النشاط"
+  "alert": {
+    "message_decn": "تم تسجيل خروجك بسبب عدم النشاط"
   },
-
-
-
-
-
-
-
-  
   "users": {
     "form": {
       "username": "اسم المستخدم",
@@ -280,10 +468,275 @@
   "common1": {
     "cancel": "إلغاء",
     "create": "إنشاء"
+  },
+  "matieres": {
+    "delete": {
+      "title": "حذف المادة",
+      "message": "هل أنت متأكد من رغبتك في حذف هذه المادة نهائيًا؟",
+      "thisItem": "هذا العنصر",
+      "warning": "هذا الإجراء لا يمكن التراجع عنه. سيتم فقدان جميع البيانات المرتبطة."
+    },
+    "grades": {
+      "grade": "مستوى"
+    },
+    "common1": {
+      "cancel": "إلغاء",
+      "confirm": "تأكيد"
+    },
+    "title": "إدارة المواد",
+    "subtitle": "إدارة ومتابعة الوحدات الأكاديمية",
+    "add": "إضافة مادة",
+    "stats": {
+      "total": "إجمالي المواد",
+      "active": "المواد النشطة",
+      "inactive": "المواد الغير نشطة",
+      "students": "الطلاب المسجلون",
+      "credits": " الوحدات"
+    },
+    "search": "البحث عن مادة...",
+    "filters": {
+      "semester": "الفصل",
+      "status": "الحالة",
+      "all": "الكل",
+      "active": "نشطة",
+      "inactive": "غير نشطة",
+      "reset": "إعادة التعيين"
+    },
+    "table": {
+      "code": "الرقم",
+      "matiere": "المادة",
+      "teacher": "الأستاذ",
+      "semester": "الفصل",
+      "credits": "الوحدات",
+      "students": "الطلاب",
+      "progress": "نسبة التقدم",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "description": "الوصف"
+    },
+    "status": {
+      "active": "نشطة",
+      "inactive": "غير نشطة"
+    },
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "modal": {
+      "addTitle": "إضافة مادة",
+      "editTitle": "تعديل المادة",
+      "supprimer": "حذف المادة"
+    },
+    "common": {
+      "reset": "إعادة التعيين"
+    }
+  },
+  "matieresAdd": {
+    "modal": {
+      "addTitle": "مادة جديدة"
+    },
+    "form": {
+      "name": "اسم المادة",
+      "namePlaceholder": "مثال: الرياضيات المتقدمة",
+      "grade": "المستوى",
+      "gradePlaceholder": "اختر المستوى",
+      "icon": "الأيقونة",
+      "iconPlaceholder": "اختر أيقونة",
+      "iconPreview": "معاينة الأيقونات",
+      "description": "الوصف",
+      "descriptionPlaceholder": "صف المادة بالتفصيل...",
+      "color": "لون المادة",
+      "presetColors": "ألوان مسبقة",
+      "status": "الحالة",
+      "activeStatus": "تفعيل المادة",
+      "activeDescription": "ستكون المادة مرئية للمدرسين والطلاب",
+      "preview": "معاينة المادة",
+      "sampleName": "مثال على المادة",
+      "sampleGrade": "مثال على المستوى"
+    },
+    "validation": {
+      "nameRequired": "يرجى إدخال اسم المادة",
+      "nameMinLength": "يجب أن يحتوي الاسم على 3 أحرف على الأقل",
+      "nameMaxLength": "لا يمكن أن يتجاوز الاسم 100 حرف",
+      "gradeRequired": "يرجى اختيار مستوى",
+      "iconRequired": "يرجى اختيار أيقونة",
+      "descriptionRequired": "يرجى إدخال وصف",
+      "descriptionMinLength": "يجب أن يحتوي الوصف على 10 أحرف على الأقل",
+      "descriptionMaxLength": "لا يمكن أن يتجاوز الوصف 500 حرف"
+    },
+    "steps": {
+      "basicInfo": "المعلومات الأساسية",
+      "appearance": "المظهر"
+    },
+    "icons": {
+      "calculator": "آلة حاسبة",
+      "book": "كتاب",
+      "science": "علم",
+      "code": "كود",
+      "history": "تاريخ",
+      "language": "لغة",
+      "music": "موسيقى",
+      "chart": "رسم بياني"
+    },
+    "grades": {
+      "grade": "مستوى",
+      "grade1": "المستوى الأول",
+      "grade2": "المستوى الثاني",
+      "grade3": "المستوى الثالث",
+      "grade4": "المستوى الرابع",
+      "grade5": "المستوى الخامس",
+      "grade6": "المستوى السادس"
+    },
+    "messages": {
+      "addSuccess": "تم إنشاء المادة بنجاح!",
+      "addError": "حدث خطأ أثناء إنشاء المادة"
+    },
+    "common": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "back": "رجوع",
+      "next": "التالي",
+      "cancel": "إلغاء",
+      "create": "إنشاء"
+    }
+  },
+  "chapitres": {
+    "title": "إدارة الوحدات",
+    "subtitle": "أنشئ وادخل  الوحدات ",
+    "addNew": "وحدة جديدة",
+    "addTitle": "إضافة وحدة جديدة",
+    "editTitle": "تعديل الوحدة",
+    "deleteConfirm": {
+      "title": "تأكيد الحذف",
+      "content": "هل أنت متأكد من رغبتك في حذف هذا الفصل؟ هذا الإجراء لا يمكن التراجع عنه."
+    },
+    "search": {
+      "placeholder": "البحث بالعنوان أو الوصف..."
+    },
+    "filter": {
+      "difficulty": "الصعوبة",
+      "status": "الحالة",
+      "allDifficulties": "جميع المستويات",
+      "allStatus": "جميع الحالات"
+    },
+    "difficulty": {
+      "easy": "سهل",
+      "medium": "متوسط",
+      "hard": "صعب"
+    },
+    "steps": {
+      "basicInfo": "المعلومات الأساسية",
+      "media": "الوسائط",
+      "settings": "الإعدادات"
+    },
+    "form": {
+      "title": "عنوان الوحدة",
+      "titlePlaceholder": "مثال: مقدمة في الكسور",
+      "subject": "المادة الدراسية",
+      "subjectPlaceholder": "اختر المادة الدراسية",
+      "order": "الترتيب",
+      "orderPlaceholder": "1, 2, 3...",
+      "description": "الوصف",
+      "descriptionPlaceholder": "صف محتوى الفصل...",
+      "learningObjective": "الهدف التعليمي",
+      "learningObjectivePlaceholder": "ما سيتعلمه الطالب...",
+      "thumbnail": "الصورة المصغرة",
+      "videoUrl": "رابط الفيديو",
+      "audioUrl": "رابط الصوت",
+      "duration": "المدة",
+      "minutes": "دقيقة",
+      "selectDifficulty": "اختر مستوى الصعوبة",
+      "publishNow": "نشر الآن",
+      "publishDescription": "جعل هذا الفصل متاحًا للطلاب",
+      "status": "الحالة"
+    },
+    "validation": {
+      "titleRequired": "العنوان مطلوب",
+      "titleMinLength": "يجب أن يحتوي العنوان على 4 أحرف على الأقل",
+      "subjectRequired": "المادة الدراسية مطلوبة",
+      "orderRequired": "الترتيب مطلوب",
+      "descriptionRequired": "الوصف مطلوب",
+      "descriptionMinLength": "يجب أن يحتوي الوصف على 10 أحرف على الأقل",
+      "learningObjectiveRequired": "الهدف التعليمي مطلوب",
+      "thumbnailRequired": "الصورة المصغرة مطلوبة",
+      "durationRequired": "المدة مطلوبة",
+      "difficultyRequired": "مستوى الصعوبة مطلوب"
+    },
+    "table": {
+      "order": "الترتيب",
+      "title": "العنوان",
+      "subject": "المادة",
+      "difficulty": "الصعوبة",
+      "duration": "المدة",
+      "minutes": "د",
+      "activities": "الأنشطة",
+      "status": "الحالة",
+      "createdAt": "تاريخ الإنشاء",
+      "items": "فصل"
+    },
+    "history": {
+      "title": "السجل",
+      "createdBy": "أنشأ بواسطة",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "activities": "الأنشطة المرتبطة"
+    },
+    "messages": {
+      "addSuccess": "تم إضافة الفصل بنجاح",
+      "addError": "حدث خطأ أثناء إضافة الفصل",
+      "updateSuccess": "تم تحديث الفصل بنجاح",
+      "updateError": "حدث خطأ أثناء التحديث",
+      "deleteSuccess": "تم حذف الفصل بنجاح",
+      "publishedSuccess": "تم نشر الفصل بنجاح",
+      "unpublishedSuccess": "تم إلغاء نشر الفصل بنجاح"
+    },
+    "sort": {
+      "order": "ترتيب حسب"
+    },
+    "common": {
+      "change_image": "تغيير الصورة",
+      "img_actuelle": "الصورة الحالية",
+      "click": "انقر على 'تغيير الصورة' للتعديل",
+      "delete_img": "احذف الصورة الجديدة",
+      "save": "حفظ",
+      "update": "تحديث",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "edit": "تعديل",
+      "view": "عرض",
+      "back": "رجوع",
+      "next": "التالي",
+      "upload": "رفع",
+      "published": "منشور",
+      "draft": "مسودة",
+      "total": "المجموع",
+      "actions": "الإجراءات",
+      "preview": "معاينة",
+      "yes": "نعم",
+      "no": "لا",
+      "confirm": "تأكيد",
+      "success": "نجاح",
+      "error": "خطأ",
+      "loading": "جاري التحميل...",
+      "select": "اختر",
+      "search": "بحث",
+      "filter": "تصفية",
+      "reset": "إعادة تعيين",
+      "apply": "تطبيق",
+      "close": "إغلاق",
+      "open": "فتح",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "all": "الكل",
+      "none": "لا شيء",
+      "required": "مطلوب",
+      "optional": "اختياري",
+      "download": "تحميل",
+      "print": "طباعة",
+      "export": "تصدير",
+      "import": "استيراد",
+      "refresh": "تحديث"
+    }
   }
 }
-
-
-
-
-

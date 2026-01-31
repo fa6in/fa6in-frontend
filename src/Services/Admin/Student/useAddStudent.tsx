@@ -3,6 +3,8 @@ import { message } from "antd";
 import api from "../../../Auth-service/axios";
 import { handleError } from "../../../Auth-service/handleError";
 import type { AddPersonne } from "./typeStudent";
+import { enqueueSnackbar } from "notistack";
+import { STUDENT_KEY } from "./useGetStudents";
 
 export const useAddStudent = () => {
     const queryClient = useQueryClient();
@@ -15,21 +17,23 @@ export const useAddStudent = () => {
 
     return useMutation({
         mutationFn: addstudent,
-        mutationKey: [],
+        mutationKey: STUDENT_KEY,
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: []
+                queryKey: STUDENT_KEY
             });
             message.success("student ajouté avec succès");
         },
         onError: (err: any) => {
-            const messageError = err?.response?.data?.logo[0]
+            const messageError = err?.response?.data?.username?.[0]!
 
             if (messageError) {
-                return message.error(messageError);
+                enqueueSnackbar(messageError, { variant: "error" });
+            } else {
+                handleError(err);
+
             }
-            handleError(err);
         }
     });
 }

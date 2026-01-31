@@ -5,45 +5,114 @@ import AuthRouter from "./AuthRouter";
 import ErrorPage from "../Pages/ErrorPage";
 import type { RouteType } from "./type";
 
+import {
+  DashboardOutlined,
+  UserOutlined,
+  BookOutlined,
+  SettingOutlined,
+  // AppstoreOutlined,
+  FileTextOutlined,
+  SafetyCertificateOutlined,
+} from "@ant-design/icons";
 // Admin Components
 const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
 const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
+const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
+const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
+const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
 
-// Student Components
-const HomeStudent = lazy(() => import("../Pages/Student/HomeStudent"));
-
-// Teacher Components
-const HomeTeacher = lazy(() => import("../Pages/Teacher/HomeTeacher"));
 
 const MainRouter: RouteType[] = [
   // ==================== Auth ROUTES ====================
-  ...AuthRouter, // Ces routes n'ont pas allowedRoles (c'est OK car c'est optionnel)
+  ...AuthRouter,
 
-  // ==================== ADMIN ROUTES ====================
+  // ====================  ROUTES MAIN ====================
   {
-    path: "/admin/dashboard",
+    path: "/",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         <HomeAdmin />
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin"] // Seul admin peut accéder
+    allowedRoles: ["admin", "teacher"],
+    sidebar: {
+      key: "dashboard",
+      label: "sidebar.dashboard",
+      icon: <DashboardOutlined />,
+    }
   },
   {
-    path: "/admin/students",
+    path: "/students",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         <StudentAdmin />
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin"] // Seul admin peut accéder
+    allowedRoles: ["admin", "teacher"],
+    sidebar: {
+      key: "students",
+      label: "sidebar.students",
+      icon: <UserOutlined />,
+    }
   },
 
   {
-    path: "/admin/teachers",
+    path: "/teachers",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <TeacherAdmin />
+      </Suspense>
+    ),
+
+    layout: "private",
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "teachers",
+      label: "sidebar.teachers",
+      icon: <UserOutlined />,
+    }
+  },
+
+  {
+    path: "/matieres",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <MartieresView />
+      </Suspense>
+    ),
+
+    layout: "private",
+    allowedRoles: ["admin", "teacher", "student"],
+    sidebar: {
+      key: "matieres",
+      label: "sidebar.subjects",
+      icon: <BookOutlined />,
+    }
+  },
+
+  {
+    path: "/chapitres",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <ChapitreView />
+      </Suspense>
+    ),
+
+    layout: "private",
+    allowedRoles: ["admin", "teacher"],
+    sidebar: {
+      key: "exams",
+      label: ("sidebar.exams"),
+      icon: <FileTextOutlined />,
+    }
+  },
+
+
+  {
+    path: "/assignments",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         <Prapared />
@@ -51,137 +120,48 @@ const MainRouter: RouteType[] = [
     ),
 
     layout: "private",
-    allowedRoles: ["admin"] 
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "roles",
+      label: ("sidebar.assignments"),
+      icon: <FileTextOutlined />,
+    }
   },
 
   {
-    path: "/admin/courses",
+    path: "/roles",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         <Prapared />
       </Suspense>
     ),
 
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-  {
-    path: "/admin/courses",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-  {
-    path: "/admin/classes",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-   {
-    path: "/admin/matieres",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-  {
-    path: "/admin/exams",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-  {
-    path: "/admin/grades",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-  {
-    path: "/admin/assignments",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-   {
-    path: "/admin/roles",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-  {
-    path: "/admin/settings",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
-
-     layout: "private",
-    allowedRoles: ["admin"] 
-  },
-
-  // ==================== STUDENT ROUTES ====================
-  {
-    path: "/student",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <HomeStudent />
-      </Suspense>
-    ),
     layout: "private",
-    allowedRoles: ["student"] // Seul student peut accéder
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "roles",
+      label: ("sidebar.roles"),
+      icon: <SafetyCertificateOutlined />,
+    }
   },
 
-  // ==================== TEACHER ROUTES ====================
   {
-    path: "/teacher",
+    path: "/settings",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <HomeTeacher />
+        <Prapared />
       </Suspense>
     ),
+
     layout: "private",
-    allowedRoles: ["teacher"] // Seul teacher peut accéder
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "settings",
+      label: ("sidebar.settings"),
+      icon: <SettingOutlined />,
+    }
   },
+
 
   // ==================== FALLBACK ROUTE ====================
   {

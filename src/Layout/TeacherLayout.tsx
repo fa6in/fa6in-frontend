@@ -7,8 +7,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import SidebarAdmin from '../Components/Admin/SidebarAdmin';
-import NavbarAdmin from '../Components/Admin/NavbarAdmin';
+import SidebarTeacher from '../Components/Teacher/SidebarTeacher';
+import NavbarTeacher from '../Components/Teacher/NavbarTeacher';
 
 const { Content } = Layout;
 
@@ -84,7 +84,7 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
               top: 0
             }}
           >
-            <SidebarAdmin
+            <SidebarTeacher
               collapsed={collapsed}
               onToggle={handleToggle}
               onCollapse={handleCollapse}
@@ -115,7 +115,7 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
               />
             }
           >
-            <SidebarAdmin
+            <SidebarTeacher
               collapsed={false}
               onToggle={handleCloseMobile}
               onCollapse={handleCollapse}
@@ -157,7 +157,7 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
               )}
 
               <div className={`flex-1 ${isMobile ? (languegChanger === "ar" ? 'mr-4' : 'ml-4') : ''}`}>
-                <NavbarAdmin
+                <NavbarTeacher
                   collapsed={collapsed}
                   onToggle={handleToggle}
                 />
@@ -211,12 +211,9 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
               </div>
             </div>
           </motion.footer>
-
-          
         </motion.main>
       </div>
 
-      {/* Overlay pour mobile */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

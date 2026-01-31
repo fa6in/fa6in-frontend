@@ -24,5 +24,7 @@ export default defineConfig({
         secure: false, 
       },
     },
+    // host : "10", 
+    // port : 5173
   },
 });

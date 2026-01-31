@@ -85,17 +85,17 @@ const Router = () => {
             if (userRole === "admin") {
                 return {
                     ...route,
-                    element: <Navigate replace to="/admin/dashboard" />
+                    element: <Navigate replace to="/" />
                 };
             } else if (userRole === "student") {
                 return {
                     ...route,
-                    element: <Navigate replace to="/student" />
+                    element: <Navigate replace to="/" />
                 };
             } else if (userRole === "teacher") {
                 return {
                     ...route,
-                    element: <Navigate replace to="/teacher" />
+                    element: <Navigate replace to="/" />
                 };
             }
             return {

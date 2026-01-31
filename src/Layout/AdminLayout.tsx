@@ -180,7 +180,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </Content>
 
           {/* Footer */}
-          <motion.footer
+          {/* <motion.footer
             className="site-footer bg-white border-t border-gray-200 py-4 px-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,38 +210,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </div>
               </div>
             </div>
-          </motion.footer>
-
-          {/* Floating Actions */}
-          {/* <FloatButton.Group
-            trigger="click"
-            type="primary"
-            icon={<UpOutlined />}
-            className="float-actions"
-            style={{
-              [languegChanger === "ar" ? "left" : "right"]: 24,
-              bottom: 100
-            }}
-          >
-            <FloatButton
-              icon={<QuestionCircleOutlined />}
-              tooltip={languegChanger === "ar" ? "مساعدة" : "Aide"}
-              onClick={() => window.open('/help', '_blank')}
-            />
-            <FloatButton
-              icon={<CustomerServiceOutlined />}
-              tooltip={languegChanger === "ar" ? "الدعم" : "Support"}
-              onClick={() => window.open('/support', '_blank')}
-            />
-            <FloatButton.BackTop
-              visibilityHeight={100}
-              tooltip={languegChanger === "ar" ? "العودة إلى الأعلى" : "Retour en haut"}
-            />
-          </FloatButton.Group> */}
+          </motion.footer> */}
         </motion.main>
       </div>
 
-      {/* Overlay pour mobile */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

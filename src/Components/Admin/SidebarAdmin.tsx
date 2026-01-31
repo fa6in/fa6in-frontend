@@ -1,21 +1,15 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    DashboardOutlined,
-    UserOutlined,
-    BookOutlined,
-    SettingOutlined,
-    AppstoreOutlined,
-    FileTextOutlined,
-    SafetyCertificateOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    SolutionOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "../../Services/Auth/useLogout";
+import AuthService from "../../Auth-service/AuthService";
+import MainRouter from "../../router/MainRouter";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -29,82 +23,22 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     const { t, i18n } = useTranslation();
 
     const { mutate: logout } = useLogout()
+    const role = AuthService.getRole()
 
-    const menuItems = [
-        {
-            key: "dashboard",
-            label: t("sidebar.dashboard"),
-            icon: <DashboardOutlined />,
-            path: "/admin/dashboard",
-        },
-        {
-            key: "students",
-            label: t("sidebar.students"),
-            icon: <UserOutlined />,
-            path: "/admin/students",
-        },
-        {
-            key: "teachers",
-            label: t("sidebar.teachers"),
-            icon: <SolutionOutlined />,
-            path: "/admin/teachers",
-        },
-        {
-            key: "courses",
-            label: t("sidebar.courses"),
-            icon: <BookOutlined />,
-            path: "/admin/courses",
-        },
-        {
-            key: "classes",
-            label: t("sidebar.classes"),
-            icon: <AppstoreOutlined />,
-            path: "/admin/classes",
-        },
-        {
-            key: "subjects",
-            label: t("sidebar.subjects"),
-            icon: <BookOutlined />,
-            path: "/admin/matieres",
-        },
-        {
-            key: "exams",
-            label: t("sidebar.exams"),
-            icon: <FileTextOutlined />,
-            path: "/admin/exams",
-        },
-        {
-            key: "grades",
-            label: t("sidebar.grades"),
-            icon: <FileTextOutlined />,
-            path: "/admin/grades",
-        },
-        {
-            key: "assignments",
-            label: t("sidebar.assignments"),
-            icon: <FileTextOutlined />,
-            path: "/admin/assignments",
-        },
-        {
-            key: "roles",
-            label: t("sidebar.roles"),
-            icon: <SafetyCertificateOutlined />,
-            path: "/admin/roles",
-        },
-        // {
-        //     key: "reports",
-        //     label: t("sidebar.reports"),
-        //     icon: <BarChartOutlined />,
-        //     path: "/admin/reports",
-        // },
-        {
-            key: "settings",
-            label: t("sidebar.settings"),
-            icon: <SettingOutlined />,
-            path: "/admin/settings",
-        },
-    ];
+    console.log("role : ", role)
 
+    const menuItems = MainRouter.filter(
+        (route) =>
+            route.layout === "private" &&
+            route.sidebar &&
+            route.allowedRoles?.includes(role!)
+    )
+        .map((route) => ({
+            key: route.sidebar!.key,
+            label: t(route.sidebar!.label),
+            icon: route.sidebar!.icon,
+            path: route.path,
+        }));
     const handleLogout = () => {
         logout()
         window.location.href = "/login";
@@ -213,7 +147,7 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                     layout
                 >
                     <nav className="flex flex-col gap-1">
-                        {menuItems.map((item) => {
+                        {menuItems?.map((item) => {
                             const isParentActive = isActiveParent(item);
 
                             return (
