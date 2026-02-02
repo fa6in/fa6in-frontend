@@ -75,7 +75,7 @@ const StudentView = () => {
     const [yearFilter, setYearFilter] = useState("all");
     const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
 
-        const post = AuthService.getRole()
+    const post = AuthService.getRole()
 
     // Ajoutez cette fonction pour gérer l'ouverture du modal
     const handleViewStudent = (record: any) => {
@@ -260,6 +260,7 @@ const StudentView = () => {
     }
 
     return (
+        <>
         <motion.div
             variants={container}
             initial="hidden"
@@ -281,14 +282,14 @@ const StudentView = () => {
                     {post === "admin" && (
                         <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
 
-                        <Button
-                            icon={<PlusOutlined />}
-                            className="flex items-center !bg-main-color !text-white"
-                            onClick={handleAddStudent}
-                        >
-                            {t("students.addStudent")}
-                        </Button>
-                    </div>
+                            <Button
+                                icon={<PlusOutlined />}
+                                className="flex items-center !bg-main-color !text-white"
+                                onClick={handleAddStudent}
+                            >
+                                {t("students.addStudent")}
+                            </Button>
+                        </div>
                     )}
                 </div>
             </motion.div>
@@ -378,24 +379,19 @@ const StudentView = () => {
             </motion.div>
 
             {/* Onglets et tableau */}
-            <motion.div variants={{ item }}>
-                <Card className="rounded-2xl shadow-sm border-0">
-                    <Table
-                        rowKey="id"
-                        loading={isPending}
-                        columns={columns}
-                        dataSource={filteredData}
-                        pagination={{
-                            pageSize: 10,
-                            showSizeChanger: true,
-                            showQuickJumper: true,
-                        }}
-                        scroll={{ x: true }}
-                    />
-
-
-                </Card>
-            </motion.div>
+            <Table
+                columns={columns}
+                dataSource={filteredData}
+                loading={isPending}
+                rowKey="id"
+                scroll={{ x: true }}
+                className=""
+                pagination={{
+                    pageSize: 10,
+                    responsive : true,
+                    showSizeChanger: true,
+                }}
+            />
 
             {/* Modal d'ajout/édition d'étudiant */}
             <Modal
@@ -427,7 +423,7 @@ const StudentView = () => {
                 onClose={() => setIsDetailsModalVisible(false)}
             />
 
-        </motion.div>
+        </motion.div></>
     );
 };
 

@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Layout, Drawer, Button } from 'antd';
-import {
-  MenuOutlined,
-  CloseOutlined
-} from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+
 import SidebarAdmin from '../Components/Admin/SidebarAdmin';
 import NavbarAdmin from '../Components/Admin/NavbarAdmin';
 
 const { Content } = Layout;
+
+const MOBILE_BREAKPOINT = 768;
+const SIDEBAR_WIDTH = {
+  collapsed: 80,
+  expanded: 200, 
+};
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const { i18n } = useTranslation();
   const location = useLocation();
 
-  // Utiliser i18n.language au lieu de localStorage pour la réactivité
-  const languegChanger = i18n.language || localStorage.getItem("languegChanger") || "ar";
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Détection du mobile
+  const language = i18n.language || localStorage.getItem('language') || 'ar';
+  const isRTL = language === 'ar';
+
+  // ===== Détection responsive =====
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
+    const handleResize = () => {
+      const mobile = window.innerWidth < MOBILE_BREAKPOINT;
       setIsMobile(mobile);
       if (mobile) {
         setCollapsed(false);
@@ -37,191 +42,105 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       }
     };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Mettre à jour la direction quand la langue change
+  // ===== Langue et direction RTL/LTR =====
   useEffect(() => {
-    document.documentElement.dir = languegChanger === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = languegChanger;
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+    localStorage.setItem('language', language);
+  }, [language, isRTL]);
 
-    // Sauvegarder dans localStorage pour persistance
-    localStorage.setItem("languegChanger", languegChanger);
-  }, [languegChanger]);
+  // ===== Calcul offset sidebar desktop =====
+  const sidebarOffset = useMemo(() => {
+    if (isMobile) return 0;
+    return collapsed ? SIDEBAR_WIDTH.collapsed : SIDEBAR_WIDTH.expanded;
+  }, [collapsed, isMobile]);
 
-  const handleToggle = () => {
-    if (isMobile) {
-      setMobileOpen(!mobileOpen);
-    } else {
-      setCollapsed(!collapsed);
-    }
-  };
-
-  const handleCloseMobile = () => {
-    setMobileOpen(false);
-  };
-
-  const handleCollapse = (newCollapsed: boolean) => {
-    setCollapsed(newCollapsed);
+  const toggleSidebar = () => {
+    if (isMobile) setMobileOpen(true);
+    else setCollapsed(prev => !prev);
   };
 
   return (
-    <div
-      className="admin-layout-container min-h-screen bg-gray-50"
-      dir={languegChanger === "ar" ? "rtl" : "ltr"}
-    >
-      {/* Layout Principal */}
-      <div className="admin-layout flex min-h-screen">
-        {/* Sidebar Desktop - Fixé à gauche/droite selon la langue */}
-        {!isMobile && (
-          <div
-            className={`sidebar-desktop fixed h-screen z-40 ${collapsed ? 'w-28' : 'w-80'
-              }`}
-            style={{
-              [languegChanger === "ar" ? "right" : "left"]: 0,
-              top: 0
-            }}
-          >
-            <SidebarAdmin
-              collapsed={collapsed}
-              onToggle={handleToggle}
-              onCollapse={handleCollapse}
-            />
-          </div>
-        )}
+    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* ===== Sidebar Desktop ===== */}
+      {!isMobile && (
+        <SidebarAdmin
+          collapsed={collapsed}
+          onToggle={toggleSidebar}
+          onCollapse={setCollapsed}
+        />
+      )}
 
-        {/* Sidebar Mobile (Drawer) */}
-        {isMobile && (
-          <Drawer
-            placement={languegChanger === "ar" ? "right" : "left"}
-            closable={false}
-            onClose={handleCloseMobile}
-            open={mobileOpen}
-            width={280}
-            bodyStyle={{ padding: 0 }}
-            className="sidebar-drawer"
-            extra={
+      {/* ===== Mobile Drawer ===== */}
+      {isMobile && (
+        <Drawer
+          placement={isRTL ? 'right' : 'left'}
+          open={mobileOpen}
+          width={280}
+          closable={false}
+          bodyStyle={{ padding: 0 }}
+          onClose={() => setMobileOpen(false)}
+        >
+          <SidebarAdmin
+            collapsed={false}
+            onToggle={() => setMobileOpen(false)}
+            onCollapse={setCollapsed}
+          />
+        </Drawer>
+      )}
+
+      {/* ===== Main Layout ===== */}
+      <motion.main
+        className="flex flex-col min-h-screen transition-all duration-300"
+        style={{
+          marginLeft: !isRTL ? sidebarOffset : 0,
+          marginRight: isRTL ? sidebarOffset : 0,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        {/* ===== Header ===== */}
+        <header className="sticky top-0 z-30 bg-white border-b">
+          <div className="flex items-center justify-between px-6 py-3">
+            {isMobile && (
               <Button
                 type="text"
-                icon={<CloseOutlined />}
-                onClick={handleCloseMobile}
-                className={`drawer-close-btn ${languegChanger === "ar" ? "mr-auto" : "ml-auto"
-                  }`}
-                style={{
-                  [languegChanger === "ar" ? "marginRight" : "marginLeft"]: 'auto'
-                }}
+                icon={<MenuOutlined />}
+                onClick={toggleSidebar}
               />
-            }
-          >
-            <SidebarAdmin
-              collapsed={false}
-              onToggle={handleCloseMobile}
-              onCollapse={handleCollapse}
-            />
-          </Drawer>
-        )}
-
-        {/* Contenu Principal */}
-        <motion.main
-          className={`site-layout flex-1 min-h-screen flex flex-col transition-all duration-300 ${!isMobile
-            ? (collapsed
-              ? (languegChanger === "ar" ? 'mr-20' : 'ml-20')
-              : (languegChanger === "ar" ? 'mr-48' : 'ml-48')
-            )
-            : ''
-            }`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Header avec bouton mobile */}
-          <div className="header-wrapper bg-white border-b border-gray-200 sticky top-0 z-30">
-            <div className={`flex items-center justify-between px-6 py-3 ${isMobile && languegChanger === "ar" ? 'flex-row-reverse' : ''
-              }`}>
-              {isMobile && (
-                <motion.div
-                  initial={{ opacity: 0, x: languegChanger === "ar" ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className={`mobile-menu-btn ${languegChanger === "ar" ? 'order-last' : ''
-                    }`}
-                >
-                  <Button
-                    type="text"
-                    icon={<MenuOutlined />}
-                    onClick={handleToggle}
-                    className="mobile-toggle-btn"
-                  />
-                </motion.div>
-              )}
-
-              <div className={`flex-1 ${isMobile ? (languegChanger === "ar" ? 'mr-4' : 'ml-4') : ''}`}>
-                <NavbarAdmin
-                  collapsed={collapsed}
-                  onToggle={handleToggle}
-                />
-              </div>
-            </div>
+            )}
+            <NavbarAdmin collapsed={collapsed} onToggle={toggleSidebar} />
           </div>
+        </header>
 
-          {/* Contenu Principal */}
-          <Content className="site-content flex-1 p-6 bg-gray-50">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="content-wrapper bg-white rounded-xl shadow-sm p-6 min-h-[calc(100vh-200px)]"
-            >
-              {children}
-            </motion.div>
-          </Content>
-
-          {/* Footer */}
-          {/* <motion.footer
-            className="site-footer bg-white border-t border-gray-200 py-4 px-6"
+        {/* ===== Content ===== */}
+        <Content className="flex-1 overflow-auto p-2 mt-2 bg-gray-50">
+          <motion.div
+            key={location.pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.25 }}
+            className="bg-white rounded-xl shadow-sm p-1 min-h-[calc(100vh-160px)]"
           >
-            <div className={`footer-content flex flex-col md:flex-row justify-between items-center ${languegChanger === "ar" ? 'md:flex-row-reverse' : ''
-              }`}>
-              <div className={`footer-left ${languegChanger === "ar" ? 'md:text-right' : ''} mb-2 md:mb-0`}>
-                <span className="footer-text text-gray-600 text-sm">
-                  © {new Date().getFullYear()} EduPlatform. {languegChanger === "ar" ? "جميع الحقوق محفوظة." : "Tous droits réservés."}
-                </span>
-              </div>
-              <div className="footer-right">
-                <div className={`footer-links flex items-center space-x-4 ${languegChanger === "ar" ? 'space-x-reverse' : ''
-                  }`}>
-                  <a href="/privacy" className="footer-link text-gray-600 hover:text-blue-600 text-sm transition-colors">
-                    {languegChanger === "ar" ? "الخصوصية" : "Confidentialité"}
-                  </a>
-                  <span className="footer-separator text-gray-400">•</span>
-                  <a href="/terms" className="footer-link text-gray-600 hover:text-blue-600 text-sm transition-colors">
-                    {languegChanger === "ar" ? "الشروط" : "Conditions"}
-                  </a>
-                  <span className="footer-separator text-gray-400">•</span>
-                  <a href="/help" className="footer-link text-gray-600 hover:text-blue-600 text-sm transition-colors">
-                    {languegChanger === "ar" ? "مساعدة" : "Aide"}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </motion.footer> */}
-        </motion.main>
-      </div>
+            {children}
+          </motion.div>
+        </Content>
+      </motion.main>
 
+      {/* ===== Mobile Overlay ===== */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            className="fixed inset-0 z-30 bg-black"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.4 }}
             exit={{ opacity: 0 }}
-            className="mobile-overlay fixed inset-0 bg-black z-30"
-            onClick={handleCloseMobile}
+            onClick={() => setMobileOpen(false)}
           />
         )}
       </AnimatePresence>
