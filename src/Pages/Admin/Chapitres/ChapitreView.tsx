@@ -47,7 +47,7 @@ const ChapitresView: React.FC = () => {
     const [selectedChapitre, setSelectedChapitre] = useState<typeChapitre | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-        const post = AuthService.getRole()
+    const post = AuthService.getRole()
 
     const { data: DataChapitre, isPending } = useGetChapitre()
 
@@ -88,9 +88,8 @@ const ChapitresView: React.FC = () => {
 
     const handleTogglePublish = async (id: number, currentStatus: boolean) => {
 
-        console.log("id : ", id )
+        console.log("id : ", id)
         try {
-            // API call to toggle status
             message.success(
                 currentStatus
                     ? t('chapitres.messages.unpublishedSuccess')
@@ -122,7 +121,7 @@ const ChapitresView: React.FC = () => {
         {
             title: t('chapitres.table.title'),
             dataIndex: 'title',
-            ellipsis: true, // ← Ajoute ... si trop long
+            ellipsis: true, 
             render: (text: string, record: typeChapitre) => (
                 <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
@@ -132,10 +131,10 @@ const ChapitresView: React.FC = () => {
                             className="w-10 h-10 rounded-lg object-cover border"
                         />
                     </div>
-                    <div className="min-w-0 flex-1"> {/* ← Important pour l'ellipsis */}
+                    <div className="min-w-0 flex-1"> 
                         <div
                             className="font-semibold text-gray-900 truncate"
-                            title={text} // ← Tooltip au survol
+                            title={text} 
                         >
                             {text}
                         </div>
@@ -239,7 +238,7 @@ const ChapitresView: React.FC = () => {
                             className="text-blue-500 hover:text-blue-700"
                         />
                     </Tooltip>
-                    
+
                     <Tooltip title={t('chapitres.common.delete')}>
                         <Button
                             type="text"
@@ -255,7 +254,7 @@ const ChapitresView: React.FC = () => {
     ];
 
     return (
-        <div className="">
+        <div className="p-6">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -263,12 +262,10 @@ const ChapitresView: React.FC = () => {
             >
                 <div className="flex justify-between items-center mb-1">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900">
                             {t('chapitres.title')}
                         </h1>
-                        <p className="text-gray-600 mt-2">
-                            {t('chapitres.subtitle')}
-                        </p>
+
                     </div>
                     <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -276,13 +273,13 @@ const ChapitresView: React.FC = () => {
                     >
                         {post === "teacher" && (
                             <Button
-                            size="large"
-                            icon={<PlusOutlined />}
-                            onClick={() => setShowAddModal(true)}
-                            className="!text-white !font-bold !bg-main-color border-none shadow-lg"
-                        >
-                            {t('chapitres.addNew')}
-                        </Button>
+                                size="large"
+                                icon={<PlusOutlined />}
+                                onClick={() => setShowAddModal(true)}
+                                className="!text-white !font-bold !bg-main-color border-none shadow-lg"
+                            >
+                                {t('chapitres.addNew')}
+                            </Button>
                         )}
                     </motion.div>
                 </div>

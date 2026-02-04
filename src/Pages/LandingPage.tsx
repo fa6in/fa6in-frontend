@@ -44,7 +44,7 @@ import { useTranslation } from 'react-i18next';
 const { Title, Text, Paragraph } = Typography;
 const { useBreakpoint } = Grid;
 
-const LandingPage: React.FC<{ section?: string }> = ({  }) => {
+const LandingPage: React.FC<{ section?: string }> = ({ }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const screens = useBreakpoint();
@@ -332,7 +332,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                 animate={heroControls}
                                 variants={staggerContainer}
                             >
-                                <motion.div variants={{fadeInUp}}>
+                                <motion.div variants={{ fadeInUp }}>
                                     <Badge.Ribbon
                                         text={t('landing.hero.badge')}
                                         color="#52c41a"
@@ -352,7 +352,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                     </Badge.Ribbon>
                                 </motion.div>
 
-                                <motion.div variants={{fadeInUp}}>
+                                <motion.div variants={{ fadeInUp }}>
                                     <Title
                                         level={1}
                                         style={{
@@ -378,7 +378,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                     </Title>
                                 </motion.div>
 
-                                <motion.div variants={{fadeInUp}}>
+                                <motion.div variants={{ fadeInUp }}>
                                     <Paragraph style={{
                                         color: 'rgba(255, 255, 255, 0.85)',
                                         fontSize: isMobile ? '1rem' : '1.25rem',
@@ -389,7 +389,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                     </Paragraph>
                                 </motion.div>
 
-                                <motion.div variants={{fadeInUp}}>
+                                <motion.div variants={{ fadeInUp }}>
                                     <Space
                                         direction={isMobile ? "vertical" : "horizontal"}
                                         size="large"
@@ -445,7 +445,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
 
                                 {/* Stats miniatures */}
                                 <motion.div
-                                    variants={{fadeInUp}}
+                                    variants={{ fadeInUp }}
                                     style={{
                                         display: 'flex',
                                         gap: 24,
@@ -517,7 +517,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                             >
                                 {/* Dashboard 3D Animation */}
                                 <motion.div
-                                    variants={{floatAnimation}}
+                                    variants={{ floatAnimation }}
                                     animate="animate"
                                     style={{
                                         position: 'relative',
@@ -677,7 +677,7 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                         color: 'white',
                         cursor: 'pointer'
                     }}
-                    // onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                // onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 >
                     <Text style={{
                         color: 'rgba(255, 255, 255, 0.8)',
@@ -771,7 +771,11 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
                                             overflow: 'hidden'
                                         }}
-                                        bodyStyle={{ padding: 32 }}
+                                        styles={{
+                                            body: {
+                                                padding: 32
+                                            }
+                                        }}
                                     >
                                         <motion.div
                                             animate={{ rotate: [0, 360] }}
@@ -1277,7 +1281,11 @@ const LandingPage: React.FC<{ section?: string }> = ({  }) => {
                                             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
                                             height: '100%'
                                         }}
-                                        bodyStyle={{ padding: 32 }}
+                                        styles={{
+                                            body: {
+                                                padding: 32
+                                            }
+                                        }}
                                     >
                                         {/* Rating Stars */}
                                         <div style={{ marginBottom: 24 }}>

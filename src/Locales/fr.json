@@ -5,7 +5,52 @@
     "login": "Se connecter",
     "forget_password": "Mot de passe oublié ?",
     "enter_password": "Veuillez saisir votre mot de passe!",
-    "enter_username": "Veuillez saisir votre username!"
+    "enter_username": "Veuillez saisir votre username!",
+    "no_admin_account": "Pas de compte administrateur ?",
+    "create_admin_account": "Créer un compte admin"
+  },
+  "register": {
+    "title": "Créer un compte administrateur",
+    "admin_secret_code": "Code secret administrateur",
+    "admin_secret_code_placeholder": "Entrez le code secret administrateur",
+    "admin_secret_code_required": "Le code secret est requis",
+    "admin_secret_code_min": "Le code doit contenir au moins 8 caractères",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Entrez votre nom d'utilisateur",
+    "username_required": "Le nom d'utilisateur est requis",
+    "username_min": "Minimum 3 caractères",
+    "email": "Email",
+    "email_placeholder": "exemple@ecole.edu",
+    "email_required": "L'email est requis",
+    "email_invalid": "Email invalide",
+    "first_name": "Prénom",
+    "first_name_placeholder": "Votre prénom",
+    "first_name_required": "Le prénom est requis",
+    "last_name": "Nom",
+    "last_name_placeholder": "Votre nom",
+    "last_name_required": "Le nom est requis",
+    "phone_number": "Numéro de téléphone",
+    "phone_number_placeholder": "+212612345678",
+    "phone_number_required": "Le numéro de téléphone est requis",
+    "phone_number_invalid": "Numéro de téléphone invalide",
+    "password": "Mot de passe",
+    "password_placeholder": "Mot de passe sécurisé",
+    "password_required": "Le mot de passe est requis",
+    "password_min": "Minimum 8 caractères",
+    "password_pattern": "Doit contenir majuscule, minuscule, chiffre et caractère spécial",
+    "password2": "Confirmer le mot de passe",
+    "password2_placeholder": "Confirmez le mot de passe",
+    "password2_required": "Veuillez confirmer le mot de passe",
+    "password2_match": "Les mots de passe ne correspondent pas",
+    "role": "Rôle",
+    "role_admin": "Administrateur",
+    "submit": "S'inscrire",
+    "success": "Inscription réussie",
+    "success_description": "Votre compte a été créé avec succès!",
+    "error": "Erreur d'inscription",
+    "error_description": "Une erreur est survenue lors de l'inscription",
+    "already_account": "Vous avez déjà un compte?",
+    "login_link": "Se connecter"
   },
   "sidebar": {
     "dashboard": "Tableau de Bord",
@@ -152,8 +197,7 @@
       "call": "Appeler",
       "grade": "Classe",
       "school": "École"
-    
-  },
+    },
     "title": "Gestion des Étudiants",
     "subtitle": "Gérez et suivez les informations de tous vos étudiants",
     "addStudent": "Ajouter un Étudiant",
@@ -247,30 +291,29 @@
     }
   },
   "teachers": {
-    "table" : {
-       "title": "Enseignants",
     "table": {
-      "id": "ID",
-      "teacher": "Enseignant",
-      "email": "Email",
-      "phone": "Téléphone",
-      "experience": "Expérience",
-      "subjects": "Matières",
-      "qualification": "Qualification",
-      "status": "Statut",
-      "actions": "Actions"
-    },
-    
-    "status": {
-      "active": "Actif",
-      "inactive": "Inactif"
-    },
-    "buttons": {
-      "add": "Ajouter enseignant",
-      "edit": "Modifier",
-      "delete": "Supprimer",
-      "view": "Voir"
-    }
+      "title": "Enseignants",
+      "table": {
+        "id": "ID",
+        "teacher": "Enseignant",
+        "email": "Email",
+        "phone": "Téléphone",
+        "experience": "Expérience",
+        "subjects": "Matières",
+        "qualification": "Qualification",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "buttons": {
+        "add": "Ajouter enseignant",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "view": "Voir"
+      }
     },
     "title": "Gestion des Enseignants",
     "subtitle": "Gérez et suivez les informations de tous vos Enseignants",
@@ -308,7 +351,6 @@
       "inactive": "Inactif",
       "pending": "En attente"
     },
-    
     "tabs": {
       "all": "Tous",
       "active": "Actifs",
@@ -407,7 +449,8 @@
       "created": "Étudiant créé avec succès"
     }
   },
-  "students2" : {  "table": {
+  "students2": {
+    "table": {
       "id": "ID",
       "student": "Étudiant",
       "phone": "Téléphone",
@@ -651,10 +694,10 @@
       "order": "Trier par ordre"
     },
     "common": {
-      "change_image" : "Changer l'image",
-      "img_actuelle" : "Image actuelle",
-      "click" : "Cliquez sur 'Changer l'image' pour modifier",
-      "delete_img" : "Supprimer la nouvelle image",
+      "change_image": "Changer l'image",
+      "img_actuelle": "Image actuelle",
+      "click": "Cliquez sur 'Changer l'image' pour modifier",
+      "delete_img": "Supprimer la nouvelle image",
       "save": "Enregistrer",
       "update": "Mettre à jour",
       "cancel": "Annuler",

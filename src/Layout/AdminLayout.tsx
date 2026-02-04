@@ -13,7 +13,7 @@ const { Content } = Layout;
 const MOBILE_BREAKPOINT = 768;
 const SIDEBAR_WIDTH = {
   collapsed: 80,
-  expanded: 200, 
+  expanded: 200,
 };
 
 interface AdminLayoutProps {
@@ -81,9 +81,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <Drawer
           placement={isRTL ? 'right' : 'left'}
           open={mobileOpen}
-          width={280}
+          width={200}
           closable={false}
-          bodyStyle={{ padding: 0 }}
+          styles={{body : {
+            padding : 0
+          }}}
           onClose={() => setMobileOpen(false)}
         >
           <SidebarAdmin
@@ -119,7 +121,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </header>
 
         {/* ===== Content ===== */}
-        <Content className="flex-1 overflow-auto p-2 mt-2 bg-gray-50">
+        <Content className="flex-1 overflow-auto pt-8 px-2 mt-2 bg-gray-50">
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 20 }}

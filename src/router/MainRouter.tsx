@@ -4,10 +4,11 @@ import SpinnerLoader from "../ui/SpinnerLoader";
 import AuthRouter from "./AuthRouter";
 import ErrorPage from "../Pages/ErrorPage";
 import type { RouteType } from "./type";
-
+import { PiStudent } from "react-icons/pi";
+import { GiTeacher } from "react-icons/gi";
+import { GrChapterAdd } from "react-icons/gr";
 import {
   DashboardOutlined,
-  UserOutlined,
   BookOutlined,
   SettingOutlined,
   // AppstoreOutlined,
@@ -21,6 +22,7 @@ const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
+// const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 
 
 const MainRouter: RouteType[] = [
@@ -43,6 +45,23 @@ const MainRouter: RouteType[] = [
       icon: <DashboardOutlined />,
     }
   },
+  //   {
+  //   path: "/admins",
+  //   element: (
+  //     <Suspense fallback={<SpinnerLoader />}>
+  //       <AdminsView />
+  //     </Suspense>
+  //   ),
+
+  //   layout: "private",
+  //   allowedRoles: ["admin"],
+  //   sidebar: {
+  //     key: "teachers",
+  //     label: "sidebar.teachers",
+  //     icon: <GrUserAdmin />,
+  //   }
+  // },
+
   {
     path: "/students",
     element: (
@@ -55,7 +74,7 @@ const MainRouter: RouteType[] = [
     sidebar: {
       key: "students",
       label: "sidebar.students",
-      icon: <UserOutlined />,
+      icon: <PiStudent />,
     }
   },
 
@@ -72,7 +91,7 @@ const MainRouter: RouteType[] = [
     sidebar: {
       key: "teachers",
       label: "sidebar.teachers",
-      icon: <UserOutlined />,
+      icon: <GiTeacher />,
     }
   },
 
@@ -106,7 +125,7 @@ const MainRouter: RouteType[] = [
     sidebar: {
       key: "exams",
       label: ("sidebar.exams"),
-      icon: <FileTextOutlined />,
+      icon: <GrChapterAdd />,
     }
   },
 

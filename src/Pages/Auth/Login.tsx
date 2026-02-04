@@ -124,7 +124,11 @@ const LoginPage: React.FC = () => {
                 backdropFilter: 'blur(10px)',
                 background: 'rgba(255, 255, 255, 0.95)'
               }}
-              bodyStyle={{ padding: 40 }}
+              styles={{
+                body: {
+                  padding: 40
+                }
+              }}
             >
               <motion.div
                 variants={itemVariants}
@@ -132,7 +136,7 @@ const LoginPage: React.FC = () => {
               >
 
                 <div className='flex items-center justify-center ' >
-                  <img className="h-[110px]" src={logo}  alt="Logo" />
+                  <img className="h-[110px]" src={logo} alt="Logo" />
 
                 </div>
 
@@ -215,26 +219,76 @@ const LoginPage: React.FC = () => {
               </Form>
 
               {/* Liens supplémentaires */}
+              {/* Liens supplémentaires */}
               <motion.div
                 variants={itemVariants}
                 style={{
+                  marginTop: 24,
                   textAlign: 'center',
-                  marginTop: 20,
-                  display: 'flex',
-                  alignItems: "center",
-                  justifyContent: 'center'
                 }}
               >
-                <Link to={"/reset-password"}>
-                  <Text type="secondary" style={{ cursor: 'pointer' }}>
-                    {t("login.forget_password")}
-                  </Text>
-                </Link>
-                {/* <Link to={"/register"}>
-                <Text type="secondary" style={{ cursor: 'pointer' }}>
-                  Créer un compte
-                </Text>
-              </Link> */}
+                <div className="flex flex-col gap-4">
+                  {/* Lien mot de passe oublié */}
+                  <div className="flex items-center justify-center">
+                    <Link
+                      to="/reset-password"
+                      className="group transition-all duration-200"
+                    >
+                      <Text
+                        className="text-gray-600 hover:text-main-color group-hover:underline transition-colors duration-200 flex items-center gap-1 text-sm"
+                      >
+                        <span className="opacity-75">{t("login.forget_password")}</span>
+                        <svg
+                          className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Text>
+                    </Link>
+                  </div>
+
+                  {/* Séparateur */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative bg-white px-4">
+                      <Text type="secondary" className="text-xs text-gray-400">
+                        او
+                      </Text>
+                    </div>
+                  </div>
+
+                  {/* Lien création de compte admin */}
+                  <div className="flex items-center justify-center">
+                    <div className="text-center">
+                      <Text type="secondary" className="text-gray-500 text-sm mb-1 block">
+                        {t("login.no_admin_account")}
+                      </Text>
+                      <Link to="/register">
+                        <Button
+                          type="link"
+                          className="!p-0 !h-auto !font-medium text-main-color hover:!text-main-color/80 transition-colors duration-200 text-sm"
+                        >
+                          <span className="flex items-center gap-1">
+                            {t("login.create_admin_account")}
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                          </span>
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </Card>
           </motion.div>

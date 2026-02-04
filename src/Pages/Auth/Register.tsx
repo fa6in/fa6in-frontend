@@ -1,45 +1,56 @@
-// register.tsx
-"use client";
-
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, notification, Typography, Divider } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, IdcardOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Card, notification, Typography } from 'antd';
+import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimate } from 'framer-motion';
+import logo from '../../assets/images/logo1.jpeg';
 import { Link } from 'react-router-dom';
+import SpinnerLoader from '../../ui/SpinnerLoader';
+import { useTranslation } from 'react-i18next';
+import { useRegisterAdmin } from '../../Services/Auth/useRegisterAdmin';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface RegisterForm {
-    firstName: string;
-    lastName: string;
+    admin_secret_code: string;
+    username: string;
     email: string;
-    phone: string;
     password: string;
-    confirmPassword: string;
+    password2: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    role: string;
 }
 
 const RegisterPage: React.FC = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const { mutate: dataregister, isPending } = useRegisterAdmin();
     const [scope, animate] = useAnimate();
+    const { t } = useTranslation();
 
-    // Variantes d'animation
     const containerVariants = {
-        hidden: { opacity: 0, y: 30 },
+        hidden: { opacity: 0, y: 20 },
         visible: {
             opacity: 1,
             y: 0,
             transition: {
-                duration: 0.7,
-                ease: "easeOut",
-                staggerChildren: 0.1
+                duration: 0.6,
+                ease: "easeOut"
+            }
+        },
+        exit: {
+            opacity: 0,
+            y: -20,
+            transition: {
+                duration: 0.4
             }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 15 },
+        hidden: { opacity: 0, y: 10 },
         visible: {
             opacity: 1,
             y: 0,
@@ -49,261 +60,322 @@ const RegisterPage: React.FC = () => {
         }
     };
 
+    const validatePassword = (_: any, value: string) => {
+        const password = form.getFieldValue('password');
+        if (value && value !== password) {
+            return Promise.reject(new Error(t('register.password2_match')));
+        }
+        return Promise.resolve();
+    };
+
+    const validateEmail = (_: any, value: string) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        if (value && !emailRegex.test(value)) {
+            return Promise.reject(new Error(t('register.email_invalid')));
+        }
+        return Promise.resolve();
+    };
+
+    const validatePhone = (_: any, value: string) => {
+        const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+        if (value && !phoneRegex.test(value)) {
+            return Promise.reject(new Error(t('register.phone_number_invalid')));
+        }
+        return Promise.resolve();
+    };
+
     const onFinish = async (values: RegisterForm) => {
         setLoading(true);
 
         try {
-            // Animation de soumission
+            // Animation de chargement
             await animate(scope.current, { scale: 0.98 }, { duration: 0.1 });
             await animate(scope.current, { scale: 1 }, { duration: 0.1 });
 
-            // Simulation d'inscription
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Ici, vous ajouterez votre appel API pour l'inscription
 
-            console.log('Register values:', values);
+            // Simuler un appel API
+            dataregister(values, {
+                onSuccess: () => {
+                    notification.success({
+                        message: t('register.success'),
+                        description: t('register.success_description'),
+                    });
+                }
+            })
 
-            notification.success({
-                message: 'Inscription réussie !',
-                description: 'Votre compte a été créé avec succès.',
-            });
 
         } catch (error) {
+            console.error('Erreur d\'inscription:', error);
             notification.error({
-                message: 'Erreur d\'inscription',
-                description: 'Une erreur est survenue lors de la création du compte.',
+                message: t('register.error'),
+                description: t('register.error_description'),
             });
         } finally {
             setLoading(false);
         }
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
+    const onFinishFailed = () => {
         animate(scope.current,
             { x: [-5, 5, -5, 5, 0] },
-            { duration: 0.4 }
+            { duration: 0.4, ease: "easeInOut" }
         );
     };
 
     return (
-        <div
-            className="min-h-screen flex items-center justify-center p-6"
-            style={{
-                // background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-            }}
-        >
-            <AnimatePresence>
-                <motion.div
-                    ref={scope}
-                    variants={{ containerVariants }}
-                    initial="hidden"
-                    animate="visible"
-                    style={{ width: '100%', maxWidth: 480 }}
-                >
-                    <Card
-                        className="rounded-xl shadow-2xl backdrop-blur-sm bg-white/95"
-                        bodyStyle={{ padding: 48 }}
-                    >
-                        {/* En-tête */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="text-center mb-3"
-                        >
-                            <Title level={2} className="!mb-2" style={{ color: 'var(--main-color)' }}>
-                                Créer un compte
-                            </Title>
-                            <Text type="secondary" className="text-lg">
-                                Rejoignez notre plateforme
-                            </Text>
-                        </motion.div>
+        <>
+            <div
+                style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
 
-                        {/* Formulaire d'inscription */}
-                        <Form
-                            form={form}
-                            name="register"
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
-                            layout="vertical"
-                            size="large"
-                            scrollToFirstError
+                }}
+            >
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        ref={scope}
+                        variants={{ containerVariants }}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                    // style={{ width: '100%', maxWidth: 500 }}
+                    >
+                        <Card
+                            style={{
+                                borderRadius: 12,
+                                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+                                backdropFilter: 'blur(10px)',
+                                background: 'rgba(255, 255, 255, 0.95)'
+                            }}
+                            styles={{
+                                body: {
+                                    padding: 40
+                                }
+                            }}
                         >
-                            {/* Nom et Prénom */}
-                            <div className="grid grid-cols-1 gap-">
-                                <motion.div variants={itemVariants}>
+                            <motion.div
+                                variants={itemVariants}
+                                style={{ textAlign: 'center', marginBottom: 32 }}
+                            >
+                                <div className='flex items-center justify-center'>
+                                    <img className="h-[93px]" src={logo} alt="Logo" />
+                                </div>
+                            </motion.div>
+
+                            {/* Formulaire d'inscription */}
+                            <Form
+                                form={form}
+                                name="register"
+                                className='-mt-5'
+                                onFinish={onFinish}
+                                onFinishFailed={onFinishFailed}
+                                layout="vertical"
+                                size="large"
+                                initialValues={{ role: 'admin' }}
+                            >
+                                {/* Code secret admin */}
+                                <motion.div variants={itemVariants} className='grid md:grid-cols-2 gap-3 grid-cols-1'>
                                     <Form.Item
-                                        name="firstName"
-                                        label="Prénom"
-                                        rules={[{ required: true, message: 'Veuillez saisir votre prénom!' }]}
+                                        name="admin_secret_code"
+                                        label={t('register.admin_secret_code')}
+                                        rules={[
+                                            { required: true, message: t('register.admin_secret_code_required') },
+                                            { min: 8, message: t('register.admin_secret_code_min') }
+                                        ]}
+                                    >
+                                        <Input.Password
+                                            prefix={<SafetyCertificateOutlined />}
+                                            placeholder={t('register.admin_secret_code_placeholder')}
+                                            style={{ borderRadius: 6 }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="username"
+                                        label={t('register.username')}
+                                        rules={[
+                                            { required: true, message: t('register.username_required') },
+                                            { min: 3, message: t('register.username_min') }
+                                        ]}
                                     >
                                         <Input
                                             prefix={<UserOutlined />}
-                                            placeholder="Votre prénom"
-                                            className="rounded-lg"
+                                            placeholder={t('register.username_placeholder')}
+                                            style={{ borderRadius: 6 }}
                                         />
                                     </Form.Item>
                                 </motion.div>
+                                <div className='grid md:grid-cols-2 gap-3 grid-cols-1 -mt-3'>
+                                    <motion.div variants={itemVariants} style={{ flex: 1 }}>
+                                        <Form.Item
+                                            name="first_name"
+                                            label={t('register.first_name')}
+                                            rules={[{ required: true, message: t('register.first_name_required') }]}
+                                        >
+                                            <Input
+                                                prefix={<IdcardOutlined />}
+                                                placeholder={t('register.first_name_placeholder')}
+                                                style={{ borderRadius: 6 }}
+                                            />
+                                        </Form.Item>
+                                    </motion.div>
 
-                                <motion.div variants={itemVariants}>
+                                    <motion.div variants={itemVariants} style={{ flex: 1 }}>
+                                        <Form.Item
+                                            name="last_name"
+                                            label={t('register.last_name')}
+                                            rules={[{ required: true, message: t('register.last_name_required') }]}
+                                        >
+                                            <Input
+                                                prefix={<IdcardOutlined />}
+                                                placeholder={t('register.last_name_placeholder')}
+                                                style={{ borderRadius: 6 }}
+                                            />
+                                        </Form.Item>
+                                    </motion.div>
+                                </div>
+                                {/* Email */}
+                                <motion.div variants={itemVariants} className='-mt-4 grid md:grid-cols-2 gap-3 grid-cols-1 '>
                                     <Form.Item
-                                        name="lastName"
-                                        label="Nom"
-                                        rules={[{ required: true, message: 'Veuillez saisir votre nom!' }]}
+                                        name="email"
+                                        label={t('register.email')}
+                                        rules={[
+                                            { required: true, message: t('register.email_required') },
+                                            { validator: validateEmail }
+                                        ]}
                                     >
                                         <Input
-                                            prefix={<IdcardOutlined />}
-                                            placeholder="Votre nom"
-                                            className="rounded-lg"
+                                            prefix={<MailOutlined />}
+                                            placeholder={t('register.email_placeholder')}
+                                            style={{ borderRadius: 6 }}
+                                            type="email"
+                                        />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="phone_number"
+                                        label={t('register.phone_number')}
+                                        rules={[
+                                            { required: true, message: t('register.phone_number_required') },
+                                            { validator: validatePhone }
+                                        ]}
+                                    >
+                                        <Input
+                                            prefix={<PhoneOutlined />}
+                                            placeholder={t('register.phone_number_placeholder')}
+                                            style={{ borderRadius: 6 }}
                                         />
                                     </Form.Item>
                                 </motion.div>
-                            </div>
 
-                            {/* Email */}
-                            <motion.div variants={itemVariants}>
-                                <Form.Item
-                                    name="email"
-                                    label="Email"
-                                    rules={[
-                                        { required: true, message: 'Veuillez saisir votre email!' },
-                                        { type: 'email', message: 'Email invalide!' }
-                                    ]}
-                                >
-                                    <Input
-                                        prefix={<MailOutlined />}
-                                        placeholder="adresse@email.com"
-                                        className="rounded-lg"
-                                    />
-                                </Form.Item>
-                            </motion.div>
+                                <div >
+                                    <motion.div variants={itemVariants} className='-mt-4 grid md:grid-cols-2 gap-3 grid-cols-1'>
+                                        <Form.Item
+                                            name="password"
+                                            label={t('register.password')}
+                                            rules={[
+                                                { required: true, message: t('register.password_required') },
+                                                { min: 8, message: t('register.password_min') },
+                                                // {
+                                                //     pattern: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+                                                //     message: t('register.password_pattern')
+                                                // }
+                                            ]}
+                                        >
+                                            <Input.Password
+                                                prefix={<LockOutlined />}
+                                                placeholder={t('register.password_placeholder')}
+                                                style={{ borderRadius: 6 }}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="password2"
+                                            label={t('register.password2')}
+                                            rules={[
+                                                { required: true, message: t('register.password2_required') },
+                                                { validator: validatePassword }
+                                            ]}
+                                        >
+                                            <Input.Password
+                                                prefix={<LockOutlined />}
+                                                placeholder={t('register.password2_placeholder')}
+                                                style={{ borderRadius: 6 }}
+                                            />
+                                        </Form.Item>
+                                    </motion.div>
+                                </div>
 
-                            {/* Téléphone */}
-                            <motion.div variants={itemVariants}>
-                                <Form.Item
-                                    name="phone"
-                                    label="Téléphone"
-                                    rules={[{ required: true, message: 'Veuillez saisir votre téléphone!' }]}
-                                >
-                                    <Input
-                                        prefix={<PhoneOutlined />}
-                                        placeholder="32421036"
-                                        className="rounded-lg"
-                                    />
-                                </Form.Item>
-                            </motion.div>
-
-                            {/* Mot de passe */}
-                            <motion.div variants={itemVariants}>
-                                <Form.Item
-                                    name="password"
-                                    label="Mot de passe"
-                                    rules={[
-                                        { required: true, message: 'Veuillez saisir votre mot de passe!' },
-                                        { min: 6, message: 'Minimum 6 caractères!' }
-                                    ]}
-                                >
-                                    <Input.Password
-                                        prefix={<LockOutlined />}
-                                        placeholder="Votre mot de passe"
-                                        className="rounded-lg"
-                                    />
-                                </Form.Item>
-                            </motion.div>
-
-                            {/* Confirmation mot de passe */}
-                            <motion.div variants={itemVariants}>
-                                <Form.Item
-                                    name="confirmPassword"
-                                    label="Confirmer le mot de passe"
-                                    dependencies={['password']}
-                                    rules={[
-                                        { required: true, message: 'Veuillez confirmer votre mot de passe!' },
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (!value || getFieldValue('password') === value) {
-                                                    return Promise.resolve();
+                                {/* Bouton de soumission */}
+                                <motion.div variants={itemVariants}>
+                                    <Form.Item style={{ marginBottom: 0 }}>
+                                        <Button
+                                            htmlType="submit"
+                                            loading={isPending || loading}
+                                            className='!bg-main-color !text-white'
+                                            block
+                                            style={{
+                                                height: 45,
+                                                borderRadius: 6,
+                                                fontSize: 16,
+                                                fontWeight: 500,
+                                                marginTop: 16
+                                            }}
+                                            onMouseEnter={() => {
+                                                if (!loading) {
+                                                    animate(scope.current.querySelector('button'),
+                                                        { scale: 1.02 },
+                                                        { duration: 0.2 }
+                                                    );
                                                 }
-                                                return Promise.reject(new Error('Les mots de passe ne correspondent pas!'));
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input.Password
-                                        prefix={<LockOutlined />}
-                                        placeholder="Confirmer le mot de passe"
-                                        className="rounded-lg"
-                                    />
-                                </Form.Item>
-                            </motion.div>
+                                            }}
+                                            onMouseLeave={() => {
+                                                if (!loading) {
+                                                    animate(scope.current.querySelector('button'),
+                                                        { scale: 1 },
+                                                        { duration: 0.2 }
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            {t('register.submit')}
+                                        </Button>
+                                    </Form.Item>
+                                </motion.div>
+                            </Form>
 
-                            {/* Bouton d'inscription */}
-                            <motion.div variants={itemVariants}>
-                                <Form.Item className="!mb-4">
-                                    <Button
-                                        // type="primary"
-                                        htmlType="submit"
-
-                                        loading={loading}
-                                        block
-                                        className="!h-12 rounded-lg !text-lg font-semibold border-0 !bg-main-color !text-white"
-                                        style={{
-                                            background: 'var(--main-color)',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            if (!loading) {
-                                                animate(e.currentTarget,
-                                                    {
-                                                        scale: 1.02,
-                                                        boxShadow: '0 8px 25px rgba(var(--main-color-rgb), 0.3)'
-                                                    },
-                                                    { duration: 0.2 }
-                                                );
-                                            }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            if (!loading) {
-                                                animate(e.currentTarget,
-                                                    {
-                                                        scale: 1,
-                                                        boxShadow: '0 4px 15px rgba(var(--main-color-rgb), 0.2)'
-                                                    },
-                                                    { duration: 0.2 }
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        S'inscrire
-                                    </Button>
-                                </Form.Item>
-                            </motion.div>
-                        </Form>
-
-                        <Divider className="!my-2">
-                            <Text type="secondary">Ou</Text>
-                        </Divider>
-
-                        {/* Lien vers la connexion */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="text-center"
-                        >
-                            <Link to={"/login"}>
-                                <Text type="secondary">
-                                    Déjà un compte ?{' '}
-                                    <span
-                                        className="font-medium hover:underline"
-                                        style={{ color: 'var(--main-color)' }}
-                                    >
-                                        Se connecter
-                                    </span>
+                            {/* Lien vers la page de connexion */}
+                            <motion.div
+                                variants={itemVariants}
+                                style={{
+                                    textAlign: 'center',
+                                    marginTop: 20,
+                                    display: 'flex',
+                                    alignItems: "center",
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text type="secondary" style={{ marginRight: 8 }}>
+                                    {t('register.already_account')}
                                 </Text>
-                            </Link>
-                        </motion.div>
-                    </Card>
-                </motion.div>
-            </AnimatePresence>
-        </div>
+                                <Link to="/login">
+                                    <Text style={{ color: '#1890ff', cursor: 'pointer' }}>
+                                        {t('register.login_link')}
+                                    </Text>
+                                </Link>
+                            </motion.div>
+                        </Card>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+            {loading && <SpinnerLoader />}
+        </>
     );
 };
 
 export default RegisterPage;
+
+
 
