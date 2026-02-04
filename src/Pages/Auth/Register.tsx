@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimate } from 'framer-motion';
 import logo from '../../assets/images/logo1.jpeg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SpinnerLoader from '../../ui/SpinnerLoader';
 import { useTranslation } from 'react-i18next';
 import { useRegisterAdmin } from '../../Services/Auth/useRegisterAdmin';
@@ -28,6 +28,7 @@ const RegisterPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const { mutate: dataregister, isPending } = useRegisterAdmin();
     const [scope, animate] = useAnimate();
+    const navigate = useNavigate();
     const { t } = useTranslation();
 
     const containerVariants = {
@@ -97,10 +98,14 @@ const RegisterPage: React.FC = () => {
             // Simuler un appel API
             dataregister(values, {
                 onSuccess: () => {
+                    
                     notification.success({
                         message: t('register.success'),
                         description: t('register.success_description'),
                     });
+                    setTimeout(() => {
+                    return navigate("/login")
+                    }, 3000);
                 }
             })
 
