@@ -15,15 +15,17 @@ import {
   FileTextOutlined,
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
+import AuthService from "../Auth-service/AuthService";
 // Admin Components
 const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
 const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
+const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/MatiereViewStudent"));
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
 // const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
-
+const role = AuthService.getRole()
 
 const MainRouter: RouteType[] = [
   // ==================== Auth ROUTES ====================
@@ -99,7 +101,8 @@ const MainRouter: RouteType[] = [
     path: "/matieres",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <MartieresView />
+        {/* <MartieresView /> */}
+         {role === "student" ? <MartieresViewStudent /> : <MartieresView />}
       </Suspense>
     ),
 
@@ -121,15 +124,13 @@ const MainRouter: RouteType[] = [
     ),
 
     layout: "private",
-    allowedRoles: ["admin", "teacher"],
+    allowedRoles: ["admin", "teacher", "student"],
     sidebar: {
       key: "exams",
       label: ("sidebar.exams"),
       icon: <GrChapterAdd />,
     }
   },
-
-
   {
     path: "/assignments",
     element: (

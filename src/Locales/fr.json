@@ -470,6 +470,53 @@
     "create": "Créer"
   },
   "matieres": {
+    "student": {
+      "title": "Mes Matières",
+      "subtitle": "Explorez votre parcours académique",
+      "subjectsAvailable": "matières disponibles",
+      "searchPlaceholder": "Rechercher une matière...",
+      "noDescription": "Aucune description disponible",
+      "viewDetails": "Voir détails",
+      "clickForDetails": "Cliquez pour voir les détails",
+      "noResults": "Aucune matière trouvée avec ces critères",
+      "resetFilters": "Réinitialiser les filtres",
+      "showing": "Affichage de",
+      "of": "sur",
+      "subjects": "matières",
+      "description": "Description",
+      "noDescriptionAvailable": "Aucune description disponible",
+      "enrollNow": "S'inscrire maintenant",
+      "close": "Fermer",
+      "tip": "Conseil",
+      "instruction": "Cliquez sur une carte pour voir les détails complets de la matière"
+    },
+    "stats": {
+      "totalSubjects": "Total Matières",
+      "activeSubjects": "Matières Actives",
+      "totalCredits": "Crédits Totaux",
+      "semesters": "Semestres"
+    },
+    "difficulty": {
+      "title": "Niveau de Difficulté",
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile",
+      "easyDescription": "Bonne matière pour débuter",
+      "mediumDescription": "Niveau intermédiaire",
+      "hardDescription": "Niveau avancé"
+    },
+    "sort": {
+      "title": "Trier par",
+      "byName": "Nom (A-Z)",
+      "bySemester": "Semestre",
+      "byDifficulty": "Difficulté"
+    },
+    "filters": {
+      "semester": "Semestre",
+      "allSemesters": "Tous les semestres",
+      "difficulty": "Difficulté",
+      "allLevels": "Tous les niveaux"
+    },
     "delete": {
       "title": "Supprimer la matière",
       "message": "Êtes-vous sûr de vouloir supprimer définitivement cette matière ?",
@@ -486,22 +533,7 @@
     "title": "Gestion des Matières",
     "subtitle": "Administration et suivi des modules académiques",
     "add": "Ajouter une matière",
-    "stats": {
-      "total": "Total Matières",
-      "active": "Matières Actives",
-      "inactive": "Matières Inactives",
-      "students": "Étudiants Inscrits",
-      "credits": "Crédits Moyens"
-    },
     "search": "Rechercher une matière...",
-    "filters": {
-      "semester": "Semestre",
-      "status": "Statut",
-      "all": "Tous",
-      "active": "Active",
-      "inactive": "Inactive",
-      "reset": "Réinitialiser"
-    },
     "table": {
       "code": "Code",
       "matiere": "Matière",

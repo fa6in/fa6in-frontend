@@ -39,15 +39,12 @@ export const useLogin = () => {
 
                 // Redirection basée sur le rôle
                 const userRole = data.user.role;
-                if (userRole === "admin") {
-                    navigate("/admin/dashboard", { replace: true });
-                } else if (userRole === "student") {
-                    navigate("/student", { replace: true });
-                } else if (userRole === "teacher") {
-                    navigate("/teacher", { replace: true });
+                if (userRole === "student") {
+                    window.location.href = "/matieres";
+                    return navigate("/matieres", { replace: true });
                 } else {
-                    // Rôle inconnu
-                    navigate("/", { replace: true });
+                    window.location.href = "/";
+                    return navigate("/", { replace: true });
                 }
 
             } catch (e: any) {

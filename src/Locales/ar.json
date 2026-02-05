@@ -515,6 +515,53 @@
     "create": "إنشاء"
   },
   "matieres": {
+     "student": {
+      "title": "موادي الدراسية",
+      "subtitle": "استكشف مسارك الأكاديمي",
+      "subjectsAvailable": "مادة متاحة",
+      "searchPlaceholder": "ابحث عن مادة...",
+      "noDescription": "لا يوجد وصف متاح",
+      "viewDetails": "عرض التفاصيل",
+      "clickForDetails": "انقر لعرض التفاصيل",
+      "noResults": "لم يتم العثور على مواد بهذه المعايير",
+      "resetFilters": "إعادة تعيين الفلاتر",
+      "showing": "عرض",
+      "of": "من",
+      "subjects": "مادة",
+      "description": "الوصف",
+      "noDescriptionAvailable": "لا يوجد وصف متاح",
+      "enrollNow": "سجل الآن",
+      "close": "إغلاق",
+      "tip": "نصيحة",
+      "instruction": "انقر على البطاقة لرؤية التفاصيل الكاملة للمادة"
+    },
+    "stats": {
+      "total": "إجمالي المواد",
+      "active": "المواد النشطة",
+      "inactive": "المواد الغير نشطة",
+      "students": "الطلاب المسجلون",
+      "credits": " الوحدات"
+    },
+    "difficulty": {
+      "title": "مستوى الصعوبة",
+      "easy": "سهل",
+      "medium": "متوسط",
+      "hard": "صعب",
+      "easyDescription": "مادة مناسبة للمبتدئين",
+      "mediumDescription": "مستوى متوسط",
+      "hardDescription": "مستوى متقدم"
+    },
+    "sort": {
+      "title": "ترتيب حسب",
+      "byName": "الاسم (أ-ي)",
+      "bySemester": "الفصل الدراسي",
+      "byDifficulty": "الصعوبة"
+    },
+   
+    "semester": "الفصل",
+    "credits": "ساعة معتمدة",
+   
+    
     "delete": {
       "title": "حذف المادة",
       "message": "هل أنت متأكد من رغبتك في حذف هذه المادة نهائيًا؟",
@@ -531,21 +578,18 @@
     "title": "إدارة المواد",
     "subtitle": "إدارة ومتابعة الوحدات الأكاديمية",
     "add": "إضافة مادة",
-    "stats": {
-      "total": "إجمالي المواد",
-      "active": "المواد النشطة",
-      "inactive": "المواد الغير نشطة",
-      "students": "الطلاب المسجلون",
-      "credits": " الوحدات"
-    },
+    
     "search": "البحث عن مادة...",
     "filters": {
-      "semester": "الفصل",
       "status": "الحالة",
       "all": "الكل",
       "active": "نشطة",
       "inactive": "غير نشطة",
-      "reset": "إعادة التعيين"
+      "reset": "إعادة التعيين",
+      "semester": "الفصل الدراسي",
+      "allSemesters": "جميع الفصول",
+      "difficulty": "الصعوبة",
+      "allLevels": "جميع المستويات"
     },
     "table": {
       "code": "الرقم",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, notification, Typography, message } from 'antd';
+import { Form, Input, Button, Card, notification, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimate } from 'framer-motion';
@@ -69,15 +69,15 @@ const LoginPage: React.FC = () => {
 
       datalogin(params, {
         onSuccess: () => {
-          message.success("connexion réussie")
+          notification.success({
+            message: 'Connexion réussie',
+            description: 'Bienvenue !',
+          });
         }
       })
 
 
-      notification.success({
-        message: 'Connexion réussie',
-        description: 'Bienvenue !',
-      });
+
 
     } catch (error) {
       notification.error({
