@@ -10,6 +10,7 @@ import {
     Empty,
     Divider,
     Tooltip,
+    Modal,
 } from 'antd';
 import {
     SearchOutlined,
@@ -24,7 +25,8 @@ import {
     EyeOutlined,
     InfoCircleOutlined,
     MenuOutlined,
-    AppstoreOutlined
+    AppstoreOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +34,7 @@ import { useGetContent } from '../../../Services/Admin/Content/useGetContent';
 import type { TypeContent } from '../../../Services/Admin/Content/typeContent';
 import { useGetChapitre } from '../../../Services/Admin/Chapitres/useGetChapitres';
 import SpinnerLoader from '../../../ui/SpinnerLoader';
+import AddNewContenu from './AddNewContenu';
 
 const { Option } = Select;
 
@@ -98,6 +101,7 @@ const ContenuView = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedContent, setSelectedContent] = useState<TypeContent | null>(null);
     const [isDetailVisible, setIsDetailVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     // const [contents, setContents] = useState<ContentItem[]>([]);
 
     const [selectChapitre, setSelectedChapitre] = useState<number | undefined>(undefined);
@@ -265,7 +269,14 @@ const ContenuView = () => {
 
                     {/* Sélecteur d'unité */}
                     <div className="flex items-center gap-4">
-
+                        <Button
+                            className='!bg-main-color !text-white !border-none'
+                            icon={<PlusOutlined />}
+                            size="large"
+                        onClick={()=>setIsModalVisible(true)}
+                        >
+                            محتوى جديد
+                        </Button>
                     </div>
                 </div>
 
@@ -739,6 +750,17 @@ const ContenuView = () => {
                     {t('content.instruction')}
                 </p>
             </motion.div>
+            <Modal
+                open={isModalVisible}
+                footer={null}
+                title={t("matieres.modal.addTitle")}
+                onCancel={() => setIsModalVisible(false)}
+                width={750}
+                maskClosable={false}
+                closeIcon={false}
+            >
+                <AddNewContenu onCancel={() => setIsModalVisible(false)} />
+            </Modal>
         </motion.div>
     );
 };

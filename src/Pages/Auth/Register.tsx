@@ -3,7 +3,7 @@ import { Form, Input, Button, Card, notification, Typography } from 'antd';
 import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimate } from 'framer-motion';
-import logo from '../../assets/images/logo1.jpeg';
+import logo from '../../assets/images/logo1.png';
 import { Link, useNavigate } from 'react-router-dom';
 import SpinnerLoader from '../../ui/SpinnerLoader';
 import { useTranslation } from 'react-i18next';

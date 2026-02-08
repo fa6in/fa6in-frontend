@@ -9,6 +9,112 @@
     "enter_password": "الرجاء إدخال كلمة المرور!",
     "enter_username": "الرجاء إدخال اسم المستخدم !"
   },
+
+  "common": {
+    "buttons": {
+      "back": "رجوع",
+      "previous": "السابق",
+      "next": "التالي",
+      "createContent": "إنشاء المحتوى",
+      "save": "حفظ",
+      "cancel": "إلغاء"
+    },
+     "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "seconds": "ثواني",
+    "required": "مطلوب"
+  },
+  "page": {
+    "title": "محتوى جديد",
+    "description": "قم بإنشاء محتوى جديد للمنهج الدراسي"
+  },
+  
+  "form": {
+    "steps": {
+      "step1": {
+        "title": "نوع المحتوى",
+        "description": "اختر نوع المحتوى"
+      },
+      "step2": {
+        "title": "التفاصيل",
+        "description": "املأ المعلومات"
+      },
+      "step3": {
+        "title": "البيانات الوصفية",
+        "description": "اضبط الخيارات"
+      },
+      "step4": {
+        "title": "التحقق",
+        "description": "تحقق وأرسل"
+      }
+    },
+    "contentType": {
+      "title": "ما نوع المحتوى الذي تريد إنشاءه؟",
+      "description": "اختر التنسيق الذي يناسب محتواك"
+    },
+    "metadata": {
+      "title": "البيانات الوصفية"
+    },
+    "summary": {
+      "title": "ملخص",
+      "type": "النوع",
+      "order": "الترتيب",
+      "unit": "الوحدة",
+      "checkBeforeSubmit": "تحقق من المعلومات قبل الإرسال"
+    },
+    "preview": {
+      "title": "معاينة",
+      "defaultTitle": "عنوان المحتوى",
+      "defaultContent": "سيظهر المحتوى هنا"
+    },
+    "fields": {
+      "title": "عنوان المحتوى",
+      "order": "ترتيب العرض",
+      "content": "المحتوى",
+      "unit": "الوحدة المرتبطة",
+      "fontSize": "حجم الخط",
+      "hasQuiz": "يتضمن اختبار",
+      "duration": "المدة",
+      "autoplay": "تشغيل تلقائي",
+      "width": "العرض",
+      "height": "الارتفاع",
+      "altText": "النص البديل"
+    },
+    "placeholders": {
+      "title": "مثال: مقدمة عن الأعداد",
+      "selectUnit": "اختر الوحدة",
+      "content": "اكتب محتواك هنا...",
+      "selectFontSize": "اختر الحجم",
+      "duration": "المدة بالثواني",
+      "videoUrl": "https://youtube.com/watch?v=...",
+      "imageUrl": "https://example.com/image.jpg",
+      "audioUrl": "https://example.com/audio.mp3",
+      "fileUrl": "رابط أو مسار الملف",
+      "altText": "وصف الصورة"
+    },
+    "validation": {
+      "requiredTitle": "الرجاء إدخال العنوان",
+      "requiredOrder": "الرجاء إدخال الترتيب",
+      "requiredContent": "الرجاء إدخال المحتوى",
+      "requiredUnit": "الرجاء اختيار الوحدة",
+      "requiredContentType": "الرجاء اختيار نوع المحتوى",
+      "requiredFontSize": "الرجاء اختيار حجم الخط",
+      "requiredDuration": "الرجاء إدخال المدة",
+      "fillRequiredFields": "الرجاء ملء جميع الحقول الإلزامية"
+    }
+  },
+  "messages": {
+    "success": {
+      "contentAdded": "تم إضافة المحتوى بنجاح!"
+    },
+    "errors": {
+      "addContentError": "حدث خطأ أثناء إضافة المحتوى"
+    }
+  }
+,
   "register": {
     "title": "إنشاء حساب مدير",
     "admin_secret_code": "الكود السري للإدارة",
@@ -458,13 +564,7 @@
       "deleted": "تم حذف المدرس بنجاح"
     }
   },
-  "common": {
-    "create": "إنشاء",
-    "update": "تحديث",
-    "delete": "حذف",
-    "cancel": "إلغاء",
-    "save": "حفظ"
-  },
+  
   "alert": {
     "message_decn": "تم تسجيل خروجك بسبب عدم النشاط"
   },
@@ -865,6 +965,7 @@
       "activities": "الأنشطة المرتبطة"
     }
   },
+ 
   "content": {
     "title": "المحتوى التعليمي",
     "subtitle": "استكشف",
@@ -931,6 +1032,24 @@
     "instruction": "انقر على أي عنصر لعرض تفاصيله الكاملة. يمكنك تصفية المحتوى حسب النوع والترتيب حسب متطلباتك.",
     "messages": {
       "markedComplete": "تم تمييز المحتوى كمكتمل بنجاح"
+    },
+    "types": {
+      "text": "نص",
+      "video": "فيديو",
+      "image": "صورة",
+      "audio": "صوت",
+      "pdf": "PDF"
+    },
+    "fontSizes": {
+      "small": "صغير",
+      "medium": "متوسط",
+      "large": "كبير",
+      "xlarge": "كبير جداً"
+    },
+    "units": {
+      "unit1": "الوحدة 1: الرياضيات",
+      "unit2": "الوحدة 2: اللغة الفرنسية",
+      "unit3": "الوحدة 3: العلوم"
     }
   }
 }

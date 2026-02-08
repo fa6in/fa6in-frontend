@@ -4,7 +4,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from "@ant-design/icons";
-import logo from "../../assets/images/logo1.jpeg"
+import logo from "../../assets/images/logo1.png"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "../../Services/Auth/useLogout";

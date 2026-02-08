@@ -5,7 +5,7 @@ import { Form, Input, Button, Card, notification, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimate } from 'framer-motion';
-import logo from '../../assets/images/logo1.jpeg'
+import logo from '../../assets/images/logo1.png'
 import { Link } from 'react-router-dom';
 import { useLogin, type LoginParams } from '../../Services/Auth/useLogin';
 import SpinnerLoader from '../../ui/SpinnerLoader';
