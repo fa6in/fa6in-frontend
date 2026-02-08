@@ -20,7 +20,7 @@ export const useUpdateChapitre = () => {
         formData.append("difficulty", chapitre.difficulty);
         formData.append("order", String(chapitre.order));
 
-        if (chapitre.thumbnail) {
+        if (chapitre.thumbnail && chapitre?.thumbnail! instanceof File) {
             formData.append("thumbnail", chapitre.thumbnail);
         }
         formData.append("video_url", chapitre?.video_url!);

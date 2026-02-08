@@ -14,6 +14,7 @@ import {
   // AppstoreOutlined,
   FileTextOutlined,
   SafetyCertificateOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import AuthService from "../Auth-service/AuthService";
 // Admin Components
@@ -22,8 +23,10 @@ const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
-const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/MatiereViewStudent"));
+const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/Matieres/MatiereViewStudent"));
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
+const ChapitreViewStudent = lazy(() => import("../Pages/Student-Pages/Chapitres/ChapitreViewStudent"));
+const Content = lazy(() => import("../Pages/Student-Pages/Contenu/ContenuView"));
 // const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 const role = AuthService.getRole()
 
@@ -119,7 +122,9 @@ const MainRouter: RouteType[] = [
     path: "/chapitres",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <ChapitreView />
+        {/* <ChapitreView /> */}
+         {role === "student" ? <ChapitreViewStudent /> : <ChapitreView />}
+
       </Suspense>
     ),
 
@@ -131,6 +136,23 @@ const MainRouter: RouteType[] = [
       icon: <GrChapterAdd />,
     }
   },
+
+  {
+    path: "/contenu",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        {role === "student" ? <Content /> : <Content />}
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin", "teacher", "student"],
+    sidebar: {
+      key: "contenu",
+      label: "sidebar.content",
+      icon: <AppstoreOutlined />,
+    }
+  },
+  
   {
     path: "/assignments",
     element: (
@@ -140,7 +162,7 @@ const MainRouter: RouteType[] = [
     ),
 
     layout: "private",
-    allowedRoles: ["admin"],
+    allowedRoles: ["admin", "student", "teacher"],
     sidebar: {
       key: "roles",
       label: ("sidebar.assignments"),

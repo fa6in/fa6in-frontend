@@ -7,7 +7,7 @@ import { chapitreKey } from "./useGetChapitres";
 export const useDeleteChapitre = () => {
     const queryClient = useQueryClient();
     async function deletechapitre({ id }: { id: string | number }) {
-        const response = await api.delete(`api/curriculum/subjects/${id}/`);
+        const response = await api.delete(`api/curriculum/units/${id}/`);
         return response.data;
     }
     return useMutation({

@@ -160,7 +160,7 @@ const MatiereView = () => {
         },
     ];
 
-    const columns = [
+    const columns = post === "admin" ? [
         {
             title: t("matieres.table.code"),
             dataIndex: "id",
@@ -193,19 +193,6 @@ const MatiereView = () => {
                 </Tag>
             )
         },
-        // {
-        //     title: t("matieres.table.credits"),
-        //     dataIndex: "unit_count",
-        //     key: "credits",
-        //     sorter: (a: any, b: any) => a.unit_count - b.unit_count,
-        //     render: (unitCount: number) => (
-        //         <div className="text-center">
-        //             <span className="inline-block bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full">
-        //                 {unitCount} {t("matieres.unit")}
-        //             </span>
-        //         </div>
-        //     )
-        // },
         {
             title: t("matieres.table.description"),
             dataIndex: "description",
@@ -243,6 +230,64 @@ const MatiereView = () => {
                     />
                 </Dropdown>
             )
+        }
+    ] : [
+        {
+            title: t("matieres.table.code"),
+            dataIndex: "id",
+            key: "id",
+
+            render: (_: any, record: any) => (
+                <div className="font-medium text-gray-700">
+                    {record?.id}
+                </div>
+            ),
+            sorter: (a: any, b: any) => a.id - b.id
+        },
+        {
+            title: t("matieres.table.matiere"),
+            key: "matiere",
+            dataIndex: "name"
+        },
+        {
+            title: t("matieres.table.semester"),
+            dataIndex: "grade",
+            key: "semester",
+            sorter: (a: any, b: any) => a.grade - b.grade,
+            render: (grade: number) => (
+                <Tag
+                    color={grade === 1 ? "blue" : grade === 2 ? "green" : "orange"}
+                    className="rounded-full px-3 py-1"
+                >
+                    {`${grade}`}
+
+                </Tag>
+            )
+        },
+        {
+            title: t("matieres.table.description"),
+            dataIndex: "description",
+            key: "description"
+        },
+        {
+            title: t("matieres.table.status"),
+            dataIndex: "is_active",
+            key: "status",
+            render: (isActive: boolean) => (
+                <Badge
+                    status={isActive ? "success" : "error"}
+                    text={
+                        <span className={isActive ? "text-green-600" : "text-red-600"}>
+                            {isActive ? t("matieres.status.active") : t("matieres.status.inactive")}
+                        </span>
+                    }
+                />
+            ),
+            filters: [
+                { text: t("matieres.status.active"), value: true },
+                { text: t("matieres.status.inactive"), value: false }
+            ],
+            onFilter: (value: any, record: any) => record.is_active === value
         }
     ];
 

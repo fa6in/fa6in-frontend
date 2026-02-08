@@ -26,9 +26,9 @@ import {
 } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useGetMatiere } from "../../Services/Admin/Matieres/useGetMatiere";
-import type { typeMatiere } from "../../Services/Admin/Matieres/typeMatiere";
-import SpinnerLoader from "../../ui/SpinnerLoader";
+import { useGetMatiere } from "../../../Services/Admin/Matieres/useGetMatiere";
+import type { typeMatiere } from "../../../Services/Admin/Matieres/typeMatiere";
+import SpinnerLoader from "../../../ui/SpinnerLoader";
 
 const { Option } = Select;
 
@@ -571,14 +571,14 @@ const MatieresViewStudent = () => {
                 {/* Actions */}
                 <div className="pt-6 border-t border-gray-200">
                   <Space className="w-full" direction="vertical">
-                    <Button
+                    {/* <Button
                       type="primary"
                       size="large"
                       block
                       className="rounded-full h-12"
                     >
                       {t("matieres.student.enrollNow")}
-                    </Button>
+                    </Button> */}
                     <Button
                       size="large"
                       block

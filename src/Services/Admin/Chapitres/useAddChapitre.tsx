@@ -17,22 +17,20 @@ export const useAddChapitre = () => {
         const formData = new FormData();
 
 
-        formData.append("subject", String(chapitre.subject));
-        formData.append("title", chapitre.title);
-        formData.append("description", chapitre.description);
-        formData.append("learning_objective", chapitre.learning_objective);
-        formData.append("duration_minutes", String(chapitre.duration_minutes));
-        formData.append("difficulty", chapitre.difficulty);
-        formData.append("order", String(chapitre.order));
-
-
+        formData.append("subject", chapitre.subject ? String(chapitre.subject) : "");
+        formData.append("title", chapitre.title ? chapitre.title : "");
+        formData.append("description", chapitre.description ? chapitre.description : "");
+        formData.append("learning_objective", chapitre.learning_objective ? chapitre.learning_objective : "");
+        formData.append("difficulty", chapitre.difficulty ? chapitre.difficulty : "");
+        formData.append("order", chapitre.order ? String(chapitre.order) : "0");
+        formData.append("duration_minutes", chapitre.duration_minutes ? String(chapitre.duration_minutes) : "0");
 
         if (chapitre.thumbnail) {
             formData.append("thumbnail", chapitre.thumbnail);
 
         }
         formData.append("video_url", chapitre?.video_url! ? chapitre?.video_url! : "");
-        formData.append("audio_url", chapitre?.audio_url! ? chapitre?.audio_url! : "" );
+        formData.append("audio_url", chapitre?.audio_url! ? chapitre?.audio_url! : "");
         formData.append("is_published", String(chapitre?.is_published!));
 
 
@@ -50,7 +48,7 @@ export const useAddChapitre = () => {
             queryClient.invalidateQueries({
                 queryKey: chapitreKey
             });
-            // message.success("matiere ajouté avec succès");
+            // message.success("chapitre ajouté avec succès");
         },
         onError: (err: any) => {
             const messageError = err?.response?.data?.logo[0]

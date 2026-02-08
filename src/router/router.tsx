@@ -59,7 +59,6 @@ const Router = () => {
         ].includes(route.path || "");
 
         const userRole = AuthService.getRole();
-        console.log("role est : ", userRole)
 
         // 1. Si l'utilisateur n'est PAS authentifié
         if (!isAuthenticated) {
@@ -86,15 +85,9 @@ const Router = () => {
             };
         }
 
-        // 2. Si l'utilisateur EST authentifié
-        // Empêcher l'accès aux routes d'authentification
-        console.log("isAuthRoute:", isAuthRoute);
         if (isAuthRoute) {
 
-            console.log("ici dans is auth route : ", isAuthRoute);
-            // Rediriger vers le dashboard approprié selon le rôle
             if (userRole === "student") {
-                console.log("Redirecting to /matieres for student");
                 return {
                     ...route,
                     element: <Navigate replace to="/matieres" />
@@ -108,7 +101,6 @@ const Router = () => {
 
         // 3. Vérifier les permissions de rôle
         if (!hasAccessToRoute(route.allowedRoles, userRole)) {
-            console.log("Access denied to route:", route.path, "for role:", userRole);
             return {
                 ...route,
                 element: <ErrorPage status={"403"} message="Access denied" />

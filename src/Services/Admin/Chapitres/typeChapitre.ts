@@ -10,7 +10,8 @@ export type typeChapitre = {
     duration_minutes: number;
     difficulty: string;
     order: number;
-    thumbnail: string;
+    // thumbnail: string;
+    thumbnail?: File | string | null;
     video_url?: string;
     audio_url?: string;
     is_published: boolean;

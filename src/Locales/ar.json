@@ -53,6 +53,8 @@
     "login_link": "تسجيل الدخول"
   },
   "sidebar": {
+    "content": "المحتوى",
+    "contentByUnit": "المحتوى حسب الوحدة",
     "dashboard": "الرئيسية",
     "students": "الطلاب",
     "teachers": "المعلمين",
@@ -515,7 +517,7 @@
     "create": "إنشاء"
   },
   "matieres": {
-     "student": {
+    "student": {
       "title": "موادي الدراسية",
       "subtitle": "استكشف مسارك الأكاديمي",
       "subjectsAvailable": "مادة متاحة",
@@ -557,11 +559,8 @@
       "bySemester": "الفصل الدراسي",
       "byDifficulty": "الصعوبة"
     },
-   
     "semester": "الفصل",
     "credits": "ساعة معتمدة",
-   
-    
     "delete": {
       "title": "حذف المادة",
       "message": "هل أنت متأكد من رغبتك في حذف هذه المادة نهائيًا؟",
@@ -578,7 +577,6 @@
     "title": "إدارة المواد",
     "subtitle": "إدارة ومتابعة الوحدات الأكاديمية",
     "add": "إضافة مادة",
-    
     "search": "البحث عن مادة...",
     "filters": {
       "status": "الحالة",
@@ -691,20 +689,29 @@
     }
   },
   "chapitres": {
+    "publish": {
+      "title": "نشر الفصل",
+      "subtitle": "جعل هذا الفصل متاحًا للطلاب",
+      "unknownTitle": "عنوان غير معروف",
+      "warningTitle": "تنبيه مهم",
+      "warningMessage": "بعد النشر، سيكون الفصل مرئيًا لجميع الطلاب المسجلين في المادة. لا يمكنك إجراء تغييرات جذرية بعد النشر.",
+      "statusAfter": "الحالة بعد النشر",
+      "visibleToStudents": "مرئي للطلاب",
+      "readyForUse": "جاهز للاستخدام",
+      "confirm": "تأكيد النشر",
+      "footerInfo": "يمكنك إلغاء النشر في أي وقت من خلال لوحة التحكم"
+    },
     "title": "إدارة الوحدات",
     "subtitle": "أنشئ وادخل  الوحدات ",
     "addNew": "وحدة جديدة",
     "addTitle": "إضافة وحدة جديدة",
     "editTitle": "تعديل الوحدة",
-    "deleteConfirm": {
-      "title": "تأكيد الحذف",
-      "content": "هل أنت متأكد من رغبتك في حذف هذا الفصل؟ هذا الإجراء لا يمكن التراجع عنه."
-    },
+    "chaptersAvailable": "فصل متاح",
     "search": {
       "placeholder": "البحث بالعنوان أو الوصف..."
     },
     "filter": {
-      "difficulty": "الصعوبة",
+      "difficulty": "مستوى الصعوبة",
       "status": "الحالة",
       "allDifficulties": "جميع المستويات",
       "allStatus": "جميع الحالات"
@@ -713,6 +720,92 @@
       "easy": "سهل",
       "medium": "متوسط",
       "hard": "صعب"
+    },
+    "common": {
+      "change_image": "تغيير الصورة",
+      "img_actuelle": "الصورة الحالية",
+      "click": "انقر على 'تغيير الصورة' للتعديل",
+      "delete_img": "احذف الصورة الجديدة",
+      "save": "حفظ",
+      "update": "تحديث",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "edit": "تعديل",
+      "view": "عرض",
+      "back": "رجوع",
+      "next": "التالي",
+      "upload": "رفع",
+      "published": "منشور",
+      "draft": "مسودة",
+      "total": "المجموع",
+      "actions": "الإجراءات",
+      "preview": "معاينة",
+      "yes": "نعم",
+      "no": "لا",
+      "confirm": "تأكيد",
+      "success": "نجاح",
+      "error": "خطأ",
+      "loading": "جاري التحميل...",
+      "select": "اختر",
+      "search": "بحث",
+      "filter": "تصفية",
+      "reset": "إعادة تعيين",
+      "apply": "تطبيق",
+      "close": "إغلاق",
+      "open": "فتح",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "all": "الكل",
+      "none": "لا شيء",
+      "required": "مطلوب",
+      "optional": "اختياري",
+      "download": "تحميل",
+      "print": "طباعة",
+      "export": "تصدير",
+      "import": "استيراد",
+      "refresh": "تحديث"
+    },
+    "deleteConfirm": {
+      "title": "تأكيد الحذف",
+      "content": "هل أنت متأكد من حذف هذا الفصل؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "messages": {
+      "addSuccess": "تمت إضافة الوحدة بنجاح",
+      "updateSuccess": "تم تحديث الوحدة بنجاح",
+      "deleteSuccess": "تم حذف الوحدة بنجاح",
+      "addError": "حدث خطأ أثناء إضافة الفصل",
+      "publishedSuccess": "تم نشر الوحدة بنجاح",
+      "unpublishedSuccess": "تم إلغاء نشر الوحدة بنجاح",
+      "updateError": "حدث خطأ أثناء التحديث"
+    },
+    "sort": {
+      "order": "الترتيب",
+      "title": "ترتيب حسب",
+      "byOrder": "حسب الترتيب",
+      "byName": "حسب الاسم",
+      "byDuration": "حسب المدة",
+      "byActivities": "حسب الأنشطة"
+    },
+    "showing": "عرض ",
+    "of": " من ",
+    "chapters": "فصول",
+    "noDescription": "لا يوجد وصف متاح",
+    "viewDetails": "عرض التفاصيل",
+    "noResults": "لم يتم العثور على فصول",
+    "resetFilters": "إعادة تعيين الفلاتر",
+    "description": "الوصف",
+    "noDescriptionAvailable": "لا يوجد وصف متاح",
+    "close": "إغلاق",
+    "tip": "نصيحة",
+    "instruction": "انقر على البطاقة لعرض تفاصيل الفصل",
+    "stats": {
+      "totalChapters": "إجمالي الفصول",
+      "published": "منشور",
+      "totalDuration": "المدة الإجمالية",
+      "totalActivities": "إجمالي الأنشطة"
+    },
+    "filters": {
+      "reset": "إعادة تعيين"
     },
     "steps": {
       "basicInfo": "المعلومات الأساسية",
@@ -758,11 +851,11 @@
       "subject": "المادة",
       "difficulty": "الصعوبة",
       "duration": "المدة",
-      "minutes": "د",
+      "minutes": "دقيقة",
       "activities": "الأنشطة",
       "status": "الحالة",
       "createdAt": "تاريخ الإنشاء",
-      "items": "فصل"
+      "items": "عنصر"
     },
     "history": {
       "title": "السجل",
@@ -770,62 +863,74 @@
       "createdAt": "تاريخ الإنشاء",
       "updatedAt": "تاريخ التحديث",
       "activities": "الأنشطة المرتبطة"
+    }
+  },
+  "content": {
+    "title": "المحتوى التعليمي",
+    "subtitle": "استكشف",
+    "itemsAvailable": "عنصر متاح",
+    "unit": "وحدة",
+    "basics": "الأساسيات",
+    "numbers": "الأعداد",
+    "operations": "العمليات",
+    "geometry": "الهندسة",
+    "stats": {
+      "total": "إجمالي العناصر",
+      "completed": "مكتمل",
+      "videos": "مقاطع فيديو",
+      "quizzes": "اختبارات",
+      "duration": "المدة الإجمالية"
     },
-    "messages": {
-      "addSuccess": "تم إضافة الفصل بنجاح",
-      "addError": "حدث خطأ أثناء إضافة الفصل",
-      "updateSuccess": "تم تحديث الفصل بنجاح",
-      "updateError": "حدث خطأ أثناء التحديث",
-      "deleteSuccess": "تم حذف الفصل بنجاح",
-      "publishedSuccess": "تم نشر الفصل بنجاح",
-      "unpublishedSuccess": "تم إلغاء نشر الفصل بنجاح"
+    "search": {
+      "placeholder": "ابحث في المحتوى..."
+    },
+    "filter": {
+      "type": "نوع المحتوى",
+      "allTypes": "جميع الأنواع",
+      "reset": "إعادة تعيين"
+    },
+    "type": {
+      "text": "نص",
+      "video": "فيديو",
+      "audio": "صوت",
+      "pdf": "PDF",
+      "quiz": "اختبار"
     },
     "sort": {
-      "order": "ترتيب حسب"
+      "title": "ترتيب حسب",
+      "byOrder": "حسب الترتيب",
+      "byName": "حسب الاسم",
+      "byDuration": "حسب المدة",
+      "byProgress": "حسب التقدم"
     },
-    "common": {
-      "change_image": "تغيير الصورة",
-      "img_actuelle": "الصورة الحالية",
-      "click": "انقر على 'تغيير الصورة' للتعديل",
-      "delete_img": "احذف الصورة الجديدة",
-      "save": "حفظ",
-      "update": "تحديث",
-      "cancel": "إلغاء",
-      "delete": "حذف",
-      "edit": "تعديل",
-      "view": "عرض",
-      "back": "رجوع",
-      "next": "التالي",
-      "upload": "رفع",
-      "published": "منشور",
-      "draft": "مسودة",
-      "total": "المجموع",
-      "actions": "الإجراءات",
-      "preview": "معاينة",
-      "yes": "نعم",
-      "no": "لا",
-      "confirm": "تأكيد",
-      "success": "نجاح",
-      "error": "خطأ",
-      "loading": "جاري التحميل...",
-      "select": "اختر",
-      "search": "بحث",
-      "filter": "تصفية",
-      "reset": "إعادة تعيين",
-      "apply": "تطبيق",
-      "close": "إغلاق",
-      "open": "فتح",
-      "active": "نشط",
-      "inactive": "غير نشط",
-      "all": "الكل",
-      "none": "لا شيء",
-      "required": "مطلوب",
-      "optional": "اختياري",
-      "download": "تحميل",
-      "print": "طباعة",
-      "export": "تصدير",
-      "import": "استيراد",
-      "refresh": "تحديث"
+    "showing": "عرض ",
+    "of": " من ",
+    "items": "عناصر",
+    "noResults": "لم يتم العثور على محتوى",
+    "resetFilters": "إعادة تعيين الفلاتر",
+    "view": "عرض",
+    "markComplete": "تمييز كمكتمل",
+    "progress": "التقدم",
+    "minutes": "دقيقة",
+    "completed": "مكتمل",
+    "video": "فيديو",
+    "quiz": "اختبار",
+    "questions": "أسئلة",
+    "open": "فتح",
+    "yourProgress": "تقدمك",
+    "content": "المحتوى",
+    "inProgress": "قيد التنفيذ",
+    "status": "الحالة",
+    "watchNow": "شاهد الآن",
+    "startReading": "ابدأ القراءة",
+    "download": "تحميل",
+    "share": "مشاركة",
+    "save": "حفظ",
+    "close": "إغلاق",
+    "tip": "نصيحة",
+    "instruction": "انقر على أي عنصر لعرض تفاصيله الكاملة. يمكنك تصفية المحتوى حسب النوع والترتيب حسب متطلباتك.",
+    "messages": {
+      "markedComplete": "تم تمييز المحتوى كمكتمل بنجاح"
     }
   }
 }

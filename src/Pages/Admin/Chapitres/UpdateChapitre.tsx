@@ -297,7 +297,7 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                                                     <div className="flex items-center gap-4">
                                                         <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
                                                             <img
-                                                                src={chapitre.thumbnail}
+                                                                src={String(chapitre?.thumbnail!)}
                                                                 alt="Image existante"
                                                                 className="w-full h-full object-cover"
                                                             />
