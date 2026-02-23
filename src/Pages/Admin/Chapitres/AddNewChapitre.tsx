@@ -60,8 +60,8 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
 
             const formData = {
                 ...values,
-                thumbnail: thumbnailFile, 
-                is_published: values.is_published || false, 
+                thumbnail: thumbnailFile,
+                is_published: values.is_published || false,
                 subject: values.subject,
             };
 

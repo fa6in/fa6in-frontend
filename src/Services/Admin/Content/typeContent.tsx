@@ -1,7 +1,7 @@
 
 
 export type TypeContent = {
-    id: number;
+    id?: number|string;
     title: string;
     content_type: string;
     content: string;
@@ -9,6 +9,8 @@ export type TypeContent = {
     metadata: {
         font_size: string;
         has_quiz: boolean;
+        duration: number;
+        alt_text?: string;
     };
-    unit: number;
+    unit: number|string;
 };

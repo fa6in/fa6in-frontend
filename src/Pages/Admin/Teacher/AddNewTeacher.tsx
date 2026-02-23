@@ -50,7 +50,7 @@ export default function AddNewTeacher({ handleModalCancel }: Props) {
                 grade: values?.grade,
                 school: values?.school
             }
-            
+
             addStudent(params, {
                 onSuccess: () => {
                     handleModalCancel();

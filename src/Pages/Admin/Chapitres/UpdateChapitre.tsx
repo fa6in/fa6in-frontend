@@ -78,8 +78,8 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
             const formData = {
                 ...values,
                 id: chapitre.id,
-                thumbnail: thumbnailFile || chapitre.thumbnail, 
-                is_published: values.is_published === true, 
+                thumbnail: thumbnailFile || chapitre.thumbnail,
+                is_published: values.is_published === true,
                 subject_id: values.subject, // 
             };
 

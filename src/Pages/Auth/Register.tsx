@@ -98,13 +98,13 @@ const RegisterPage: React.FC = () => {
             // Simuler un appel API
             dataregister(values, {
                 onSuccess: () => {
-                    
+
                     notification.success({
                         message: t('register.success'),
                         description: t('register.success_description'),
                     });
                     setTimeout(() => {
-                    return navigate("/login")
+                        return navigate("/login")
                     }, 3000);
                 }
             })

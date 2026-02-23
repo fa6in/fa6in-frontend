@@ -10,7 +10,7 @@ import { GrChapterAdd } from "react-icons/gr";
 import {
   DashboardOutlined,
   BookOutlined,
-  SettingOutlined,
+  // SettingOutlined,
   // AppstoreOutlined,
   FileTextOutlined,
   SafetyCertificateOutlined,
@@ -27,6 +27,8 @@ const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/Matieres/
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
 const ChapitreViewStudent = lazy(() => import("../Pages/Student-Pages/Chapitres/ChapitreViewStudent"));
 const Content = lazy(() => import("../Pages/Student-Pages/Contenu/ContenuView"));
+const AssignemnetViewStudent = lazy(() => import("../Pages/Student-Pages/Assignements/AssignementViewStudent"));
+const AssignemnetViewAdmin = lazy(() => import("../Pages/Admin/Assignments/AssignmentViewAdmin"));
 // const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 const role = AuthService.getRole()
 
@@ -157,7 +159,7 @@ const MainRouter: RouteType[] = [
     path: "/assignments",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
+        {role === "student" ? <AssignemnetViewStudent /> : <AssignemnetViewAdmin />}
       </Suspense>
     ),
 
@@ -187,22 +189,22 @@ const MainRouter: RouteType[] = [
     }
   },
 
-  {
-    path: "/settings",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
+  // {
+  //   path: "/settings",
+  //   element: (
+  //     <Suspense fallback={<SpinnerLoader />}>
+  //       <Prapared />
+  //     </Suspense>
+  //   ),
 
-    layout: "private",
-    allowedRoles: ["admin"],
-    sidebar: {
-      key: "settings",
-      label: ("sidebar.settings"),
-      icon: <SettingOutlined />,
-    }
-  },
+  //   layout: "private",
+  //   allowedRoles: ["admin"],
+  //   sidebar: {
+  //     key: "settings",
+  //     label: ("sidebar.settings"),
+  //     icon: <SettingOutlined />,
+  //   }
+  // },
 
 
   // ==================== FALLBACK ROUTE ====================

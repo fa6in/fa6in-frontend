@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../../../Auth-service/axios";
 import type { TypeContent } from "./typeContent";
 
+export const KEY_CONTENT = ["Content"];
 async function getcontent(id: number): Promise<TypeContent[]> {
     try {
         const res = await api.get(`/api/curriculum/units/${id}/sections/`);
@@ -23,8 +24,8 @@ export function useGetContent(id: number | undefined) {
             }
             return getcontent(id);
         },
-        enabled: !!id, // Ne lancer la requête que si l'id est défini
-        staleTime: 5 * 60 * 1000, // 5 minutes (optionnel)
-        retry: 1, // Nombre de tentatives en cas d'erreur (optionnel)
+        // enabled: !!id, // Ne lancer la requête que si l'id est défini
+        // staleTime: 5 * 60 * 1000, // 5 minutes (optionnel)
+        // retry: 1, // Nombre de tentatives en cas d'erreur (optionnel)
     });
 }
