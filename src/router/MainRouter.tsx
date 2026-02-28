@@ -19,6 +19,7 @@ import {
 import AuthService from "../Auth-service/AuthService";
 // Admin Components
 const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
+const HomeTeacher = lazy(() => import("../Pages/Teacher/HomeTeacher"));
 const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
@@ -41,7 +42,8 @@ const MainRouter: RouteType[] = [
     path: "/",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <HomeAdmin />
+        {role === "teacher" ?<HomeTeacher/> : <HomeAdmin />}
+        
       </Suspense>
     ),
     layout: "private",
@@ -107,7 +109,7 @@ const MainRouter: RouteType[] = [
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         {/* <MartieresView /> */}
-         {role === "student" ? <MartieresViewStudent /> : <MartieresView />}
+        {role === "student" ? <MartieresViewStudent /> : <MartieresView />}
       </Suspense>
     ),
 
@@ -125,7 +127,7 @@ const MainRouter: RouteType[] = [
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         {/* <ChapitreView /> */}
-         {role === "student" ? <ChapitreViewStudent /> : <ChapitreView />}
+        {role === "student" ? <ChapitreViewStudent /> : <ChapitreView />}
 
       </Suspense>
     ),
@@ -154,7 +156,7 @@ const MainRouter: RouteType[] = [
       icon: <AppstoreOutlined />,
     }
   },
-  
+
   {
     path: "/assignments",
     element: (

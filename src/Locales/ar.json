@@ -1,4 +1,67 @@
 {
+   "dashboard_teacher": {
+    "common": {
+      "loading": "جاري التحميل...",
+      "no_data": "لا توجد بيانات",
+      "actions": {
+        "view": "عرض",
+        "view_details": "عرض التفاصيل"
+      }
+    },
+    "dashboard": {
+      "welcome_back": "مرحباً بعودتك",
+      "last_updated": "آخر تحديث",
+      "stats": {
+        "total_students": "إجمالي الطلاب",
+        "active_students": "الطلاب النشطون",
+        "total_units": "إجمالي الوحدات",
+        "published_units": "الوحدات المنشورة",
+        "total_activities": "إجمالي الأنشطة",
+        "engagement": "مشاركة الطلاب",
+        "avg_progress": "متوسط التقدم"
+      },
+      "recent_activity": {
+        "title": "النشاط الأخير",
+        "period": "الفترة",
+        "attempts": "إجمالي المحاولات",
+        "unique_students": "الطلاب الفريدون"
+      },
+      "deadlines": {
+        "title": "المواعيد النهائية القادمة"
+      },
+      "students_progress": {
+        "title": "تقدم الطلاب",
+        "name": "اسم الطالب",
+        "grade": "الصف",
+        "progress": "التقدم",
+        "mastery_level": "مستوى الإتقان",
+        "last_accessed": "آخر وصول"
+      },
+      "units_performance": {
+        "title": "أداء الوحدات",
+        "unit_title": "عنوان الوحدة",
+        "subject": "المادة",
+        "difficulty": "الصعوبة",
+        "completion_rate": "معدل الإكمال",
+        "average_score": "متوسط الدرجة"
+      },
+      "mastery": {
+        "beginner": "مبتدئ",
+        "intermediate": "متوسط",
+        "advanced": "متقدم"
+      },
+      "priority": {
+        "high": "أولوية عالية",
+        "medium": "أولوية متوسطة",
+        "low": "أولوية منخفضة"
+      },
+      "difficulty": {
+        "easy": "سهل",
+        "medium": "متوسط",
+        "hard": "صعب"
+      }
+    }
+  },
   "login": {
     "no_admin_account": "ليس لديك حساب مدير؟",
     "create_admin_account": "إنشاء حساب مدير",
@@ -1343,4 +1406,6 @@
       "error": "حدث خطأ أثناء إنشاء النشاط"
     }
   }
+ 
+
 }

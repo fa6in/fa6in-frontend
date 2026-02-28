@@ -38,10 +38,6 @@ import {
     OrderedListOutlined,
     FormatPainterOutlined,
     CloseOutlined,
-    FullscreenOutlined,
-    ShareAltOutlined,
-    DownloadOutlined,
-    StarOutlined,
     CheckCircleOutlined
 } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -429,7 +425,7 @@ const ContenuView = () => {
                             onClick={() => setIsModalVisible(true)}
                             className="!bg-gradient-to-r !from-emerald-500 !to-teal-500 !border-none shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
                         >
-                            {t('content.addNew')}
+                            {t('common.add')}
                         </Button>
                     </motion.div>
                 </div>
@@ -437,11 +433,11 @@ const ContenuView = () => {
                 {/* Statistiques améliorées */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8">
                     {[
-                        { icon: <BookOutlined />, value: stats.total, label: t('content.stats.total'), color: 'blue' },
+                        { icon: <BookOutlined />, value: stats.total, label: t('content.stats.total'), color: 'emerald' },
                         { icon: <FileTextOutlined />, value: stats.textContents, label: t('content.type.text'), color: 'emerald' },
-                        { icon: <VideoCameraOutlined />, value: stats.videoContents, label: t('content.type.video'), color: 'purple' },
-                        { icon: <AudioOutlined />, value: stats.audioContents, label: t('content.type.audio'), color: 'cyan' },
-                        { icon: <ClockCircleOutlined />, value: `${Math.floor(stats.totalDuration / 60)}h ${stats.totalDuration % 60}m`, label: t('content.stats.duration'), color: 'amber' }
+                        { icon: <VideoCameraOutlined />, value: stats.videoContents, label: t('content.type.video'), color: 'emerald' },
+                        { icon: <AudioOutlined />, value: stats.audioContents, label: t('content.type.audio'), color: 'emerald' },
+                        { icon: <ClockCircleOutlined />, value: `${Math.floor(stats.totalDuration / 60)}h ${stats.totalDuration % 60}m`, label: t('content.stats.duration'), color: 'emerald' }
                     ].map((stat, index) => (
                         <motion.div
                             key={index}
@@ -979,47 +975,7 @@ const ContenuView = () => {
                                         </div>
                                     )}
 
-                                    {/* Actions */}
-                                    <div className="space-y-3">
-                                        <Button
-                                            type="primary"
-                                            size="large"
-                                            block
-                                            icon={<FullscreenOutlined />}
-                                            className="!bg-gradient-to-r !from-emerald-500 !to-teal-500 !border-none h-12 rounded-xl font-semibold"
-                                        >
-                                            {selectedContent.content_type === 'video' ? t('content.watchNow') : t('content.startReading')}
-                                        </Button>
 
-                                        <div className="grid grid-cols-3 gap-3">
-                                            <Button
-                                                icon={<DownloadOutlined />}
-                                                size="large"
-                                                block
-                                                className="rounded-xl hover:!text-emerald-500"
-                                            >
-                                                {t('content.download')}
-                                            </Button>
-
-                                            <Button
-                                                icon={<ShareAltOutlined />}
-                                                size="large"
-                                                block
-                                                className="rounded-xl hover:!text-emerald-500"
-                                            >
-                                                {t('content.share')}
-                                            </Button>
-
-                                            <Button
-                                                icon={<StarOutlined />}
-                                                size="large"
-                                                block
-                                                className="rounded-xl hover:!text-emerald-500"
-                                            >
-                                                {t('content.save')}
-                                            </Button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </motion.div>
