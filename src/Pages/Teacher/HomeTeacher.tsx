@@ -173,7 +173,7 @@ const TeacherDashboard: React.FC = () => {
               </h1>
               <p className="text-gray-600 flex items-center text-sm md:text-base">
                 <ClockCircleOutlined className="ml-2" />
-                {t('dashboard_teacher.dashboard.last_updated')}: {new Date(dataDashboardTeacher?.last_updated || '').toLocaleString('ar-EG')}
+                {t('dashboard_teacher.dashboard.last_updated')}: {new Date(dataDashboardTeacher?.last_updated || '').toLocaleString('fr')}
               </p>
             </div>
             <motion.div
