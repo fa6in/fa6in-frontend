@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../Auth-service/axios";
 
-export const TEACHER_KEY = ["dashboard-teacher"]
+export const TEACHER_DASHBOARD_KEY = ["dashboard-teacher"]
 
 export type TeacherDashboardType = {
   id: number;
@@ -31,7 +31,7 @@ async function getdashboard():Promise<TeacherDashboardType>{
 
 export function useGetDashboardTeacher(){
     return useQuery({
-        queryKey:TEACHER_KEY,
+        queryKey:TEACHER_DASHBOARD_KEY,
         queryFn:()=>getdashboard(),
     })
 }

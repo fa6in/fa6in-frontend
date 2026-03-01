@@ -1,4 +1,100 @@
 {
+  "dashboard_admin": {
+    "common": {
+      "loading": "جاري التحميل...",
+      "no_data": "لا توجد بيانات",
+      "actions": {
+        "view": "عرض",
+        "view_details": "عرض التفاصيل",
+        "refresh": "تحديث",
+        "export": "تصدير"
+      },
+      "time": {
+        "today": "اليوم",
+        "this_week": "هذا الأسبوع",
+        "this_month": "هذا الشهر",
+        "last_30_days": "آخر 30 يوم"
+      }
+    },
+    "dashboard": {
+      "title": "لوحة تحكم المدير",
+      "welcome": "مرحباً بعودتك",
+      "subtitle": "نظرة عامة على أداء المنصة",
+      "last_updated": "آخر تحديث",
+      "generated_at": "تم التوليد في"
+    },
+    "stats": {
+      "total_users": "إجمالي المستخدمين",
+      "total_logins": "إجمالي تسجيلات الدخول",
+      "daily_active_users": "المستخدمين النشطين يومياً",
+      "total_activities": "إجمالي الأنشطة المكتملة",
+      "avg_session_duration": "متوسط مدة الجلسة",
+      "active_users_rate": "معدل المستخدمين النشطين",
+      "new_users": "المستخدمين الجدد",
+      "growth_rate": "معدل النمو",
+      "total_units": "إجمالي الوحدات",
+      "published_units": "الوحدات المنشورة",
+      "success_rate": "معدل النجاح",
+      "completion_rate": "معدل الإكمال",
+      "minutes": "دقائق",
+      "seconds": "ثواني"
+    },
+    "charts": {
+      "peak_usage": "ساعات الذروة",
+      "usage_trend": "اتجاه الاستخدام",
+      "user_distribution": "توزيع المستخدمين",
+      "subject_performance": "أداء المواد",
+      "content_creation": "اتجاه إنشاء المحتوى",
+      "role_distribution": "توزيع الأدوار",
+      "units_by_difficulty": "الوحدات حسب الصعوبة",
+      "hour": "الساعة",
+      "count": "العدد",
+      "date": "التاريخ",
+      "attempts": "المحاولات",
+      "users": "المستخدمين"
+    },
+    "performance": {
+      "title": "تحليلات الأداء",
+      "overall_success_rate": "معدل النجاح العام",
+      "avg_completion_rate": "متوسط معدل الإكمال",
+      "top_students": "أفضل الطلاب أداءً",
+      "struggling_students": "الطلاب المتعثرون",
+      "student_name": "اسم الطالب",
+      "avg_progress": "متوسط التقدم",
+      "total_score": "إجمالي الدرجات",
+      "no_struggling": "لا يوجد طلاب متعثرون"
+    },
+    "users": {
+      "title": "تحليلات المستخدمين",
+      "role_distribution": "توزيع الأدوار",
+      "admin": "مدير",
+      "teacher": "معلم",
+      "student": "طالب",
+      "new_users": "مستخدمين جدد",
+      "active_rate": "معدل النشاط",
+      "growth": "النمو",
+      "current_month": "الشهر الحالي",
+      "last_month": "الشهر الماضي"
+    },
+    "content": {
+      "title": "تحليلات المحتوى",
+      "most_accessed": "الوحدات الأكثر وصولاً",
+      "unit_title": "عنوان الوحدة",
+      "difficulty": "الصعوبة",
+      "access_count": "عدد مرات الوصول",
+      "easy": "سهل",
+      "medium": "متوسط",
+      "hard": "صعب",
+      "creation_trend": "اتجاه إنشاء المحتوى"
+    },
+    "subjects": {
+      "title": "أداء المواد",
+      "subject": "المادة",
+      "grade": "المستوى",
+      "avg_progress": "متوسط التقدم",
+      "total_students": "عدد الطلاب"
+    }
+  },
    "dashboard_teacher": {
     "common": {
       "loading": "جاري التحميل...",

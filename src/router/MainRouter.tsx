@@ -18,7 +18,7 @@ import {
 } from "@ant-design/icons";
 import AuthService from "../Auth-service/AuthService";
 // Admin Components
-const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
+// const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
 const HomeTeacher = lazy(() => import("../Pages/Teacher/HomeTeacher"));
 const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
@@ -30,6 +30,9 @@ const ChapitreViewStudent = lazy(() => import("../Pages/Student-Pages/Chapitres/
 const Content = lazy(() => import("../Pages/Student-Pages/Contenu/ContenuView"));
 const AssignemnetViewStudent = lazy(() => import("../Pages/Student-Pages/Assignements/AssignementViewStudent"));
 const AssignemnetViewAdmin = lazy(() => import("../Pages/Admin/Assignments/AssignmentViewAdmin"));
+
+const NewDashboardAdmin = lazy(() => import("../Pages/Admin/Dashboard/DashboardHomeAdmin"));
+
 // const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 const role = AuthService.getRole()
 
@@ -42,8 +45,8 @@ const MainRouter: RouteType[] = [
     path: "/",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "teacher" ?<HomeTeacher/> : <HomeAdmin />}
-        
+        {role === "teacher" ? <HomeTeacher /> : <NewDashboardAdmin />}
+
       </Suspense>
     ),
     layout: "private",

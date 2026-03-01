@@ -49,6 +49,7 @@ import SpinnerLoader from '../../../ui/SpinnerLoader';
 import AddNewContenu from './AddNewContenu';
 import { FcViewDetails } from 'react-icons/fc';
 import UpdateContenu from './UpdateContent';
+import AuthService from '../../../Auth-service/AuthService';
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -197,6 +198,7 @@ const ContenuView = () => {
     const [selectedChapitre, setSelectedChapitre] = useState<number | undefined>(undefined);
     const [hoveredContentId, setHoveredContentId] = useState<number | null>(null);
 
+    const role = AuthService.getRole()
     const { data: chapitreData, isPending: isPendingChapitre } = useGetChapitre();
 
     useEffect(() => {
@@ -413,7 +415,8 @@ const ContenuView = () => {
                         </motion.div>
                     </div>
 
-                    <motion.div
+                    {role !== "student" && (
+                        <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
@@ -428,6 +431,7 @@ const ContenuView = () => {
                             {t('common.add')}
                         </Button>
                     </motion.div>
+                    )}
                 </div>
 
                 {/* Statistiques améliorées */}
