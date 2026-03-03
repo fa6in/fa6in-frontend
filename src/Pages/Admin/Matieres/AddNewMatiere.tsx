@@ -43,10 +43,10 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedColor, setSelectedColor] = useState('#4CAF50');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     // Utilisation du hook avec gestion correcte du statut
     const { mutate: addMatiere, isPending: isPendingAdd } = useAddMatiere();
-    
+
     const handleCancel = () => {
         setCurrentStep(0);
         onCancel();
@@ -72,6 +72,12 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
         { value: 4, label: t('matieresAdd.grades.grade4'), color: 'purple' },
         { value: 5, label: t('matieresAdd.grades.grade5'), color: 'red' },
         { value: 6, label: t('matieresAdd.grades.grade6'), color: 'cyan' },
+        { value: 7, label: t('matieresAdd.grades.grade7'), color: 'red' },
+        { value: 8, label: t('matieresAdd.grades.grade8'), color: 'blue' },
+        { value: 9, label: t('matieresAdd.grades.grade9'), color: 'green' },
+        { value: 10, label: t('matieresAdd.grades.grade10'), color: 'gray' },
+        { value: 11, label: t('matieresAdd.grades.grade11'), color: 'pink' },
+        { value: 12, label: t('matieresAdd.grades.grade12'), color: 'purple' },
     ];
 
     // Couleurs prédéfinies
@@ -96,44 +102,44 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
 
         try {
             setIsSubmitting(true);
-            
+
             // Valider tous les champs du formulaire
             await form.validateFields();
-            
+
             const values = form.getFieldsValue(true);
-            
+
             // Ajouter la couleur sélectionnée aux valeurs
             const finalValues = {
                 ...values,
                 color: selectedColor
             };
-            
+
             console.log('Soumission des données:', finalValues);
-            
+
             // Utiliser mutate avec des callbacks complets
             addMatiere(finalValues, {
                 onSuccess: (data) => {
                     console.log('Succès de l\'ajout:', data);
                     message.success(t('matieresAdd.messages.addSuccess'));
-                    
+
                     // Réinitialiser le formulaire
                     form.resetFields();
                     setSelectedColor('#4CAF50');
                     setCurrentStep(0);
                     setIsSubmitting(false);
-                    
+
                     // Fermer le modal
                     onCancel();
                 },
                 onError: (error) => {
                     console.error('Erreur lors de l\'ajout:', error);
-                    
+
                     // Réinitialiser l'état de soumission
                     setIsSubmitting(false);
-                    
+
                     // Les messages d'erreur sont déjà gérés dans le hook useAddMatiere
                     // Vous pouvez ajouter une logique supplémentaire ici si nécessaire
-                    
+
                     // Par exemple, revenir au premier step si l'erreur est liée aux données de base
                     if (error?.response?.status === 400) {
                         // Optionnel: Revenir au premier step pour corriger les erreurs
@@ -146,10 +152,10 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
             // Cette erreur vient de la validation du formulaire, pas de l'API
             console.error('Erreur de validation:', validationError);
             setIsSubmitting(false);
-            
+
             // Afficher un message si la validation échoue
             message.error(t('matieresAdd.validation.formValidationFailed'));
-            
+
             // Revenir au premier step pour corriger les erreurs
             setCurrentStep(0);
         }
@@ -159,7 +165,7 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
         // Valider uniquement les champs visibles
         const fieldNames = steps[currentStep].content.props.children.props.children;
         const fieldsToValidate = extractFieldNames(fieldNames);
-        
+
         form.validateFields(fieldsToValidate)
             .then(() => {
                 setCurrentStep(currentStep + 1);
@@ -173,13 +179,13 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
     // Fonction utilitaire pour extraire les noms de champs d'une étape
     const extractFieldNames = (elements: any): string[] => {
         const fieldNames: string[] = [];
-        
+
         React.Children.forEach(elements, (element) => {
             if (element && element.props) {
                 if (element.props.name) {
                     fieldNames.push(element.props.name);
                 }
-                
+
                 // Vérifier les enfants récursivement
                 if (element.props.children) {
                     const childFields = extractFieldNames(element.props.children);
@@ -187,7 +193,7 @@ const AddNewMatiere: React.FC<AddNewMatiereProps> = ({ onCancel }) => {
                 }
             }
         });
-        
+
         return fieldNames;
     };
 

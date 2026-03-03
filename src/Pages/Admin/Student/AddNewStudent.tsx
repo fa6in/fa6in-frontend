@@ -9,6 +9,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAddStudent } from "../../../Services/Admin/Student/useAddStudent";
 import type { AddPersonne } from "../../../Services/Admin/Student/typeStudent";
+import { useGetWilaya } from "../../../Services/Admin/Student/useGetWilaya";
+import SpinnerLoader from "../../../ui/SpinnerLoader";
 
 const { Option } = Select;
 
@@ -27,11 +29,15 @@ type FormValues = {
     phone_number: string;
     grade?: number;
     school: string;
+    wilaya_id:number
 };
 
 export default function AddNewStudent({ handleModalCancel }: Props) {
     const { t } = useTranslation();
     const [form] = Form.useForm<FormValues>();
+    const { data: getWilaya, isPending: isPendingWilaya } = useGetWilaya()
+
+    console.log("wilaya : ", getWilaya)
     const { mutate: addStudent, isPending } = useAddStudent()
 
     const handleModalOk = () => {
@@ -46,7 +52,9 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                 password_confirm: values?.password_confirm,
                 phone_number: values?.phone_number,
                 grade: values?.grade,
-                school: values?.school
+                school: values?.school,
+                wilaya_id : values?.wilaya_id
+
             }
 
             addStudent(params, {
@@ -62,6 +70,10 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
         form.resetFields();
         handleModalCancel()
 
+    }
+
+    if(isPendingWilaya){
+        return <SpinnerLoader/>
     }
 
     return (
@@ -237,6 +249,27 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(grade => (
                                     <Option key={grade} value={grade}>
                                         {t("students1.grades.grade")} {grade}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={12}>
+                        <Form.Item
+                            name="wilaya_id"
+                            label={t("الولاية")}
+                            rules={[
+                                { required: true, message: t("users.form.required") },
+                            ]}
+                        >
+                            <Select
+                                size="large"
+                                placeholder={t("students1.form.gradePlaceholder")}
+                            >
+                                {getWilaya?.map(wilaya => (
+                                    <Option key={wilaya.id} value={wilaya.id}>
+                                        {wilaya.name}
                                     </Option>
                                 ))}
                             </Select>

@@ -11,6 +11,7 @@ export type AddPersonne = {
     phone_number: string;
     grade?: number;
     school: string;
+    wilaya_id:number
 };
 
 

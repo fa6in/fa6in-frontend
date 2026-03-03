@@ -19,7 +19,6 @@ import {
   InfoCircleOutlined,
   FileTextOutlined,
   CheckCircleOutlined,
-  CalendarOutlined,
   SortAscendingOutlined,
   FireOutlined,
   RocketOutlined
@@ -269,21 +268,7 @@ const MatieresViewStudent = () => {
             </div>
 
             <Space wrap className="flex flex-wrap justify-center gap-3">
-              <Select
-                value={semesterFilter}
-                onChange={setSemesterFilter}
-                className="w-40"
-                size="large"
-                suffixIcon={<CalendarOutlined />}
-                placeholder={t("matieres.filters.semester")}
-              >
-                <Option value="all">{t("matieres.filters.allSemesters")}</Option>
-                {[1, 2, 3, 4, 5, 6].map(sem => (
-                  <Option key={sem} value={sem.toString()}>
-                    {t("matieres.semester")} {sem}
-                  </Option>
-                ))}
-              </Select>
+             
 
               <Select
                 value={difficultyFilter}
@@ -617,3 +602,4 @@ const MatieresViewStudent = () => {
 };
 
 export default MatieresViewStudent;
+

@@ -284,7 +284,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                                             min={0}
                                             className="w-full"
                                             placeholder={t('form.placeholders.duration')}
-                                            addonAfter={t('common.seconds')}
+                                            addonAfter={t('dashboard_admin.stats.minutes')}
                                             style={{ borderRadius: '8px' }}
                                         />
                                     </Form.Item>
@@ -455,14 +455,14 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="text-center mb-8">
+                        {/* <div className="text-center mb-8">
                             <Title level={3} className="!text-gray-800 mb-2">
                                 {t('form.contentType.title')}
                             </Title>
                             <Text type="secondary" className="text-lg">
                                 {t('form.contentType.updateDescription')}
                             </Text>
-                        </div>
+                        </div> */}
 
                         <Form.Item
                             name="content_type"
@@ -672,7 +672,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                         transition={{ duration: 0.3 }}
                     >
                         <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 mb-6">
-                            <div className="text-center mb-6">
+                            {/* <div className="text-center mb-6">
                                 <EditOutlined className="text-5xl text-blue-500 mb-3" />
                                 <Title level={3} className="!text-blue-800">
                                     {t('form.summary.reviewUpdate')}
@@ -680,7 +680,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                                 <Text className="text-blue-600">
                                     {t('form.summary.checkBeforeUpdate')}
                                 </Text>
-                            </div>
+                            </div> */}
 
                             <Card className="shadow-sm border-blue-100">
                                 <Space direction="vertical" size="middle" className="w-full">
@@ -752,7 +752,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                                                 {t('form.fields.duration')}:
                                             </Text>
                                             <Tag color="orange">
-                                                {formValues.metadata.duration} {t('common.seconds')}
+                                                {formValues.metadata.duration} {t('dashboard_admin.stats.minutes')}
                                             </Tag>
                                         </div>
                                     )}
@@ -798,10 +798,10 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                         <div className="text-center mb-6">
                             <Title level={2} className="!text-gray-800 !mb-2 flex items-center justify-center gap-3">
                                 <EditOutlined className="text-blue-600 bg-blue-100 p-2 rounded-lg" />
-                                {t('page.updateTitle')}
+                                {/* {t('page.updateTitle')} */}
                             </Title>
                             <Text type="secondary" className="text-lg">
-                                {t('page.updateDescription')}
+                                {/* {t('page.updateDescription')} */}
                             </Text>
                         </div>
 
@@ -885,7 +885,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                                         icon={<SaveOutlined />}
                                         className="w-full sm:w-auto rounded-lg px-8 !bg-blue-600 !text-white hover:!bg-blue-700"
                                     >
-                                        {t('common.buttons.updateContent')}
+                                        تحديث
                                     </Button>
                                 )}
                             </div>

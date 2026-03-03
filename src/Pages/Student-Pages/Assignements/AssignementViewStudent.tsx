@@ -547,7 +547,7 @@ const AssignmentViewStudent: React.FC = () => {
                             onClick={() => handleSubmitSingleAnswer(type, activity)}
                             className="!bg-green-500"
                         >
-                            {t('assignment.submit')}
+                            {t('assignment.messages.submit')}
                         </Button>
                     ) : (
                         <Button
@@ -667,7 +667,7 @@ const AssignmentViewStudent: React.FC = () => {
                             onClick={() => handleSubmitSingleAnswer(type, activity)}
                             className="!bg-green-500"
                         >
-                            {t('assignment.submit')}
+                            {t('assignment.messages.submit')}
                         </Button>
                     ) : (
                         <Button
@@ -792,7 +792,7 @@ const AssignmentViewStudent: React.FC = () => {
                             onClick={() => handleSubmitSingleAnswer(type, activity)}
                             className="!bg-green-500"
                         >
-                            {t('assignment.submit')}
+                            {t('assignment.messages.submit')}
                         </Button>
                     ) : (
                         <Button

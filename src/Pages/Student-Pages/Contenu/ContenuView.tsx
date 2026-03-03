@@ -38,7 +38,7 @@ import {
     OrderedListOutlined,
     FormatPainterOutlined,
     CloseOutlined,
-    CheckCircleOutlined
+    CheckCircleOutlined,
 } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -186,7 +186,6 @@ const ContenuView = () => {
 
     // États
     const [searchText, setSearchText] = useState('');
-    const [contentTypeFilter, setContentTypeFilter] = useState<string>('all');
     const [sortBy, setSortBy] = useState('order');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedContent, setSelectedContent] = useState<TypeContent | null>(null);
@@ -201,15 +200,69 @@ const ContenuView = () => {
     const role = AuthService.getRole()
     const { data: chapitreData, isPending: isPendingChapitre } = useGetChapitre();
 
+   
+
     useEffect(() => {
         if (chapitreData && chapitreData.length > 0) {
             setSelectedChapitre(chapitreData[0]?.id);
         }
     }, [chapitreData]);
 
+    const getDirectImageUrl = (url: string): string => {
+        try {
+            // Gestion des liens files.fm
+            if (url.includes('files.fm')) {
+                const fileId = url.split('/').pop();
+                if (fileId) {
+                    return `https://files.fm/down.php?i=${fileId}`;
+                }
+            }
+
+            // Gestion des liens Google Drive
+            if (url.includes('drive.google.com')) {
+                // https://drive.google.com/file/d/FILE_ID/view -> https://drive.google.com/uc?id=FILE_ID
+                const match = url.match(/\/d\/([^\/]+)/);
+                if (match) {
+                    return `https://drive.google.com/uc?id=${match[1]}`;
+                }
+            }
+
+            // Gestion des liens Dropbox
+            if (url.includes('dropbox.com')) {
+                // Remplacer ?dl=0 par ?dl=1 pour le téléchargement direct
+                return url.replace('?dl=0', '?dl=1');
+            }
+
+            // Gestion des liens Imgur
+            if (url.includes('imgur.com')) {
+                if (url.includes('/a/') || url.includes('/gallery/')) {
+                    // Pour les albums/galleries, on ne peut pas afficher directement
+                    return url;
+                }
+                // Ajouter l'extension .jpg si ce n'est pas déjà une image
+                if (!url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                    return `${url}.jpg`;
+                }
+            }
+
+            return url;
+        } catch (error) {
+            console.error('Erreur lors du traitement de l\'URL image:', error);
+            return url;
+        }
+    };
+
+    // Fonction pour vérifier si l'URL est une image valide
+    const isImageUrl = (url: string): boolean => {
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
+        return imageExtensions.some(ext => url.toLowerCase().includes(ext));
+    };
+
+    
+
     const { data: contents, isPending } = useGetContent(selectedChapitre!);
 
-    const generateItems = (content: TypeContent): MenuProps["items"] => [
+    const generateItems = (content: TypeContent): MenuProps["items"] => role !== "student" ? [
         {
             key: '1',
             label: t("teachers.common.viewDetails"),
@@ -222,7 +275,51 @@ const ContenuView = () => {
             icon: <EditFilled />,
             onClick: () => handleShow(content, "update"),
         },
-    ];
+    ] : [
+        {
+            key: '1',
+            label: t("teachers.common.viewDetails"),
+            icon: <FcViewDetails />,
+            onClick: () => handleContentSelect(content)
+        },
+    ]
+
+    const getYouTubeEmbedUrl = (url: string): string => {
+        try {
+            // Regex pour extraire l'ID de la vidéo YouTube depuis différentes formes d'URL
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
+                /^([^&\n?#]+)$/ // Si c'est juste l'ID
+            ];
+
+            let videoId = null;
+
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) {
+                    videoId = match[1];
+                    break;
+                }
+            }
+
+            if (videoId) {
+                // Nettoyer l'ID des paramètres supplémentaires
+                videoId = videoId.split('?')[0].split('&')[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            // Si ce n'est pas une URL YouTube, retourner l'URL originale
+            return url;
+        } catch (error) {
+            console.error('Erreur lors du parsing de l\'URL YouTube:', error);
+            return url;
+        }
+    };
+
+    const isAudioUrl = (url: string): boolean => {
+        const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac', '.webm'];
+        return audioExtensions.some(ext => url.toLowerCase().includes(ext));
+    };
 
     const handleSelectChapitre = (value: number) => {
         setSelectedChapitre(value);
@@ -309,66 +406,149 @@ const ContenuView = () => {
             case 'video':
                 return (
                     <motion.div
-                        className="relative rounded-xl overflow-hidden group/video"
+                        className="relative rounded-xl overflow-hidden group/video cursor-pointer"
                         whileHover={{ scale: 1.02 }}
+                        onClick={() => handleContentSelect(content)}
                     >
                         <div className={`h-40 bg-gradient-to-br ${config.gradient} flex items-center justify-center relative`}>
-                            <PlayCircleOutlined className="text-white text-5xl opacity-90 group-hover/video:opacity-100 group-hover/video:scale-110 transition-all duration-300" />
-                            {content.metadata?.duration > 0 && (
-                                <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                                    <ClockCircleOutlined className="mr-1" />
-                                    {content.metadata.duration} min
+                            {content.content?.includes('youtube.com') || content.content?.includes('youtu.be') ? (
+                                <div className="w-full h-full relative">
+                                    <iframe
+                                        src={getYouTubeEmbedUrl(content.content)}
+                                        className="w-full h-full"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        title={content.title}
+                                    />
                                 </div>
+                            ) : (
+                                <>
+                                    <PlayCircleOutlined className="text-white text-5xl opacity-90 group-hover/video:opacity-100 group-hover/video:scale-110 transition-all duration-300" />
+                                    {content.metadata?.duration > 0 && (
+                                        <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                                            <ClockCircleOutlined className="mr-1" />
+                                            {content.metadata.duration} min
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </motion.div>
                 );
-
             case 'audio':
                 return (
                     <motion.div
-                        className={`bg-gradient-to-br ${config.gradient} p-4 rounded-xl relative overflow-hidden`}
+                        className={`bg-gradient-to-br ${config.gradient} p-4 rounded-xl relative overflow-hidden cursor-pointer`}
                         whileHover={{ scale: 1.02 }}
+                        onClick={() => handleContentSelect(content)}
                     >
                         <div className="absolute inset-0 bg-white/10 backdrop-blur-sm" />
                         <div className="relative flex items-center gap-3">
-                            <Avatar size={48} icon={<AudioOutlined />} className="bg-white/20" />
+                            <Avatar
+                                size={48}
+                                icon={<AudioOutlined />}
+                                className="bg-white/20 shadow-lg"
+                                style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                            />
                             <div className="flex-1">
-                                <div className="h-1 bg-white/30 rounded-full w-full">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <PlayCircleOutlined className="text-white text-xl" />
+                                    <Text className="text-white text-sm font-medium truncate">
+                                        {content?.title}
+                                    </Text>
+                                </div>
+                                <div className="h-1.5 bg-white/30 rounded-full w-full overflow-hidden">
                                     <motion.div
-                                        className="h-1 bg-white rounded-full w-2/3"
-                                        animate={{ width: ["0%", "70%"] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="h-full bg-white rounded-full"
+                                        initial={{ width: "0%" }}
+                                        animate={{ width: "100%" }}
+                                        transition={{
+                                            duration: 3,
+                                            repeat: Infinity,
+                                            ease: "linear"
+                                        }}
                                     />
                                 </div>
-                                <Text className="text-white text-xs mt-2 block">
-                                    {content.metadata?.duration || 0} min
-                                </Text>
+                                <div className="flex justify-between items-center mt-2">
+                                    <Text className="text-white/80 text-xs">
+                                        {isAudioUrl(content.content)}
+                                    </Text>
+                                    {/* {content.metadata?.duration > 0 && (
+                                        <Text className="text-white text-xs font-medium">
+                                            {Math.floor(content.metadata.duration / 60)}:
+                                            {(content.metadata.duration % 60).toString().padStart(2, '0')} min
+                                        </Text>
+                                    )} */}
+                                </div>
                             </div>
                         </div>
                     </motion.div>
                 );
-
             case 'image':
+                const imageUrl = getDirectImageUrl(content.content);
+                const isDirectImage = isImageUrl(imageUrl);
+
                 return (
                     <motion.div
-                        className="relative rounded-xl overflow-hidden h-40"
+                        className="relative rounded-xl overflow-hidden group/image cursor-pointer"
                         whileHover={{ scale: 1.02 }}
+                        onClick={() => handleContentSelect(content)}
                     >
-                        <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} opacity-20`} />
-                        <div className="h-full flex items-center justify-center">
-                            <img
-                                src={content.content}
-                                alt={content.metadata?.alt_text || content.title}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Image+non+disponible';
-                                }}
-                            />
-                        </div>
+                        <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} opacity-20 group-hover/image:opacity-30 transition-opacity z-10`} />
+
+                        {isDirectImage ? (
+                            // Image directe
+                            <div className="h-40 relative">
+                                <img
+                                    src={imageUrl}
+                                    alt={content.metadata?.alt_text || content.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-110"
+                                    loading="lazy"
+                                    onError={(e) => {
+                                        console.error('Erreur de chargement image:', imageUrl);
+                                        e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Image+non+disponible';
+                                        e.currentTarget.alt = 'Image non disponible';
+                                    }}
+                                />
+                                {/* Overlay avec informations */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 z-20">
+                                    <div className="absolute bottom-2 left-2 right-2">
+                                        <div className="flex justify-between items-center">
+                                            <Text className="text-white text-xs truncate flex-1">
+                                                {content.title}
+                                            </Text>
+                                            <EyeOutlined className="text-white text-sm" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            // Lien de partage (pas d'image directe)
+                            <div className={`h-40 bg-gradient-to-br ${config.gradient} flex flex-col items-center justify-center p-4 text-center relative`}>
+                                <FormatPainterOutlined className="text-white text-4xl mb-2 opacity-80" />
+                                <Text className="text-white text-sm font-medium line-clamp-2">
+                                    {content.title}
+                                </Text>
+                                <Text className="text-white/80 text-xs mt-2">
+                                    انقر لعرض الصورة
+                                </Text>
+                                <div className="absolute bottom-2 right-2 bg-white/20 rounded-full px-2 py-1">
+                                    <Text className="text-white text-xs">
+                                        رابط خارجي
+                                    </Text>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Badge pour les métadonnées */}
+                        {content.metadata?.alt_text && (
+                            <Tooltip title={content.metadata.alt_text}>
+                                <InfoCircleOutlined className="absolute top-2 right-2 text-white/80 z-20" />
+                            </Tooltip>
+                        )}
                     </motion.div>
                 );
-
             default:
                 return null;
         }
@@ -417,20 +597,20 @@ const ContenuView = () => {
 
                     {role !== "student" && (
                         <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 }}
-                    >
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            size="large"
-                            onClick={() => setIsModalVisible(true)}
-                            className="!bg-gradient-to-r !from-emerald-500 !to-teal-500 !border-none shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 }}
                         >
-                            {t('common.add')}
-                        </Button>
-                    </motion.div>
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                size="large"
+                                onClick={() => setIsModalVisible(true)}
+                                className="!bg-gradient-to-r !from-emerald-500 !to-teal-500 !border-none shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            >
+                                {t('common.add')}
+                            </Button>
+                        </motion.div>
                     )}
                 </div>
 
@@ -509,7 +689,7 @@ const ContenuView = () => {
                                 ))}
                             </Select>
 
-                            <Select
+                            {/* <Select
                                 value={contentTypeFilter}
                                 onChange={setContentTypeFilter}
                                 className="w-40"
@@ -524,7 +704,7 @@ const ContenuView = () => {
                                 <Option value="audio">{t('content.type.audio')}</Option>
                                 <Option value="image">{t('content.type.image')}</Option>
                                 <Option value="pdf">{t('content.type.pdf')}</Option>
-                            </Select>
+                            </Select> */}
 
                             <Select
                                 value={sortBy}
@@ -568,7 +748,6 @@ const ContenuView = () => {
                                     icon={<FilterOutlined />}
                                     onClick={() => {
                                         setSearchText('');
-                                        setContentTypeFilter('all');
                                         setSortBy('order');
                                     }}
                                     size="large"
@@ -724,7 +903,6 @@ const ContenuView = () => {
                                     <Button
                                         onClick={() => {
                                             setSearchText('');
-                                            setContentTypeFilter('all');
                                         }}
                                         size="large"
                                         className="rounded-full px-8"
@@ -922,14 +1100,86 @@ const ContenuView = () => {
                                         </Title>
                                         <div className={`bg-gray-50 rounded-xl p-6 ${selectedContent.metadata?.font_size === 'large' ? 'text-lg' : ''}`}>
                                             {selectedContent.content_type === 'image' ? (
-                                                <img
-                                                    src={selectedContent.content}
-                                                    alt={selectedContent.title}
-                                                    className="w-full rounded-lg shadow-md"
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = 'https://via.placeholder.com/800x400?text=Image+non+disponible';
-                                                    }}
-                                                />
+                                                <div className="bg-gray-100 rounded-xl overflow-hidden">
+                                                    <div className="relative bg-gradient-to-br from-gray-200 to-gray-300 p-4">
+                                                        {isImageUrl(getDirectImageUrl(selectedContent.content)) ? (
+                                                            // Image avec gestion des erreurs et zoom
+                                                            <div className="relative group/image-modal">
+                                                                <img
+                                                                    src={getDirectImageUrl(selectedContent.content)}
+                                                                    alt={selectedContent.metadata?.alt_text || selectedContent.title}
+                                                                    className="w-full rounded-lg shadow-xl transition-transform duration-300 group-hover/image-modal:scale-105"
+                                                                    loading="lazy"
+                                                                    style={{
+                                                                        maxHeight: '70vh',
+                                                                        objectFit: 'contain'
+                                                                    }}
+                                                                    onError={(e) => {
+                                                                        console.error('Erreur de chargement image:', selectedContent.content);
+                                                                        e.currentTarget.src = 'https://via.placeholder.com/800x400?text=Image+non+disponible';
+                                                                    }}
+                                                                />
+
+                                                                {/* Barre d'outils pour l'image */}
+                                                                <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover/image-modal:opacity-100 transition-opacity">
+                                                                    <Tooltip title="Ouvrir dans un nouvel onglet">
+                                                                        <Button
+                                                                            icon={<EyeOutlined />}
+                                                                            size="small"
+                                                                            className="bg-white/90 hover:bg-white"
+                                                                            onClick={() => window.open(getDirectImageUrl(selectedContent.content), '_blank')}
+                                                                        />
+                                                                    </Tooltip>
+
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            // Message pour les liens non directs
+                                                            <div className="text-center py-12">
+                                                                <FormatPainterOutlined className="text-6xl text-gray-400 mb-4" />
+                                                                {/* <Title level={4} className="!text-gray-600 !mb-2">
+                                                                    Image externe
+
+                                                                </Title>
+                                                                <Text type="secondary" className="block mb-4">
+                                                                    Cette image est hébergée sur un service externe
+                                                                </Text> */}
+                                                                <Button
+                                                                    type="primary"
+                                                                    icon={<EyeOutlined />}
+                                                                    href={selectedContent.content}
+                                                                    target="_blank"
+                                                                    className="!bg-gradient-to-r !from-amber-500 !to-orange-500 !border-none"
+                                                                >
+                                                                    عرض الصورة الأصلية
+                                                                </Button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Métadonnées de l'image */}
+                                                    <div className="p-4 bg-white">
+                                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+
+                                                            {selectedContent.metadata?.alt_text && (
+                                                                <div className="text-center col-span-2">
+                                                                    <Text type="secondary" className="text-xs block">Texte alternatif</Text>
+                                                                    <Text strong className="text-sm">{selectedContent.metadata.alt_text}</Text>
+                                                                </div>
+                                                            )}
+
+                                                            <div className="text-center">
+                                                                <Text type="secondary" className="text-xs block">Type</Text>
+
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
                                             ) : selectedContent.content_type === 'video' ? (
                                                 <div className="aspect-video bg-black rounded-lg overflow-hidden">
                                                     <iframe
@@ -1043,3 +1293,4 @@ const ContenuView = () => {
 };
 
 export default ContenuView;
+
