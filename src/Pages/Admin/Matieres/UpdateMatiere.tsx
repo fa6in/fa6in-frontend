@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconName } from "@fortawesome/fontawesome-svg-core";
 import {
     Form,
     Input,
@@ -17,11 +19,7 @@ import {
 import {
     SaveOutlined,
     CloseOutlined,
-    CalculatorOutlined,
     BookOutlined,
-    CodeOutlined,
-    HistoryOutlined,
-    LineChartOutlined,
     CheckCircleOutlined,
     ArrowLeftOutlined,
 } from '@ant-design/icons';
@@ -44,47 +42,54 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
     const { t } = useTranslation();
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedColor, setSelectedColor] = useState('#4CAF50');
-    const [isFormInitialized, setIsFormInitialized] = useState(false);
+    // const [isFormInitialized, setIsFormInitialized] = useState(false);
     const { mutate: updateMatiere, isPending } = useUpdateMatiere()
 
+    // Supprimez isFormInitialized et utilisez une référence pour suivre la matière précédente
+    const prevMatiereRef = React.useRef<typeMatiere | null>(null);
 
     useEffect(() => {
-        if (matiere && Object.keys(matiere).length > 0 && !isFormInitialized) {
+        // Vérifiez si c'est une nouvelle matière (différente de la précédente)
+        if (matiere && matiere.id !== prevMatiereRef.current?.id) {
+            // Réinitialisez complètement le formulaire
+            form.resetFields();
+
+            // Ensuite, définissez les nouvelles valeurs
             form.setFieldsValue({
-                name: matiere.name || '',
+                name: matiere?.name || '',
                 grade: matiere.grade || 1,
-                description: matiere.description || '',
-                icon: matiere.icon || 'book',
-                is_active: matiere.is_active ?? true, // 👈 clé ici
+                description: matiere?.description || '',
+                icon: matiere?.icon || 'book',
+                is_active: matiere.is_active ?? true,
             });
 
             setSelectedColor(matiere.color || '#4CAF50');
-            setIsFormInitialized(true);
+            setCurrentStep(0); // Remet à la première étape
+
+            // Mettez à jour la référence
+            prevMatiereRef.current = matiere;
         }
-    }, [matiere, form, isFormInitialized]);
-
-
-    // const handleCancel = () => {
-    //     // setCurrentStep(0)
-    //     onCancel()
-    // }
+    }, [matiere, form]); // Dépendez uniquement de matiere et form
 
     const handleCancel = () => {
         form.resetFields();
-        setIsFormInitialized(false); // ← IMPORTANT
+        setSelectedColor('#4CAF50');
         setCurrentStep(0);
+        prevMatiereRef.current = null; // 👈 Réinitialisez aussi la référence
         onCancel();
     }
 
-
-
     // Options d'icônes
-    const iconOptions = [
-        { value: 'calculator', icon: <CalculatorOutlined />, label: t('matieresAdd.icons.calculator') },
-        { value: 'book', icon: <BookOutlined />, label: t('matieresAdd.icons.book') },
-        { value: 'code', icon: <CodeOutlined />, label: t('matieresAdd.icons.code') },
-        { value: 'history', icon: <HistoryOutlined />, label: t('matieresAdd.icons.history') },
-        { value: 'chart', icon: <LineChartOutlined />, label: t('matieresAdd.icons.chart') },
+    const iconOptions: { value: IconName; label: string }[] = [
+        { value: "calculator", label: t("matieresAdd.icons.calculator") },
+        { value: "book-open", label: t("matieresAdd.icons.book-open") },
+        { value: "language", label: t("matieresAdd.icons.language") },
+        { value: "mosque", label: t("matieresAdd.icons.mosque") },
+        { value: "flask", label: t("matieresAdd.icons.flask") },
+        { value: "scale-balanced", label: t("matieresAdd.icons.scale-balanced") },
+        { value: "futbol", label: t("matieresAdd.icons.futbol") },
+        { value: "landmark", label: t("matieresAdd.icons.landmark") },
+        { value: "globe", label: t("matieresAdd.icons.globe") },
     ];
 
     // Options de niveaux
@@ -118,24 +123,15 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
 
         const params = {
             ...values,
-            color: selectedColor, // ← N'oubliez pas la couleur
+            color: selectedColor,
             id: matiere.id!,
         };
 
         try {
-            // const payload = {
-            //     name: values.name,
-            //     grade: values.grade,
-            //     description: values.description,
-            //     icon: values.icon,
-            //     color: selectedColor,
-            //     is_active: values.is_active || true,
-            // };
+
 
             updateMatiere(params, {
                 onSuccess: () => {
-                    // form.resetFields();
-                    // setSelectedColor('#4CAF50');
                     setCurrentStep(0);
                     onCancel();
                     message.success(t('matieresAdd.messages.addSuccess'));
@@ -221,7 +217,10 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                     <Select
                                         size="large"
                                         placeholder={t('matieresAdd.form.iconPlaceholder')}
-                                        dropdownRender={menu => (
+                                        disabled={isPending}
+                                        allowClear
+                                        optionLabelProp="label"
+                                        dropdownRender={(menu) => (
                                             <div>
                                                 {menu}
                                                 <Divider className="my-2" />
@@ -229,17 +228,20 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                                     <div className="text-sm text-gray-500 mb-2">
                                                         {t('matieresAdd.form.iconPreview')}
                                                     </div>
+
                                                     <div className="flex flex-wrap gap-2">
-                                                        {iconOptions.map(icon => (
+                                                        {iconOptions.map((icon) => (
                                                             <div
                                                                 key={icon.value}
-                                                                className={`w-10 h-10 rounded-lg flex items-center justify-center cursor-pointer border-2 hover:border-primary transition-all ${form.getFieldValue('icon') === icon.value
+                                                                className={`w-10 h-10 rounded-lg flex items-center justify-center cursor-pointer border-2 transition-all ${form.getFieldValue('icon') === icon.value
                                                                     ? 'border-primary bg-primary/10'
                                                                     : 'border-gray-200'
                                                                     }`}
-                                                                onClick={() => form.setFieldValue('icon', icon.value)}
+                                                                onClick={() =>
+                                                                    !isPending && form.setFieldValue('icon', icon.value)
+                                                                }
                                                             >
-                                                                <span className="text-lg">{icon.icon}</span>
+                                                                <FontAwesomeIcon icon={["fas", icon.value]} />
                                                             </div>
                                                         ))}
                                                     </div>
@@ -247,13 +249,17 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                             </div>
                                         )}
                                     >
-                                        {iconOptions.map(icon => (
-                                            <Option key={icon.value} value={icon.value}>
-                                                <div className="flex items-center">
-                                                    <span className="mr-2 text-lg">{icon.icon}</span>
+                                        {iconOptions.map((icon) => (
+                                            <Select.Option
+                                                key={icon.value}
+                                                value={icon.value}
+                                                label={icon.label}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <FontAwesomeIcon icon={["fas", icon.value]} />
                                                     {icon.label}
                                                 </div>
-                                            </Option>
+                                            </Select.Option>
                                         ))}
                                     </Select>
                                 </Form.Item>
@@ -266,13 +272,13 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                     rules={[
                                         { required: true, message: t('matieresAdd.validation.descriptionRequired') },
                                         { min: 5, message: t('matieresAdd.validation.descriptionMinLength') },
-                                        { max: 500, message: t('matieresAdd.validation.descriptionMaxLength') }
+                                        { max: 5000, message: t('matieresAdd.validation.descriptionMaxLength') }
                                     ]}
                                 >
                                     <TextArea
-                                        rows={4}
+                                        rows={5}
                                         placeholder={t('matieresAdd.form.descriptionPlaceholder')}
-                                        maxLength={500}
+                                        maxLength={5000}
                                         showCount
                                     />
                                 </Form.Item>
@@ -375,7 +381,7 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                         </span>
                                     </div>
                                     <div className="flex items-center p-3 gap-6 bg-white rounded border">
-                                        <div
+                                        {/* <div
                                             className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
                                             style={{ backgroundColor: selectedColor }}
                                         >
@@ -383,7 +389,7 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                                 const selectedIcon = iconOptions.find(icon => icon.value === form.getFieldValue('icon'));
                                                 return selectedIcon ? selectedIcon.icon : <BookOutlined className="text-white" />;
                                             })()}
-                                        </div>
+                                        </div> */}
                                         <div>
                                             <div className="font-semibold text-gray-900">
                                                 {form.getFieldValue('name') || t('matieresAdd.form.sampleName')}

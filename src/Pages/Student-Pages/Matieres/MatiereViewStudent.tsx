@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconName } from "@fortawesome/fontawesome-svg-core";
 import {
   Card,
   Button,
@@ -188,74 +190,7 @@ const MatieresViewStudent = () => {
         </p>
       </motion.div>
 
-      {/* Statistiques */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {[
-          { 
-            key: "total", 
-            title: t("matieres.stats.totalSubjects"), 
-            value: stats.total, 
-            icon: <BookOutlined className="text-2xl" />,
-            color: "from-blue-500 to-cyan-500",
-            delay: 0
-          },
-          { 
-            key: "active", 
-            title: t("matieres.stats.activeSubjects"), 
-            value: stats.active, 
-            icon: <CheckCircleOutlined className="text-2xl" />,
-            color: "from-green-500 to-emerald-500",
-            delay: 0.1
-          },
-          { 
-            key: "credits", 
-            title: t("matieres.stats.totalCredits"), 
-            value: stats.credits, 
-            icon: <StarOutlined className="text-2xl" />,
-            color: "from-orange-500 to-amber-500",
-            delay: 0.2
-          },
-          { 
-            key: "semesters", 
-            title: t("matieres.stats.semesters"), 
-            value: stats.semesters, 
-            icon: <CalendarOutlined className="text-2xl" />,
-            color: "from-purple-500 to-pink-500",
-            delay: 0.3
-          }
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.key}
-            variants={statCardVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: stat.delay }}
-          >
-            <Card className="rounded-2xl border-0 shadow-lg h-full overflow-hidden group cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${stat.color}"></div>
-              <div className="relative z-10 flex justify-between items-center">
-                <div>
-                  <div className="text-sm text-gray-500 mb-1">{stat.title}</div>
-                  <div className="text-3xl font-bold text-gray-800">{stat.value}</div>
-                </div>
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
-                  {stat.icon}
-                </div>
-              </div>
-              <div className="mt-4 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-                <motion.div 
-                  className={`h-full bg-gradient-to-r ${stat.color}`}
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ delay: stat.delay + 0.5, duration: 1 }}
-                />
-              </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div> */}
 
-      {/* Barre de filtres */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -337,7 +272,7 @@ const MatieresViewStudent = () => {
         <AnimatePresence>
           {filteredMatieres.length > 0 ? (
             filteredMatieres.map((matiere, index) => {
-              const difficulty = getDifficultyLevel(matiere);
+              // const difficulty = getDifficultyLevel(matiere);
 
               return (
                 <motion.div
@@ -358,7 +293,6 @@ const MatieresViewStudent = () => {
                       setIsDetailVisible(true);
                     }}
                   >
-                    {/* Header de la carte */}
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <Badge
@@ -380,9 +314,14 @@ const MatieresViewStudent = () => {
                         >
                           {t("matieres.semester")} {matiere.grade}
                         </Tag>
-                        <Tooltip title={t(`matieres.difficulty.${difficulty.level}`)}>
-                          <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-${difficulty.color}-500 to-${difficulty.color}-600 flex items-center justify-center text-white`}>
-                            {difficulty.icon}
+                        <Tooltip title={matiere.name}>
+                          <div
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-white"
+                            style={{ backgroundColor: matiere.color }}
+                          >
+                            <FontAwesomeIcon
+                              icon={["fas", (matiere.icon || "question") as IconName]}
+                            />
                           </div>
                         </Tooltip>
                       </div>

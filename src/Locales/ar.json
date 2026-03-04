@@ -95,7 +95,7 @@
       "total_students": "عدد الطلاب"
     }
   },
-   "dashboard_teacher": {
+  "dashboard_teacher": {
     "common": {
       "loading": "جاري التحميل...",
       "no_data": "لا توجد بيانات",
@@ -934,21 +934,22 @@
       "iconRequired": "يرجى اختيار أيقونة",
       "descriptionRequired": "يرجى إدخال وصف",
       "descriptionMinLength": "يجب أن يحتوي الوصف على 10 أحرف على الأقل",
-      "descriptionMaxLength": "لا يمكن أن يتجاوز الوصف 500 حرف"
+      "descriptionMaxLength": "لا يمكن أن يتجاوز الوصف 5000 حرف"
     },
     "steps": {
       "basicInfo": "المعلومات الأساسية",
       "appearance": "المظهر"
     },
     "icons": {
-      "calculator": "آلة حاسبة",
-      "book": "كتاب",
-      "science": "علم",
-      "code": "كود",
-      "history": "تاريخ",
-      "language": "لغة",
-      "music": "موسيقى",
-      "chart": "رسم بياني"
+      "calculator": "الرياضيات",
+      "book-open": "اللغة",
+      "language": "اللغات",
+      "mosque": "التربية الإسلامية",
+      "flask": "العلوم الطبيعية",
+      "scale-balanced": "التربية المدنية",
+      "futbol": "التربية البدنية",
+      "landmark": "التاريخ",
+      "globe": "الجغرافيا"
     },
     "grades": {
       "grade": "مستوى",
@@ -1508,6 +1509,4 @@
       "error": "حدث خطأ أثناء إنشاء النشاط"
     }
   }
- 
-
 }
