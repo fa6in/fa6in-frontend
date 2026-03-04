@@ -95,34 +95,39 @@ const MatiereView = () => {
 
     };
     const { data: matieresData, isPending } = useGetMatiere()
+    const matieres = Array.isArray(matieresData)
+        ? matieresData
+        : Array.isArray(matieresData)
+            ? matieresData
+            : [];
     const { mutate: deleteMatiere, isPending: isPendingDelete } = usedeleteMatiere()
 
     const stats = [
         {
             key: "total",
             title: t("matieres.stats.total"),
-            value: matieresData?.length,
+            value: matieres.length,
             icon: <BookOutlined />,
             color: "from-blue-500 to-blue-600"
         },
         {
             key: "active",
             title: t("matieres.stats.active"),
-            value: matieresData?.filter(m => m?.is_active === true)?.length,
+            value: matieres.filter(m => m?.is_active === true).length,
             icon: <CheckCircleOutlined />,
             color: "from-green-500 to-green-600"
         },
         {
-            key: "active",
+            key: "inactive",
             title: t("matieres.stats.inactive"),
-            value: matieresData?.filter(m => m?.is_active === false)?.length,
+            value: matieres.filter(m => m?.is_active === false).length,
             icon: <WarningFilled />,
             color: "from-red-500 to-red-600"
         },
         {
             key: "credits",
             title: t("matieres.stats.credits"),
-            value: matieresData?.filter(m => m?.unit_count)?.reduce((acc, curr) => acc + curr?.unit_count!, 0),
+            value: matieres.reduce((acc, curr) => acc + (curr?.unit_count || 0), 0),
             icon: <BarChartOutlined />,
             color: "from-orange-500 to-orange-600"
         }
@@ -291,13 +296,20 @@ const MatiereView = () => {
         }
     ];
 
-    const filteredMatieres = matieresData?.filter(matiere => {
-        const matchesSearch = matiere?.name?.toLowerCase()?.includes(searchText?.toLowerCase()) ||
-            matiere.description?.toLowerCase()?.includes(searchText?.toLowerCase());
-        const matchesSemester = semesterFilter === "all" || matiere?.grade?.toString() === semesterFilter;
-        const matchesStatus = statusFilter === "all" ||
+    const filteredMatieres = matieres.filter(matiere => {
+        const matchesSearch =
+            matiere?.name?.toLowerCase()?.includes(searchText.toLowerCase()) ||
+            matiere?.description?.toLowerCase()?.includes(searchText.toLowerCase());
+
+        const matchesSemester =
+            semesterFilter === "all" ||
+            matiere?.grade?.toString() === semesterFilter;
+
+        const matchesStatus =
+            statusFilter === "all" ||
             (statusFilter === "active" && matiere?.is_active) ||
             (statusFilter === "inactive" && !matiere?.is_active);
+
         return matchesSearch && matchesSemester && matchesStatus;
     });
 
