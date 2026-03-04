@@ -90,11 +90,13 @@ const MatieresViewStudent = () => {
   const { data: matieresData, isPending } = useGetMatiere();
 
   // Statistiques calculées
+  const safeMatieres = Array.isArray(matieresData) ? matieresData : [];
+
   const stats = {
-    total: matieresData?.length || 0,
-    active: matieresData?.filter(m => m?.is_active === true)?.length || 0,
-    credits: matieresData?.reduce((acc, curr) => acc + (curr?.unit_count || 0), 0) || 0,
-    semesters: Array.from(new Set(matieresData?.map(m => m.grade) || [])).length
+    total: safeMatieres.length,
+    active: safeMatieres.filter(m => m?.is_active === true).length,
+    credits: safeMatieres.reduce((acc, curr) => acc + (curr?.unit_count || 0), 0),
+    semesters: new Set(safeMatieres.map(m => m?.grade)).size
   };
 
   // Niveaux de difficulté (exemple)
@@ -106,30 +108,37 @@ const MatieresViewStudent = () => {
   };
 
   // Fonction de filtrage
-  const filteredMatieres = matieresData
-    ?.filter(matiere => {
-      const matchesSearch = matiere?.name?.toLowerCase()?.includes(searchText.toLowerCase()) ||
-        matiere.description?.toLowerCase()?.includes(searchText.toLowerCase());
-      const matchesSemester = semesterFilter === "all" || matiere?.grade?.toString() === semesterFilter;
+
+  const filteredMatieres = safeMatieres
+    .filter(matiere => {
+      const matchesSearch =
+        matiere?.name?.toLowerCase()?.includes(searchText.toLowerCase()) ||
+        matiere?.description?.toLowerCase()?.includes(searchText.toLowerCase());
+
+      const matchesSemester =
+        semesterFilter === "all" ||
+        matiere?.grade?.toString() === semesterFilter;
 
       const difficulty = getDifficultyLevel(matiere);
-      const matchesDifficulty = difficultyFilter === "all" ||
+
+      const matchesDifficulty =
+        difficultyFilter === "all" ||
         difficulty.level === difficultyFilter;
 
       return matchesSearch && matchesSemester && matchesDifficulty;
     })
-    ?.sort((a, b) => {
+    .sort((a, b) => {
       switch (sortBy) {
         case "name":
           return a.name.localeCompare(b.name);
         case "semester":
-          return a.grade - b.grade;
+          return (a.grade || 0) - (b.grade || 0);
         case "difficulty":
           return (b.unit_count || 0) - (a.unit_count || 0);
         default:
           return 0;
       }
-    }) || [];
+    });
 
   // Animation pour la vue détail
   const detailVariants = {
@@ -268,7 +277,7 @@ const MatieresViewStudent = () => {
             </div>
 
             <Space wrap className="flex flex-wrap justify-center gap-3">
-             
+
 
               <Select
                 value={difficultyFilter}
