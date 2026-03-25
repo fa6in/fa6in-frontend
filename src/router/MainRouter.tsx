@@ -13,7 +13,7 @@ import {
   // SettingOutlined,
   // AppstoreOutlined,
   FileTextOutlined,
-  SafetyCertificateOutlined,
+  // SafetyCertificateOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
 import AuthService from "../Auth-service/AuthService";
@@ -22,7 +22,7 @@ import AuthService from "../Auth-service/AuthService";
 const HomeTeacher = lazy(() => import("../Pages/Teacher/HomeTeacher"));
 const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
-const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
+// const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
 const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/Matieres/MatiereViewStudent"));
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
@@ -177,22 +177,22 @@ const MainRouter: RouteType[] = [
     }
   },
 
-  {
-    path: "/roles",
-    element: (
-      <Suspense fallback={<SpinnerLoader />}>
-        <Prapared />
-      </Suspense>
-    ),
+  // {
+  //   path: "/roles",
+  //   element: (
+  //     <Suspense fallback={<SpinnerLoader />}>
+  //       <Prapared />
+  //     </Suspense>
+  //   ),
 
-    layout: "private",
-    allowedRoles: ["admin"],
-    sidebar: {
-      key: "roles",
-      label: ("sidebar.roles"),
-      icon: <SafetyCertificateOutlined />,
-    }
-  },
+  //   layout: "private",
+  //   allowedRoles: ["admin"],
+  //   sidebar: {
+  //     key: "roles",
+  //     label: ("sidebar.roles"),
+  //     icon: <SafetyCertificateOutlined />,
+  //   }
+  // },
 
   // {
   //   path: "/settings",

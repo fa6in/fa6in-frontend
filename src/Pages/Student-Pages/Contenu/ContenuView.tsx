@@ -615,13 +615,13 @@ const ContenuView = () => {
                 </div>
 
                 {/* Statistiques améliorées */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                     {[
                         { icon: <BookOutlined />, value: stats.total, label: t('content.stats.total'), color: 'emerald' },
                         { icon: <FileTextOutlined />, value: stats.textContents, label: t('content.type.text'), color: 'emerald' },
                         { icon: <VideoCameraOutlined />, value: stats.videoContents, label: t('content.type.video'), color: 'emerald' },
                         { icon: <AudioOutlined />, value: stats.audioContents, label: t('content.type.audio'), color: 'emerald' },
-                        { icon: <ClockCircleOutlined />, value: `${Math.floor(stats.totalDuration / 60)}h ${stats.totalDuration % 60}m`, label: t('content.stats.duration'), color: 'emerald' }
+                        // { icon: <ClockCircleOutlined />, value: `${Math.floor(stats.totalDuration / 60)}h ${stats.totalDuration % 60}m`, label: t('content.stats.duration'), color: 'emerald' }
                     ].map((stat, index) => (
                         <motion.div
                             key={index}
