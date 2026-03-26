@@ -344,7 +344,7 @@
     "login_link": "تسجيل الدخول"
   },
   "sidebar": {
-    "content": "الأنشطة",
+    "content": "المحتوى",
     "contentByUnit": "المحتوى حسب الوحدة",
     "dashboard": "الرئيسية",
     "students": "الطلاب",
@@ -354,7 +354,7 @@
     "subjects": "المواد",
     "exams": "الدروس",
     "grades": "الدرجات",
-    "assignments": "الواجبات",
+    "assignments": "الأنشطة",
     "roles": "الأدوار والصلاحيات",
     "reports": "التقارير",
     "settings": "الإعدادات",
@@ -373,7 +373,7 @@
       "subjects": "المواد",
       "exams": "الامتحانات",
       "grades": "الدرجات",
-      "assignments": "الواجبات",
+      "assignments": "الأنشطة",
       "roles": "الأدوار والصلاحيات",
       "reports": "التقارير",
       "settings": "الإعدادات"

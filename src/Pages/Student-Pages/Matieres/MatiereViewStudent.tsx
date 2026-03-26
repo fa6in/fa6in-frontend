@@ -5,8 +5,8 @@ import {
   Card,
   Button,
   Tag,
-  Input,
-  Select,
+  // Input,
+  // Select,
   Space,
   Badge,
   Empty,
@@ -15,13 +15,13 @@ import {
   Tooltip
 } from "antd";
 import {
-  SearchOutlined,
-  FilterOutlined,
+  // SearchOutlined,
+  // FilterOutlined,
   BookOutlined,
   InfoCircleOutlined,
   FileTextOutlined,
   CheckCircleOutlined,
-  SortAscendingOutlined,
+  // SortAscendingOutlined,
   FireOutlined,
   RocketOutlined
 } from "@ant-design/icons";
@@ -31,7 +31,7 @@ import { useGetMatiere } from "../../../Services/Admin/Matieres/useGetMatiere";
 import type { typeMatiere } from "../../../Services/Admin/Matieres/typeMatiere";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
 
-const { Option } = Select;
+// const { Option } = Select;
 
 /* =======================
 Animations
@@ -85,7 +85,7 @@ const MatieresViewStudent = () => {
   const [searchText, setSearchText] = useState("");
   const [semesterFilter, setSemesterFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("name");
+  // const [sortBy, setSortBy] = useState("name");
   const [selectedMatiere, setSelectedMatiere] = useState<typeMatiere | null>(null);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
 
@@ -129,18 +129,19 @@ const MatieresViewStudent = () => {
 
       return matchesSearch && matchesSemester && matchesDifficulty;
     })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "name":
-          return a.name.localeCompare(b.name);
-        case "semester":
-          return (a.grade || 0) - (b.grade || 0);
-        case "difficulty":
-          return (b.unit_count || 0) - (a.unit_count || 0);
-        default:
-          return 0;
-      }
-    });
+  //   .sort((a, b) => {
+  //     switch (sortBy) {
+  //       case "name":
+  //         return a.name.localeCompare(b.name);
+  //       case "semester":
+  //         return (a.grade || 0) - (b.grade || 0);
+  //       case "difficulty":
+  //         return (b.unit_count || 0) - (a.unit_count || 0);
+  //       default:
+  //         return 0;
+  //     }
+  //   }
+  // );
 
   // Animation pour la vue détail
   const detailVariants = {
@@ -200,7 +201,7 @@ const MatieresViewStudent = () => {
         <Card className="rounded-2xl shadow-md border-0 bg-white/80 backdrop-blur-sm">
           <div className="flex flex-col lg:flex-row justify-between gap-4 items-center">
             <div className="flex-1 w-full">
-              <Input
+              {/* <Input
                 placeholder={t("matieres.student.searchPlaceholder")}
                 prefix={<SearchOutlined className="text-gray-400" />}
                 value={searchText}
@@ -208,11 +209,10 @@ const MatieresViewStudent = () => {
                 className="rounded-full h-12 text-base"
                 allowClear
                 size="large"
-              />
+              /> */}
             </div>
 
-            <Space wrap className="flex flex-wrap justify-center gap-3">
-
+            {/* <Space wrap className="flex flex-wrap justify-center gap-3">
 
               <Select
                 value={difficultyFilter}
@@ -254,7 +254,7 @@ const MatieresViewStudent = () => {
               >
                 {t("matieres.filters.reset")}
               </Button>
-            </Space>
+            </Space> */}
           </div>
 
           {/* Info résultats */}

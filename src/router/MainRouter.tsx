@@ -57,23 +57,6 @@ const MainRouter: RouteType[] = [
       icon: <DashboardOutlined />,
     }
   },
-  //   {
-  //   path: "/admins",
-  //   element: (
-  //     <Suspense fallback={<SpinnerLoader />}>
-  //       <AdminsView />
-  //     </Suspense>
-  //   ),
-
-  //   layout: "private",
-  //   allowedRoles: ["admin"],
-  //   sidebar: {
-  //     key: "teachers",
-  //     label: "sidebar.teachers",
-  //     icon: <GrUserAdmin />,
-  //   }
-  // },
-
   {
     path: "/students",
     element: (
@@ -89,7 +72,6 @@ const MainRouter: RouteType[] = [
       icon: <PiStudent />,
     }
   },
-
   {
     path: "/teachers",
     element: (
@@ -106,7 +88,6 @@ const MainRouter: RouteType[] = [
       icon: <GiTeacher />,
     }
   },
-
   {
     path: "/matieres",
     element: (
@@ -124,7 +105,6 @@ const MainRouter: RouteType[] = [
       icon: <BookOutlined />,
     }
   },
-
   {
     path: "/chapitres",
     element: (

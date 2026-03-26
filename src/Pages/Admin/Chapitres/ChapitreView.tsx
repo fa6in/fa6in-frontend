@@ -449,7 +449,7 @@ const ChapitresView: React.FC = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        {post === "teacher" && (
+                        {post === "teacher" || post === "admin" && (
                             <Button
                                 size="large"
                                 icon={<PlusOutlined />}
