@@ -35,15 +35,14 @@ api.interceptors.response.use(
   
         try {
             const refresh = AuthService.getRefreshToken()
-        const res = await axios.post(`${BaseUrl}api/token/refresh/`,  {
-          
-          refresh : refresh
-        } )
-           sessionStorage.setItem("access", res.data.access)
+            const res = await axios.post(`${BaseUrl}api/token/refresh/`, {
+              refresh
+            })
+            if (res.data.access) AuthService.setAccessToken(res.data.access)
+            if (res.data.refresh) AuthService.setRefreshToken(res.data.refresh)
 
-
-          originalRequest.headers.Authorization = `Bearer ${res.data.access}`
-          return axios(originalRequest)
+            originalRequest.headers.Authorization = `Bearer ${res.data.access}`
+            return api(originalRequest)
         } catch (error:any) {
           if(error.response.data) {
             const result = await ALert_Retourne_Login()
