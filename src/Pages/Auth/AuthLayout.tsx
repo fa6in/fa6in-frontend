@@ -3,7 +3,7 @@ import { ConfigProvider } from "antd";
 import { motion } from "framer-motion";
 import { BookOutlined, TeamOutlined, TrophyOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import LanguageSite from "../../Components/LanguageSite";
+// import LanguageSite from "../../Components/LanguageSite";
 import logo from "../../assets/images/logo-auth.png";
 
 type AuthLayoutProps = {
@@ -78,9 +78,10 @@ const AuthLayout = ({ children, compact = false }: AuthLayoutProps) => {
         </aside>
 
         <main className={`auth-panel ${compact ? "auth-panel-compact" : ""}`}>
+          {/* Sélecteur de langue masqué — langue par défaut : arabe
           <div className="auth-panel-top">
             <LanguageSite />
-          </div>
+          </div> */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
