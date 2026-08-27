@@ -87,7 +87,7 @@ const ChapitresView: React.FC = () => {
     const { data: DataChapitre, isPending } = useGetChapitre();
 
     // Fonction pour obtenir la couleur de difficulté
-    const difficultyColor = (difficulty: string) => {
+    const difficultyColor = (difficulty?: string) => {
         switch (difficulty) {
             case 'easy': return 'green';
             case 'medium': return 'orange';
@@ -97,7 +97,7 @@ const ChapitresView: React.FC = () => {
     };
 
     // Icône de difficulté
-    const getDifficultyIcon = (difficulty: string) => {
+    const getDifficultyIcon = (difficulty?: string) => {
         switch (difficulty) {
             case 'easy': return <CheckCircleOutlined />;
             case 'medium': return <RocketOutlined />;
@@ -107,10 +107,12 @@ const ChapitresView: React.FC = () => {
     };
 
     // Fonction de filtrage
-    const filteredChapitres = DataChapitre ? DataChapitre?.filter(chapitre => {
+    const chapitres = Array.isArray(DataChapitre) ? DataChapitre : [];
+    const filteredChapitres = chapitres.filter(chapitre => {
         const matchesSearch = searchText === '' ||
-            chapitre.title.toLowerCase().includes(searchText.toLowerCase()) ||
-            chapitre.description.toLowerCase().includes(searchText.toLowerCase());
+            chapitre.title?.toLowerCase().includes(searchText.toLowerCase()) ||
+            chapitre.description?.toLowerCase().includes(searchText.toLowerCase()) ||
+            chapitre.code?.toLowerCase().includes(searchText.toLowerCase());
 
         const matchesDifficulty = selectedDifficulty === 'all' ||
             chapitre.difficulty === selectedDifficulty;
@@ -120,13 +122,13 @@ const ChapitresView: React.FC = () => {
             (selectedStatus === 'draft' && !chapitre.is_published);
 
         return matchesSearch && matchesDifficulty && matchesStatus;
-    }) : [];
+    });
 
     // Trier les chapitres
     const sortedChapitres = [...filteredChapitres].sort((a, b) => {
         switch (sortBy) {
             case 'order':
-                return a.order - b.order;
+                return (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0);
             case 'title':
                 return a.title.localeCompare(b.title);
             case 'duration':

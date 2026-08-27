@@ -210,6 +210,8 @@
     "previous": "السابق",
     "submit": "تقديم",
     "reset": "إعادة تعيين",
+    "confirm_delete": "تأكيد الحذف؟",
+    "no_data": "لا توجد بيانات",
     "buttons": {
       "back": "رجوع",
       "previous": "السابق",
@@ -416,6 +418,12 @@
     "exams": "الوحدات",
     "grades": "الدرجات",
     "assignments": "الأنشطة",
+    "curriculum": "المنهج",
+    "skills": "المهارات",
+    "assessment": "التقييم",
+    "analytics": "التحليلات",
+    "users": "المستخدمون",
+    "wilaya": "الولايات",
     "roles": "الأدوار والصلاحيات",
     "reports": "التقارير",
     "settings": "الإعدادات",
@@ -423,6 +431,90 @@
     "copyright": "© 2026 منصة التعليم الإلكتروني",
     "logout": "تسجيل الخروج",
     "admins": "المسؤولون"
+  },
+  "curriculum": {
+    "title_page": "إدارة المنهج",
+    "subtitle": "الدورات والمستويات والأهداف والدروس",
+    "stages": "الدورات",
+    "levels": "المستويات",
+    "goals": "الأهداف",
+    "lessons": "الدروس",
+    "code": "الرمز",
+    "name": "الاسم",
+    "title": "العنوان",
+    "type": "النوع",
+    "order": "الترتيب",
+    "description": "الوصف",
+    "content": "المحتوى",
+    "published": "منشور",
+    "publish": "نشر",
+    "stage": "الدورة",
+    "lesson": "الدرس",
+    "unit": "الوحدة",
+    "required": "هذا الحقل مطلوب",
+    "goal_types": {
+      "conceptual": "مفهومي",
+      "operational": "عملي"
+    },
+    "placeholders": {
+      "code": "مثال PRI أو 5AP",
+      "name": "أدخل الاسم",
+      "title": "أدخل العنوان",
+      "description": "أدخل الوصف",
+      "content": "أدخل محتوى الدرس",
+      "stage": "اختر الدورة",
+      "type": "اختر النوع",
+      "lesson": "اختر الدرس",
+      "unit": "اختر الوحدة"
+    },
+    "modal": {
+      "edit": "تعديل",
+      "add_stages": "إضافة دورة",
+      "add_levels": "إضافة مستوى",
+      "add_goals": "إضافة هدف",
+      "add_lessons": "إضافة درس"
+    }
+  },
+  "assessment": {
+    "title_page": "التقييم",
+    "subtitle": "أخطاء التعلم وتقدم الطلاب",
+    "errors": "الأخطاء",
+    "progress": "التقدم",
+    "add_error": "إضافة خطأ",
+    "error_type": "نوع الخطأ",
+    "category": "الفئة",
+    "severity": "الخطورة",
+    "root_cause": "السبب الجذري",
+    "mastery": "الإتقان",
+    "attempts": "المحاولات",
+    "filter_skill": "تصفية حسب المهارة",
+    "progress_records": "سجلات التقدم",
+    "code": "الرمز",
+    "student": "الطالب",
+    "severity_levels": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "مرتفع"
+    }
+  },
+  "skills": {
+    "title_page": "المهارات والمحتويات",
+    "subtitle": "المهارات والمتطلبات والمحتويات المصغرة",
+    "title": "المهارات",
+    "name": "الاسم",
+    "type": "النوع",
+    "difficulty": "الصعوبة",
+    "prerequisites": "المتطلبات",
+    "prerequisite": "متطلب",
+    "skill": "مهارة",
+    "strength": "القوة",
+    "chunks": "المحتويات",
+    "chunk_title": "عنوان المحتوى",
+    "placeholders": {
+      "goal": "اختر الهدف",
+      "skill": "اختر المهارة",
+      "prerequisite": "اختر المتطلب"
+    }
   },
   "navbar": {
     "titles": {
@@ -435,6 +527,13 @@
       "exams": "الوحدات",
       "grades": "الدرجات",
       "assignments": "الأنشطة",
+      "curriculum": "المنهج",
+      "skills": "المهارات",
+      "assessment": "التقييم",
+      "analytics": "التحليلات",
+      "admins": "المسؤولون",
+      "wilaya": "الولايات",
+      "users": "المستخدمون",
       "roles": "الأدوار والصلاحيات",
       "reports": "التقارير",
       "settings": "الإعدادات"
@@ -459,7 +558,18 @@
       "editProfile": "تعديل الملف الشخصي",
       "logout": "تسجيل الخروج",
       "buttn_confirm": "تأكيد",
-      "btn_annuler": "إلغاء"
+      "btn_annuler": "إلغاء",
+      "firstName": "الاسم",
+      "lastName": "اللقب",
+      "phone": "رقم الهاتف",
+      "avatar": "صورة الملف الشخصي",
+      "formSubtitle": "حدّث معلوماتك الشخصية",
+      "requiredFields": "جميع الحقول مطلوبة"
+    },
+    "roles": {
+      "admin": "مشرف",
+      "teacher": "أستاذ",
+      "student": "تلميذ"
     }
   },
   "dashboard": {
@@ -1569,5 +1679,49 @@
       "success": "تم إنشاء النشاط بنجاح",
       "error": "حدث خطأ أثناء إنشاء النشاط"
     }
+  },
+  "analytics": {
+    "title_page": "التحليلات",
+    "subtitle": "لوحة معلومات الفصل وتحليل الأخطاء",
+    "filter_level": "تصفية حسب المستوى",
+    "total_students": "إجمالي الطلاب",
+    "avg_progress": "متوسط التقدم",
+    "active_today": "النشطون اليوم",
+    "error_rate": "نسبة الأخطاء",
+    "class_overview": "نظرة عامة على الفصل",
+    "student_errors": "أخطاء الطالب",
+    "select_student": "اختر طالبًا",
+    "select_student_hint": "اختر طالبًا لعرض أخطائه",
+    "no_errors_found": "لم يتم العثور على أخطاء لهذا الطالب",
+    "no_dashboard_data": "لا توجد بيانات متاحة",
+    "progress_description": "متوسط تقدم جميع الطلاب",
+    "error_description": "متوسط نسبة الأخطاء في التقييمات",
+    "count": "العدد",
+    "fields": {
+      "total_students": "إجمالي الطلاب",
+      "students_count": "عدد الطلاب",
+      "avg_progress": "متوسط التقدم",
+      "average_progress": "متوسط التقدم",
+      "active_today": "النشطون اليوم",
+      "daily_active": "النشطون يوميًا",
+      "error_rate": "نسبة الأخطاء",
+      "total_lessons": "إجمالي الدروس",
+      "total_activities": "إجمالي الأنشطة",
+      "completion_rate": "نسبة الإنجاز",
+      "average_score": "متوسط الدرجات"
+    }
+  },
+  "wilaya": {
+    "title": "الولايات",
+    "subtitle": "إدارة الولايات",
+    "add": "ولاية جديدة",
+    "edit": "تعديل الولاية",
+    "list": "قائمة الولايات",
+    "table": {
+      "code": "الرمز",
+      "name": "الاسم"
+    },
+    "duplicate_code": "هذا الرمز موجود بالفعل",
+    "duplicate_name": "هذا الاسم موجود بالفعل"
   }
 }

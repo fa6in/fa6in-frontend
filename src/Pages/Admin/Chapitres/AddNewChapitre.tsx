@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Modal,
     Form,
@@ -30,6 +30,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAddChapitre } from '../../../Services/Admin/Chapitres/useAddChapitre';
 import { useGetMatiere } from '../../../Services/Admin/Matieres/useGetMatiere';
+import RelationSelect, { toRelationItems } from '../../../ui/RelationSelect';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -52,6 +53,11 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
     const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
     const { mutate: addChapitre, isPending } = useAddChapitre();
     const { data: getMatieres, isPending: isPendingMatiere } = useGetMatiere()
+    const matieres = Array.isArray(getMatieres) ? getMatieres : [];
+    const matiereOptions = useMemo(
+        () => toRelationItems(matieres, (m) => m.name, (m) => m.description),
+        [matieres]
+    );
 
 
     const handleSubmit = async () => {
@@ -162,19 +168,11 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                                 label={t('chapitres.form.subject')}
                                 rules={[{ required: true, message: t('chapitres.validation.subjectRequired') }]}
                             >
-                                <Select
-                                    size="large"
+                                <RelationSelect
                                     placeholder={t('chapitres.form.subjectPlaceholder')}
                                     loading={isPendingMatiere}
-                                >
-                                    {getMatieres?.map((matiere, index) => {
-                                        return (
-                                            <Option key={index} value={matiere?.id}>{matiere?.name}</Option>
-                                        )
-                                    })}
-
-
-                                </Select>
+                                    items={matiereOptions}
+                                />
                             </Form.Item>
 
                             <Form.Item

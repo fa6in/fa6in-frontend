@@ -13,7 +13,7 @@ const { Content } = Layout;
 const MOBILE_BREAKPOINT = 768;
 const SIDEBAR_WIDTH = {
   collapsed: 80,
-  expanded: 200,
+  expanded: 248,
 };
 
 interface AdminLayoutProps {
@@ -66,7 +66,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="admin-shell min-h-screen bg-surface" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* ===== Sidebar Desktop ===== */}
       {!isMobile && (
         <SidebarAdmin
@@ -81,7 +81,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <Drawer
           placement={isRTL ? 'right' : 'left'}
           open={mobileOpen}
-          width={200}
+          width={248}
           closable={false}
           styles={{body : {
             padding : 0
@@ -107,8 +107,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         animate={{ opacity: 1 }}
       >
         {/* ===== Header ===== */}
-        <header className="sticky top-0 z-30 bg-white border-b">
-          <div className="flex items-center justify-between px-6 py-3">
+        <header className="sticky top-0 z-30 border-b border-[#e5eee8] bg-white/90 backdrop-blur-md">
+          <div className="flex items-center justify-between px-4 py-3 md:px-6">
             {isMobile && (
               <Button
                 type="text"
@@ -121,13 +121,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </header>
 
         {/* ===== Content ===== */}
-        <Content className="flex-1 overflow-auto pt-8 px-2 mt-2 bg-gray-50">
+        <Content className="flex-1 overflow-auto px-0 py-0">
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className="bg-white rounded-xl shadow-sm p-1 min-h-[calc(100vh-160px)]"
+            className="min-h-[calc(100vh-140px)]"
           >
             {children}
           </motion.div>

@@ -1,9 +1,6 @@
-
-
-import { Button, Input, Space } from "antd";
+import { Button, Card, Divider, Form, Input } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-
-
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import type { ImageListType } from "react-images-uploading";
@@ -11,159 +8,137 @@ import ImageUploader from "../../ui/ImageUploader";
 import { useGetProfile, type UserInfo } from "../../Services/Profile/useGetProfile";
 import SpinnerLoader from "../../ui/SpinnerLoader";
 import { useUpdateUser } from "../../Services/Profile/useUpdateProfile";
+
 type Props = {
-    handleCancel: () => void;
-};
-export const validateEmail = (email: string) => {
-    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return pattern.test(email);
+  handleCancel: () => void;
 };
 
 export function UpdateProfileAdmin({ handleCancel }: Props) {
-    const { data: clients, isPending: isPendingClient } = useGetProfile()
-    const [images, setImages] = useState<ImageListType>([]);
-    const {t} = useTranslation()
-    const { i18n } = useTranslation()
+  const { data: clients, isPending: isPendingClient } = useGetProfile();
+  const [images, setImages] = useState<ImageListType>([]);
+  const { t, i18n } = useTranslation();
+  const [form] = Form.useForm();
 
-    const [username, setUsername] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastname, setLastName] = useState("")
-    const [phone, setPhone] = useState("")
-    // const [grade, setGrade] = useState("")
+  const { mutate: UpdateProfile, isPending: isPendingProfile } = useUpdateUser();
 
+  useEffect(() => {
+    if (clients) {
+      form.setFieldsValue({
+        phone: clients.phone_number || "",
+        firstName: clients.first_name || "",
+        lastName: clients.last_name || "",
+      });
 
-    const { mutate: UpdateProfile, isPending: isPendingProfile } = useUpdateUser()
-
-    useEffect(() => {
-        if (clients) {
-            setUsername(clients.username || "");
-            setFirstName(clients.first_name || "");
-            setLastName(clients.last_name || "");
-            setPhone(clients.phone_number || "");
-
-            if (clients.profile_image) {
-                setImages([{ data_url: clients.profile_image }]);
-            } else {
-                setImages([]);
-            }
-        }
-    }, [clients])
-
-
-
-    const handleUpdate = () => {
-        if (!phone || !firstName || !lastname || !username) {
-            enqueueSnackbar("Tous les champs sont obligatoires !", { variant: "error" });
-        }
-        //  else if (!validateEmail(email)) {
-        //     return message.error(t("Entrez une adresse e-mail valide !"))
-        // }
-        // else if (images?.length === 0) {
-        //     message.error("please select the image !")
-        // }
-        else {
-            const file = images[0]?.file;
-
-            const params: UserInfo = {
-                // email: email,
-                phone_number: phone,
-                first_name: firstName,
-                last_name: lastname,
-                username: clients?.username,
-                profile_image: file!
-
-            }
-            UpdateProfile(params, {
-                onSuccess: () => {
-                    handleCancel()
-                }
-            })
-        }
+      if (clients.profile_image) {
+        setImages([{ data_url: clients.profile_image }]);
+      } else {
+        setImages([]);
+      }
     }
-    if (isPendingClient || isPendingProfile) {
-        return <SpinnerLoader />
-    }
-    return (
-        <div dir={i18n.language === "ar" ? "rtl" : "ltr"} className="p-4 md:p-6 lg:p-7 2xl:p-8 space-y-4 md:space-y-5 lg:space-y-6 2xl:space-y-7">
-            <div className="flex items-center justify-center flex-col space-y-2">
-                <ImageUploader
-                    placeholder="Profile Image"
-                    image={images}
-                    setImage={setImages}
-                />
+  }, [clients, form]);
 
+  const handleUpdate = () => {
+    form.validateFields().then((values) => {
+      const file = images[0]?.file;
 
-            </div>
-            <div className="grid grid-cols-2 gap-y-1 gap-x-3">
+      const params: UserInfo = {
+        phone_number: values.phone,
+        first_name: values.firstName,
+        last_name: values.lastName,
+        username: clients?.username,
+        profile_image: file!,
+      };
 
-                {/* <Space direction="vertical">
-                    <label className="text-blue-2a text-[13px]" htmlFor="">
-                        Username
+      UpdateProfile(params, {
+        onSuccess: () => handleCancel(),
+      });
+    }).catch(() => {
+      enqueueSnackbar(t("navbar.profile.requiredFields"), { variant: "error" });
+    });
+  };
 
+  if (isPendingClient) {
+    return <SpinnerLoader />;
+  }
 
-                    </label>
-                    <Input
-                        onChange={(e) => setUsername(e.target.value)}
-                        value={username}
-                        placeholder="Medos"
-                    />
-                </Space> */}
-
-                <Space direction="vertical" className="">
-                    <label className="text-blue-2a text-[13px]" htmlFor="">
-                        {/* {t("Email")} */}
-                        Phone Number
-                    </label>
-                    <Input
-                        type="number"
-                        onChange={(e) => setPhone(e.target.value)}
-                        value={phone}
-
-                        placeholder={"48354773"}
-
-                    />
-                </Space>
-
-                <Space direction="vertical">
-                    <label className="text-blue-2a text-[13px]" htmlFor="">
-                        {/* {t("Nom")} */}
-                        First Name
-
-
-                    </label>
-                    <Input
-                        onChange={(e) => setFirstName(e.target.value)}
-                        value={firstName}
-                        placeholder="Medos"
-                    />
-                </Space>
-
-
-
-                {/* <Space direction="vertical" className="grid col-span-2"> */}
-
-                <Space direction="vertical" className="">
-                    <label className="text-blue-2a text-[13px]" htmlFor="">
-                        Last Name
-                    </label>
-                    <Input
-                        type="text"
-                        onChange={(e) => setLastName(e.target.value)}
-                        value={lastname}
-
-                        placeholder={"lastname"}
-                    />
-                </Space>
-
-            </div>
-            <div className="grid grid-cols-2 items-center gap-x-4 mt-4 md:mt-5">
-                <Button className=" h-[50.6px]   mt-2 !border-main-color !text-main-color" onClick={handleCancel}>{t("navbar.profile.btn_annuler")} </Button>
-                <Button loading={isPendingProfile} className=" h-[50.6px] mt-2 !bg-main-color !text-white" onClick={handleUpdate}
-                >
-                    {t("navbar.profile.buttn_confirm")}
-                </Button>
-
-            </div>
+  return (
+    <div dir={i18n.language === "ar" ? "rtl" : "ltr"} className="space-y-5">
+      <Card
+        bordered={false}
+        className="rounded-2xl border border-[#e5eee8] bg-gradient-to-br from-[#f6faf7] to-white"
+        styles={{ body: { padding: "24px" } }}
+      >
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-main-color/10 text-main-color">
+            <UserOutlined className="text-xl" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-ink">
+              {t("navbar.profile.editProfile")}
+            </h3>
+            <p className="mt-1 text-sm text-muted">
+              {t("navbar.profile.formSubtitle")}
+            </p>
+          </div>
         </div>
-    );
+
+        <Divider className="!my-5" />
+
+        <div className="mb-6 flex justify-center">
+          <ImageUploader
+            placeholder={t("navbar.profile.avatar")}
+            image={images}
+            setImage={setImages}
+          />
+        </div>
+
+        <Form form={form} layout="vertical" requiredMark={false}>
+          <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+            <Form.Item
+              label={t("navbar.profile.firstName")}
+              name="firstName"
+              rules={[{ required: true, message: t("navbar.profile.requiredFields") }]}
+            >
+              <Input size="large" placeholder={t("navbar.profile.firstName")} />
+            </Form.Item>
+
+            <Form.Item
+              label={t("navbar.profile.lastName")}
+              name="lastName"
+              rules={[{ required: true, message: t("navbar.profile.requiredFields") }]}
+            >
+              <Input size="large" placeholder={t("navbar.profile.lastName")} />
+            </Form.Item>
+
+            <Form.Item
+              className="md:col-span-2"
+              label={t("navbar.profile.phone")}
+              name="phone"
+              rules={[{ required: true, message: t("navbar.profile.requiredFields") }]}
+            >
+              <Input size="large" type="tel" placeholder="+213..." />
+            </Form.Item>
+          </div>
+        </Form>
+      </Card>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Button
+          size="large"
+          className="!h-12 !border-main-color !text-main-color"
+          onClick={handleCancel}
+        >
+          {t("navbar.profile.btn_annuler")}
+        </Button>
+        <Button
+          size="large"
+          loading={isPendingProfile}
+          className="!h-12 !bg-main-color !text-white"
+          onClick={handleUpdate}
+        >
+          {t("navbar.profile.buttn_confirm")}
+        </Button>
+      </div>
+    </div>
+  );
 }

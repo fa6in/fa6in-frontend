@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    TeamOutlined,
+    DownOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/images/logo1.png"
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,6 +19,16 @@ interface SidebarProps {
     onCollapse?: (collapsed: boolean) => void;
 }
 
+type SidebarItem = {
+    key: string;
+    label: string;
+    icon: React.ReactNode;
+    path?: string;
+    submenu?: SidebarItem[];
+};
+
+const USER_MENU_KEYS = ["students", "teachers", "admins", "wilaya"];
+
 const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -25,20 +37,53 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     const { mutate: logout } = useLogout()
     const role = AuthService.getRole()
 
-    console.log("role : ", role)
-
-    const menuItems = MainRouter.filter(
-        (route) =>
-            route.layout === "private" &&
-            route.sidebar &&
-            route.allowedRoles?.includes(role!)
-    )
-        .map((route) => ({
+    const menuItems = useMemo<SidebarItem[]>(() => {
+        const flat = MainRouter.filter(
+            (route) =>
+                route.layout === "private" &&
+                route.sidebar &&
+                route.allowedRoles?.includes(role!)
+        ).map((route) => ({
             key: route.sidebar!.key,
             label: t(route.sidebar!.label),
             icon: route.sidebar!.icon,
             path: route.path,
         }));
+
+        if (role !== "admin") return flat;
+
+        const userChildren: SidebarItem[] = USER_MENU_KEYS.flatMap((key) => {
+            const item = flat.find((entry) => entry.key === key);
+            return item ? [item] : [];
+        });
+        const rest = flat.filter((item) => !USER_MENU_KEYS.includes(item.key));
+
+        if (userChildren.length === 0) return rest;
+
+        const usersGroup: SidebarItem = {
+            key: "users",
+            label: t("sidebar.users"),
+            icon: <TeamOutlined />,
+            submenu: userChildren,
+        };
+
+        const dashIndex = rest.findIndex((item) => item.key === "dashboard");
+        if (dashIndex >= 0) {
+            return [
+                ...rest.slice(0, dashIndex + 1),
+                usersGroup,
+                ...rest.slice(dashIndex + 1),
+            ];
+        }
+        return [usersGroup, ...rest];
+    }, [role, t]);
+
+    const [usersOpen, setUsersOpen] = useState(() =>
+        ["/students", "/teachers", "/admins", "/wilayas"].some((p) =>
+            location.pathname === p || location.pathname.startsWith(`${p}/`)
+        )
+    );
+
     const handleLogout = () => {
         logout()
         window.location.href = "/login";
@@ -49,10 +94,16 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         navigate(path);
     };
 
-    const isActiveParent = (item: any) => {
-        if (location.pathname === item.path) return true;
+    const isActiveParent = (item: SidebarItem) => {
+        if (item.path && (location.pathname === item.path || location.pathname.startsWith(`${item.path}/`))) {
+            return true;
+        }
         if (item.submenu) {
-            return item.submenu.some((sub: any) => location.pathname === sub.path);
+            return item.submenu.some(
+                (sub) =>
+                    sub.path &&
+                    (location.pathname === sub.path || location.pathname.startsWith(`${sub.path}/`))
+            );
         }
         return false;
     };
@@ -96,26 +147,98 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         },
     };
 
+    const renderItem = (item: SidebarItem, nested = false) => {
+        const isParentActive = isActiveParent(item);
+        const isOpen = item.key === "users" ? usersOpen || isParentActive : false;
+
+        return (
+            <div key={item.key} className="relative">
+                <motion.div
+                    className={`
+                        flex items-center cursor-pointer mx-2 rounded-xl font-medium text-sm relative overflow-hidden transition-all duration-200
+                        ${nested ? "ms-4" : ""}
+                        ${isParentActive && !item.submenu
+                            ? "!bg-main-color font-semibold text-white shadow-lg shadow-emerald-900/40"
+                            : item.submenu && isParentActive
+                                ? "bg-white/10 font-semibold text-white"
+                                : "text-white/70 hover:bg-white/8 hover:text-white"
+                        }
+                    `}
+                    variants={itemVariants}
+                    initial="expanded"
+                    animate={collapsed ? "collapsed" : "expanded"}
+                    whileHover={{
+                        transform: i18n.language === "ar" ? "translateX(-4px)" : "translateX(4px)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                        if (item.submenu) {
+                            if (collapsed) {
+                                const first = item.submenu[0];
+                                if (first?.path) handleNavigation(first.path);
+                                return;
+                            }
+                            setUsersOpen((open) => !open);
+                            return;
+                        }
+                        if (item.path) handleNavigation(item.path);
+                    }}
+                >
+                    <div
+                        className={`flex min-w-6 items-center justify-center text-lg transition-colors duration-200 ${isParentActive ? "text-white" : "text-white/70"
+                            }`}
+                    >
+                        {item.icon}
+                    </div>
+
+                    <AnimatePresence>
+                        {!collapsed && (
+                            <motion.span
+                                className="flex flex-1 items-center justify-between overflow-hidden whitespace-nowrap font-inherit"
+                                variants={textVariants}
+                                initial="expanded"
+                                animate="expanded"
+                                exit="collapsed"
+                            >
+                                {item.label}
+                                {item.submenu && (
+                                    <DownOutlined
+                                        className={`ms-2 text-[10px] transition-transform ${isOpen ? "rotate-180" : ""}`}
+                                    />
+                                )}
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+
+                {item.submenu && isOpen && !collapsed && (
+                    <div className="mt-1 mb-1 flex flex-col gap-0.5">
+                        {item.submenu.map((sub) => renderItem(sub, true))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <>
             <motion.div
                 dir={i18n.language === "ar" ? "rtl" : "ltr"}
-                className="h-screen bg-gradient-to-b from-white to-[#fafbff] shadow-lg flex flex-col fixed top-0 z-50 overflow-hidden"
-                initial={{ width: 200 }}
-                animate={{ width: collapsed ? 100 : 210 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="fixed top-0 z-50 flex h-screen flex-col overflow-hidden bg-gradient-to-b from-[#0a1f14] via-[#0f2a1c] to-[#12261b] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
+                initial={{ width: 248 }}
+                animate={{ width: collapsed ? 80 : 248 }}
+                transition={{ duration: 0.28, ease: "easeInOut" }}
                 style={{
                     height: '100vh',
                     position: 'fixed',
                     [i18n.language === "ar" ? "right" : "left"]: 0,
                     top: 0,
-                    borderRight: i18n.language === "ar" ? "none" : "1px solid #e5e7eb",
-                    borderLeft: i18n.language === "ar" ? "1px solid #e5e7eb" : "none",
+                    borderRight: i18n.language === "ar" ? "none" : "1px solid rgba(255,255,255,0.06)",
+                    borderLeft: i18n.language === "ar" ? "1px solid rgba(255,255,255,0.06)" : "none",
                 }}
             >
-                {/* En-tête du Sidebar */}
                 <motion.div
-                    className={`flex items-center justify-between p-6 border-b border-gray-100 bg-white/90 backdrop-blur-sm ${i18n.language === "ar" ? "flex-row-reverse" : ""
+                    className={`flex items-center justify-between border-b border-white/10 p-5 ${i18n.language === "ar" ? "flex-row-reverse" : ""
                         }`}
                 >
                     <motion.div
@@ -124,16 +247,15 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        {/* <img src={logo} className="h-[80px]" alt="Logo" /> */}
-                        <img src={logo} alt="Logo" />
+                        <img src={logo} alt="Logo" className={`object-contain ${collapsed ? "h-8" : "h-11"}`} />
                     </motion.div>
 
                     <motion.button
-                        className="w-10 h-10 border-none rounded-lg bg-transparent text-gray-600 cursor-pointer flex items-center justify-center text-base transition-all duration-200"
+                        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-none bg-white/5 text-base text-white/80 transition-all duration-200"
                         onClick={onToggle}
                         whileHover={{
-                            scale: 1.1,
-                            backgroundColor: "rgba(63, 81, 181, 0.1)",
+                            scale: 1.08,
+                            backgroundColor: "rgba(23, 171, 91, 0.25)",
                         }}
                         whileTap={{ scale: 0.9 }}
                     >
@@ -141,68 +263,19 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                     </motion.button>
                 </motion.div>
 
-                {/* Menu Principal */}
                 <motion.div
                     className="flex-1 py-4 overflow-y-auto overflow-x-hidden"
                     layout
                 >
                     <nav className="flex flex-col gap-1">
-                        {menuItems?.map((item) => {
-                            const isParentActive = isActiveParent(item);
-
-                            return (
-                                <div key={item.key} className="relative">
-                                    <motion.div
-                                        className={`
-                                            flex items-center cursor-pointer mx-2 rounded-xl font-medium text-sm relative overflow-hidden transition-all duration-200
-                                            ${isParentActive
-                                                ? "!bg-main-color text-white font-semibold"
-                                                : "text-gray-600 hover:bg-[#3f51b5]/10"
-                                            }
-                                        `}
-                                        variants={itemVariants}
-                                        initial="expanded"
-                                        animate={collapsed ? "collapsed" : "expanded"}
-                                        whileHover={{
-                                            transform: i18n.language === "ar" ? "translateX(-4px)" : "translateX(4px)",
-                                        }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => {
-                                            handleNavigation(item.path);
-                                        }}
-                                    >
-                                        <div
-                                            className={`text-lg min-w-6 flex items-center justify-center transition-colors duration-200 ${isParentActive ? "text-white" : "text-gray-600"
-                                                }`}
-                                        >
-                                            {item.icon}
-                                        </div>
-
-                                        <AnimatePresence>
-                                            {!collapsed && (
-                                                <motion.span
-                                                    className="whitespace-nowrap overflow-hidden font-inherit"
-                                                    variants={textVariants}
-                                                    initial="expanded"
-                                                    animate="expanded"
-                                                    exit="collapsed"
-                                                >
-                                                    {item.label}
-                                                </motion.span>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-                                </div>
-                            );
-                        })}
+                        {menuItems?.map((item) => renderItem(item))}
                     </nav>
                 </motion.div>
 
-                {/* Footer du Sidebar */}
                 <AnimatePresence>
                     {!collapsed && (
                         <motion.div
-                            className={`text-center py-3 text-xs text-gray-500 bg-[#f8f9ff]/80 mx-2 rounded-lg backdrop-blur-sm mb-4 ${i18n.language === "ar" ? "text-right px-3" : "text-left px-3"
+                            className={`mx-2 mb-3 rounded-xl bg-white/5 py-3 text-center text-xs text-white/50 ${i18n.language === "ar" ? "px-3 text-right" : "px-3 text-left"
                                 }`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -212,14 +285,13 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                             <div className="font-medium mb-1">
                                 {t("sidebar.version")} v1.0.0
                             </div>
-                            <div className="text-[10px] text-gray-400">
+                            <div className="text-[10px] text-white/35">
                                 {t("sidebar.copyright")}
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                {/* Bouton de déconnexion */}
                 {!collapsed && (
                     <motion.div
                         className={`mx-2 mb-4 ${i18n.language === "ar" ? "text-right" : ""}`}
@@ -230,9 +302,8 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                         <motion.button
                             className={`
                                 w-full flex items-center px-4 py-3 rounded-xl font-medium text-sm
-                                bg-red-50 text-red-600 hover:bg-red-100
+                                bg-red-500/10 text-red-300 hover:bg-red-500/20
                                 transition-all duration-200
-                                ${i18n.language === "ar" ? "" : ""}
                             `}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}

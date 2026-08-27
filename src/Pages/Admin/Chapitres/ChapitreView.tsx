@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
     Table,
     Button,
-    Card,
     Tag,
     Space,
     Input,
@@ -42,6 +41,9 @@ import type { typeChapitre } from '../../../Services/Admin/Chapitres/typeChapitr
 import AuthService from '../../../Auth-service/AuthService';
 import { useDeleteChapitre } from '../../../Services/Admin/Chapitres/useDeleteChapitre';
 import { usePublishChapitre } from '../../../Services/Admin/Chapitres/usePublishChapitre';
+import PageShell from '../../../ui/PageShell';
+import PageToolbar from '../../../ui/PageToolbar';
+import DataPanel from '../../../ui/DataPanel';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -75,10 +77,12 @@ const ChapitresView: React.FC = () => {
 
 
 
-    const filteredChapitres = DataChapitre ? DataChapitre?.filter(chapitre => {
+    const chapitres = Array.isArray(DataChapitre) ? DataChapitre : [];
+    const filteredChapitres = chapitres.filter(chapitre => {
         const matchesSearch = searchText === '' ||
-            chapitre.title.toLowerCase().includes(searchText.toLowerCase()) ||
-            chapitre.description.toLowerCase().includes(searchText.toLowerCase());
+            chapitre.title?.toLowerCase().includes(searchText.toLowerCase()) ||
+            chapitre.description?.toLowerCase().includes(searchText.toLowerCase()) ||
+            chapitre.code?.toLowerCase().includes(searchText.toLowerCase());
 
         const matchesDifficulty = selectedDifficulty === 'all' ||
             chapitre.difficulty === selectedDifficulty;
@@ -88,7 +92,7 @@ const ChapitresView: React.FC = () => {
             (selectedStatus === 'draft' && !chapitre.is_published);
 
         return matchesSearch && matchesDifficulty && matchesStatus;
-    }) : []
+    });
 
     const handleEdit = (chapitre: typeChapitre) => {
         setSelectedChapitre(chapitre);
@@ -155,7 +159,7 @@ const ChapitresView: React.FC = () => {
             {
                 title: t('chapitres.table.order'),
                 dataIndex: 'order',
-                sorter: (a: typeChapitre, b: typeChapitre) => a.order - b.order,
+                sorter: (a: typeChapitre, b: typeChapitre) => (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0),
                 render: (order: number) => (
                     <Badge count={order} style={{ backgroundColor: '#1890ff' }} />
                 ),
@@ -267,7 +271,7 @@ const ChapitresView: React.FC = () => {
             {
                 title: t('chapitres.table.order'),
                 dataIndex: 'order',
-                sorter: (a: typeChapitre, b: typeChapitre) => a.order - b.order,
+                sorter: (a: typeChapitre, b: typeChapitre) => (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0),
                 render: (order: number) => (
                     <Badge count={order} style={{ backgroundColor: '#1890ff' }} />
                 ),
@@ -432,131 +436,88 @@ const ChapitresView: React.FC = () => {
         ];
 
     return (
-        <div className="p-6">
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className="flex justify-between items-center mb-1">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
-                            {t('chapitres.title')}
-                        </h1>
-
-                    </div>
-                    <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+        <PageShell
+            title={t('chapitres.title')}
+            subtitle={t('chapitres.subtitle')}
+            icon={<BookOutlined />}
+            extra={
+                (post === "teacher" || post === "admin") ? (
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<PlusOutlined />}
+                        onClick={() => setShowAddModal(true)}
                     >
-                        {post === "teacher" || post === "admin" && (
-                            <Button
-                                size="large"
-                                icon={<PlusOutlined />}
-                                onClick={() => setShowAddModal(true)}
-                                className="!text-white !font-bold !bg-main-color border-none shadow-lg"
-                            >
-                                {t('chapitres.addNew')}
-                            </Button>
-                        )}
-                    </motion.div>
-                </div>
-
-                <Card className="shadow-lg border-0 rounded-xl mb-6">
-                    <div className="flex flex-wrap gap-4 mb-6">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex-1 min-w-[300px]"
+                        {t('chapitres.addNew')}
+                    </Button>
+                ) : undefined
+            }
+        >
+            <PageToolbar
+                search={
+                    <Search
+                        placeholder={t('chapitres.search.placeholder')}
+                        prefix={<SearchOutlined />}
+                        size="large"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        allowClear
+                    />
+                }
+                filters={
+                    <>
+                        <Select
+                            placeholder={t('chapitres.filter.difficulty')}
+                            size="large"
+                            value={selectedDifficulty}
+                            onChange={setSelectedDifficulty}
+                            className="w-40"
+                            suffixIcon={<FilterOutlined />}
                         >
-                            <Search
-                                placeholder={t('chapitres.search.placeholder')}
-                                prefix={<SearchOutlined />}
-                                size="large"
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                allowClear
-                                className="w-full"
-                            />
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 }}
+                            <Option value="all">{t('chapitres.filter.allDifficulties')}</Option>
+                            <Option value="easy">{t('chapitres.difficulty.easy')}</Option>
+                            <Option value="medium">{t('chapitres.difficulty.medium')}</Option>
+                            <Option value="hard">{t('chapitres.difficulty.hard')}</Option>
+                        </Select>
+                        <Select
+                            placeholder={t('chapitres.filter.status')}
+                            size="large"
+                            value={selectedStatus}
+                            onChange={setSelectedStatus}
+                            className="w-40"
                         >
-                            <Select
-                                placeholder={t('chapitres.filter.difficulty')}
-                                size="large"
-                                value={selectedDifficulty}
-                                onChange={setSelectedDifficulty}
-                                className="w-40"
-                                suffixIcon={<FilterOutlined />}
-                            >
-                                <Option value="all">{t('chapitres.filter.allDifficulties')}</Option>
-                                <Option value="easy">{t('chapitres.difficulty.easy')}</Option>
-                                <Option value="medium">{t('chapitres.difficulty.medium')}</Option>
-                                <Option value="hard">{t('chapitres.difficulty.hard')}</Option>
-                            </Select>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
+                            <Option value="all">{t('chapitres.filter.allStatus')}</Option>
+                            <Option value="published">{t('chapitres.common.published')}</Option>
+                            <Option value="draft">{t('chapitres.common.draft')}</Option>
+                        </Select>
+                        <Button
+                            size="large"
+                            icon={<SortAscendingOutlined />}
+                            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
                         >
-                            <Select
-                                placeholder={t('chapitres.filter.status')}
-                                size="large"
-                                value={selectedStatus}
-                                onChange={setSelectedStatus}
-                                className="w-40"
-                            >
-                                <Option value="all">{t('chapitres.filter.allStatus')}</Option>
-                                <Option value="published">{t('chapitres.common.published')}</Option>
-                                <Option value="draft">{t('chapitres.common.draft')}</Option>
-                            </Select>
-                        </motion.div>
+                            {t('chapitres.sort.order')} {sortOrder === 'asc' ? '↑' : '↓'}
+                        </Button>
+                    </>
+                }
+            />
 
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            <Button
-                                size="large"
-                                icon={<SortAscendingOutlined />}
-                                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                            >
-                                {t('chapitres.sort.order')} {sortOrder === 'asc' ? '↑' : '↓'}
-                            </Button>
-                        </motion.div>
-                    </div>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                    >
-                        <Table
-                            columns={columns}
-                            dataSource={filteredChapitres}
-                            rowKey="id"
-                            loading={isPending}
-                            pagination={{
-                                pageSize: 10,
-                                responsive: true,
-                                showSizeChanger: true,
-                                showTotal: (total) => `${t('chapitres.common.total')} ${total} ${t('chapitres.table.items')}`,
-                            }}
-                            scroll={{ x: true }} // ← Supprimez ou modifiez cette ligne
-                            rowClassName="hover:bg-gray-50 transition-colors"
-                            className="!w-full"
-                            size="middle"
-                        />
-                    </motion.div>
-                </Card>
-            </motion.div>
+            <DataPanel loading={isPending}>
+                <Table
+                    columns={columns}
+                    dataSource={filteredChapitres}
+                    rowKey="id"
+                    pagination={{
+                        pageSize: 10,
+                        responsive: true,
+                        showSizeChanger: true,
+                        showTotal: (total) => `${t('chapitres.common.total')} ${total} ${t('chapitres.table.items')}`,
+                    }}
+                    scroll={{ x: true }}
+                    rowClassName="hover:bg-[#f6faf7] transition-colors"
+                    className="!w-full"
+                    size="middle"
+                />
+            </DataPanel>
 
             {/* Modals */}
             {showAddModal && (
@@ -778,7 +739,7 @@ const ChapitresView: React.FC = () => {
                     </motion.div>
                 </div>
             </Modal>
-        </div>
+        </PageShell>
     );
 };
 

@@ -38,6 +38,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useGetStudentErrorAnalysis } from '../../../Services/Analytics/useGetStudentErrorAnalysis';
 
 dayjs.extend(relativeTime);
 
@@ -98,6 +99,14 @@ const DetailsStudent: React.FC<DetailsStudentProps> = ({
     onClose
 }) => {
     const { t } = useTranslation();
+
+    const studentUserId = student?.user?.id ?? student?.id;
+    const { data: errorAnalysis } = useGetStudentErrorAnalysis(
+        studentUserId,
+        { days: 30 },
+        visible && !!studentUserId
+    );
+    const apiErrors = errorAnalysis?.top_errors ?? errorAnalysis?.errors ?? [];
 
     if (!student) return null;
 
@@ -448,6 +457,25 @@ const DetailsStudent: React.FC<DetailsStudentProps> = ({
                         >
                             <motion.div variants={staggerChildren}>
                                 <Row gutter={[24, 24]}>
+                                    <Col xs={24}>
+                                        <Card title={t('analytics.student_errors')} className="shadow-sm mb-4">
+                                            {Array.isArray(apiErrors) && apiErrors.length > 0 ? (
+                                                <List
+                                                    dataSource={apiErrors}
+                                                    renderItem={(item: { error_type?: string; category?: string; count?: number }) => (
+                                                        <List.Item>
+                                                            <Space className="w-full justify-between">
+                                                                <Text>{item.error_type ?? item.category}</Text>
+                                                                <Tag color="red">{item.count ?? "—"}</Tag>
+                                                            </Space>
+                                                        </List.Item>
+                                                    )}
+                                                />
+                                            ) : (
+                                                <Text type="secondary">{t('common.no_data')}</Text>
+                                            )}
+                                        </Card>
+                                    </Col>
                                     <Col xs={24}>
                                         <Card
                                             title={t('students.details.subjectsPerformance')}

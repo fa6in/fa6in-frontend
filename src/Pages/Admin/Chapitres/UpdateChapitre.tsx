@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Modal,
     Form,
@@ -32,6 +32,7 @@ import type { typeChapitre } from '../../../Services/Admin/Chapitres/typeChapitr
 import { useGetMatiere } from '../../../Services/Admin/Matieres/useGetMatiere';
 import { useUpdateChapitre } from '../../../Services/Admin/Chapitres/useUpdateChapitre';
 import SpinnerLoader from '../../../ui/SpinnerLoader';
+import RelationSelect, { normalizeRelationId, toRelationItems } from '../../../ui/RelationSelect';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -57,12 +58,17 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
     const [showExistingImage, setShowExistingImage] = useState<boolean>(true);
     const { mutate: updateChapitre, isPending } = useUpdateChapitre()
     const { data: getMatieres, isPending: isPendingMatiere } = useGetMatiere()
+    const matieres = Array.isArray(getMatieres) ? getMatieres : [];
+    const matiereOptions = useMemo(
+        () => toRelationItems(matieres, (m) => m.name, (m) => m.description),
+        [matieres]
+    );
 
     useEffect(() => {
         if (chapitre && visible) {
             form.setFieldsValue({
                 ...chapitre,
-                subject: chapitre.subject,
+                subject: normalizeRelationId(chapitre.subject),
             });
             setThumbnailFile(null);
             setThumbnailPreview('');
@@ -189,18 +195,11 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                                 label={t('chapitres.form.subject')}
                                 rules={[{ required: true, message: t('chapitres.validation.subjectRequired') }]}
                             >
-                                <Select
-                                    size="large"
+                                <RelationSelect
                                     placeholder={t('chapitres.form.subjectPlaceholder')}
                                     loading={isPendingMatiere}
-                                    disabled
-                                >
-                                    {getMatieres?.map((matiere, index) => {
-                                        return (
-                                            <Option key={index} value={matiere?.id}>{matiere?.name}</Option>
-                                        )
-                                    })}
-                                </Select>
+                                    items={matiereOptions}
+                                />
                             </Form.Item>
 
                             <Form.Item
@@ -507,7 +506,7 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                     initialValues={{
                         ...chapitre,
                         is_published: chapitre.is_published || false,
-                        subject: chapitre.subject,
+                        subject: normalizeRelationId(chapitre.subject),
                     }}
                 >
                     {steps[currentStep].content}

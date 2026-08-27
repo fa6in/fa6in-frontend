@@ -121,14 +121,177 @@
     "classes": "Classes",
     "subjects": "Matières",
     "exams": "Examens",
+    "content": "Contenu",
     "grades": "Notes",
     "assignments": "Devoirs",
+    "curriculum": "Curriculum",
+    "skills": "Compétences",
+    "assessment": "Évaluation",
+    "analytics": "Analytique",
+    "users": "Utilisateurs",
+    "wilaya": "Wilayas",
+    "admins": "Administrateurs",
     "roles": "Rôles & Permissions",
     "reports": "Rapports",
     "settings": "Paramètres",
     "version": "Version",
     "copyright": "© 2026 Ed-Tech Platform",
     "logout": "Déconnexion"
+  },
+  "common": {
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "search": "Rechercher",
+    "reset": "Réinitialiser",
+    "yes": "Oui",
+    "no": "Non",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "actions": "Actions",
+    "confirm_delete": "Confirmer la suppression ?",
+    "no_data": "Aucune donnée"
+  },
+  "curriculum": {
+    "title_page": "Gestion du Curriculum",
+    "subtitle": "Stages, niveaux, objectifs et leçons",
+    "stages": "Cycles",
+    "levels": "Niveaux",
+    "goals": "Objectifs",
+    "lessons": "Leçons",
+    "code": "Code",
+    "name": "Nom",
+    "title": "Titre",
+    "type": "Type",
+    "order": "Ordre",
+    "description": "Description",
+    "content": "Contenu",
+    "published": "Publié",
+    "publish": "Publier",
+    "stage": "Cycle",
+    "lesson": "Leçon",
+    "unit": "Unité",
+    "required": "Ce champ est obligatoire",
+    "goal_types": {
+      "conceptual": "Conceptuel",
+      "operational": "Opérationnel"
+    },
+    "placeholders": {
+      "code": "Ex. PRI, 5AP, MATH-01",
+      "name": "Entrez le nom",
+      "title": "Entrez le titre",
+      "description": "Entrez la description",
+      "content": "Entrez le contenu de la leçon",
+      "stage": "Sélectionnez un cycle",
+      "type": "Sélectionnez le type",
+      "lesson": "Sélectionnez une leçon",
+      "unit": "Sélectionnez une unité"
+    },
+    "modal": {
+      "edit": "Modifier",
+      "add_stages": "Ajouter un cycle",
+      "add_levels": "Ajouter un niveau",
+      "add_goals": "Ajouter un objectif",
+      "add_lessons": "Ajouter une leçon"
+    }
+  },
+  "skills": {
+    "title_page": "Compétences & Chunks",
+    "subtitle": "Skills, prérequis et micro-contenus",
+    "title": "Compétences",
+    "name": "Nom",
+    "type": "Type",
+    "difficulty": "Difficulté",
+    "prerequisites": "Prérequis",
+    "prerequisite": "Prérequis",
+    "skill": "Compétence",
+    "strength": "Force",
+    "chunks": "Chunks",
+    "chunk_title": "Titre du chunk",
+    "placeholders": {
+      "goal": "Sélectionnez un objectif",
+      "skill": "Sélectionnez une compétence",
+      "prerequisite": "Sélectionnez un prérequis"
+    }
+  },
+  "assessment": {
+    "title_page": "Évaluation",
+    "subtitle": "Erreurs d'apprentissage et progression des étudiants",
+    "errors": "Erreurs",
+    "progress": "Progression",
+    "add_error": "Ajouter une erreur",
+    "error_type": "Type d'erreur",
+    "category": "Catégorie",
+    "severity": "Sévérité",
+    "root_cause": "Cause racine",
+    "mastery": "Maîtrise",
+    "attempts": "Tentatives",
+    "filter_skill": "Filtrer par compétence",
+    "progress_records": "Enregistrements de progression",
+    "code": "Code",
+    "student": "Étudiant",
+    "severity_levels": {
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé"
+    }
+  },
+  "analytics": {
+    "title_page": "Analytique",
+    "subtitle": "Tableau de bord de classe et analyse des erreurs",
+    "filter_level": "Filtrer par niveau",
+    "total_students": "Total étudiants",
+    "avg_progress": "Progression moyenne",
+    "active_today": "Actifs aujourd'hui",
+    "error_rate": "Taux d'erreur",
+    "class_overview": "Vue d'ensemble de la classe",
+    "student_errors": "Erreurs par étudiant",
+    "select_student": "Sélectionnez un étudiant",
+    "select_student_hint": "Sélectionnez un étudiant pour voir ses erreurs",
+    "no_errors_found": "Aucune erreur trouvée pour cet étudiant",
+    "no_dashboard_data": "Aucune donnée de tableau de bord disponible",
+    "progress_description": "Progression moyenne de tous les étudiants",
+    "error_description": "Taux d'erreur moyen dans les évaluations",
+    "count": "Nombre",
+    "fields": {
+      "total_students": "Total étudiants",
+      "students_count": "Nombre d'étudiants",
+      "avg_progress": "Progression moyenne",
+      "average_progress": "Progression moyenne",
+      "active_today": "Actifs aujourd'hui",
+      "daily_active": "Actifs quotidiens",
+      "error_rate": "Taux d'erreur",
+      "total_lessons": "Total leçons",
+      "total_activities": "Total activités",
+      "completion_rate": "Taux de complétion",
+      "average_score": "Score moyen"
+    }
+  },
+  "wilaya": {
+    "title": "Wilayas",
+    "subtitle": "Gestion des wilayas",
+    "add": "Nouvelle wilaya",
+    "edit": "Modifier la wilaya",
+    "list": "Liste des wilayas",
+    "table": {
+      "code": "Code",
+      "name": "Nom"
+    },
+    "duplicate_code": "Ce code existe déjà",
+    "duplicate_name": "Ce nom existe déjà"
+  },
+  "admins": {
+    "title": "Administrateurs",
+    "subtitle": "Gestion des comptes administrateurs",
+    "add": "Nouvel admin",
+    "total": "Total admins",
+    "table": {
+      "user": "Utilisateur",
+      "email": "Email",
+      "role": "Rôle",
+      "status": "Statut"
+    }
   },
   "navbar": {
     "titles": {
@@ -141,6 +304,13 @@
       "exams": "Examens",
       "grades": "Notes",
       "assignments": "Devoirs",
+      "curriculum": "Curriculum",
+      "skills": "Compétences",
+      "assessment": "Évaluation",
+      "analytics": "Analytique",
+      "admins": "Administrateurs",
+      "wilaya": "Wilayas",
+      "users": "Utilisateurs",
       "roles": "Rôles & Permissions",
       "reports": "Rapports",
       "settings": "Paramètres"
@@ -165,7 +335,18 @@
       "editProfile": "Modifier le profil",
       "logout": "Déconnexion",
       "buttn_confirm": "Confirmer",
-      "btn_annuler": "Annuler"
+      "btn_annuler": "Annuler",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "phone": "Téléphone",
+      "avatar": "Photo de profil",
+      "formSubtitle": "Mettez à jour vos informations personnelles",
+      "requiredFields": "Tous les champs sont obligatoires"
+    },
+    "roles": {
+      "admin": "Administrateur",
+      "teacher": "Enseignant",
+      "student": "Élève"
     }
   },
   "dashboard": {

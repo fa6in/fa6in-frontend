@@ -4,12 +4,10 @@ import {
   Input, 
   Button, 
   Card, 
-  Typography, 
   Row, 
   Col, 
   Select, 
   Space,
-  message,
   Steps,
   Divider
 } from 'antd';
@@ -25,36 +23,24 @@ import {
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useRegisterAdmin } from '../../../Services/Auth/useRegisterAdmin';
+import type { RegisterAdminParams } from '../../../Services/Auth/useRegisterAdmin';
+import PageShell from '../../../ui/PageShell';
 
-const { Title } = Typography;
 const { Step } = Steps;
 const { Option } = Select;
 
 export default function AddNewAdmin() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const { mutate: registerAdmin, isPending: loading } = useRegisterAdmin();
 
-  const onFinish = async (values: any) => {
-    setLoading(true);
-    try {
-      // Simulation d'appel API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log('Admin data to submit:', values);
-      message.success('Admin ajouté avec succès!');
-      
-      // Animation de succès
-      setTimeout(() => {
-        navigate('/admins');
-      }, 1000);
-      
-    } catch (error) {
-      message.error('Erreur lors de l\'ajout de l\'admin');
-    } finally {
-      setLoading(false);
-    }
+  const onFinish = (values: RegisterAdminParams) => {
+    registerAdmin({
+      ...values,
+      role: "admin",
+    });
   };
 
   const steps = [
@@ -81,29 +67,22 @@ export default function AddNewAdmin() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+    <PageShell
+      title="Ajouter un administrateur"
+      subtitle="Créez un compte administrateur sécurisé"
+      icon={<UserAddOutlined className="text-2xl" />}
+      extra={
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/admins')}>
+          Retour
+        </Button>
+      }
     >
-      <Card 
-        bordered={false}
-        className="shadow-lg"
-        title={
-          <Space>
-            <UserAddOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
-            <Title level={3} style={{ margin: 0 }}>Ajouter un Nouvel Admin</Title>
-          </Space>
-        }
-        extra={
-          <Button 
-            icon={<ArrowLeftOutlined />}
-            onClick={() => navigate('/admins')}
-          >
-            Retour
-          </Button>
-        }
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
+      <Card bordered={false} className="shadow-lg">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -338,6 +317,7 @@ export default function AddNewAdmin() {
           </Form>
         </motion.div>
       </Card>
-    </motion.div>
+      </motion.div>
+    </PageShell>
   );
 }

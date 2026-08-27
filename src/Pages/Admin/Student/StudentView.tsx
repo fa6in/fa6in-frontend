@@ -1,12 +1,10 @@
 import { useState } from "react";
 import {
     Table,
-    Card,
     Button,
     Tag,
     Input,
     Select,
-    Space,
     Modal,
     Form,
     Badge,
@@ -23,49 +21,20 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import type { Student } from "../../../Services/Admin/Student/typeStudent";
 
-
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import AddNewStudent from "./AddNewStudent";
 import { useGetStudents } from "../../../Services/Admin/Student/useGetStudents";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
+import PageShell from "../../../ui/PageShell";
+import StatCard from "../../../ui/StatCard";
+import PageToolbar from "../../../ui/PageToolbar";
+import DataPanel from "../../../ui/DataPanel";
 import { FcViewDetails } from "react-icons/fc";
 import DetailsStudent from "./DetailsStudent";
 import AuthService from "../../../Auth-service/AuthService";
 
 const { Option } = Select;
 
-/* =======================
-   Animations
-======================= */
-const container = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
-};
-
-const item = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { type: "spring", damping: 12 }
-    }
-};
-
-const cardHover = {
-    hover: {
-        y: -4,
-        boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-        transition: { duration: 0.3 }
-    }
-};
-
-/* =======================
-   Component
-======================= */
 const StudentView = () => {
     const { t, i18n } = useTranslation();
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -260,138 +229,111 @@ const StudentView = () => {
     }
 
     return (
-        <>
-            <motion.div
-                variants={container}
-                initial="hidden"
-                animate="visible"
-                className="min-h-screen bg-gray-50 p-4 md:p-6"
-                dir={isRTL ? "rtl" : "ltr"}
-            >
-                {/* Header */}
-                <motion.div variants={{ item }} className="mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                                {t("students.title")}
-                            </h1>
-                            <p className="text-gray-600 mt-2">
-                                {t("students.subtitle")}
-                            </p>
-                        </div>
-                        {post === "admin" && (
-                            <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-
-                                <Button
-                                    icon={<PlusOutlined />}
-                                    className="flex items-center !bg-main-color !text-white"
-                                    onClick={handleAddStudent}
-                                >
-                                    {t("students.addStudent")}
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
-
-                {/* Statistiques */}
-                <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <PageShell
+            title={t("students.title")}
+            subtitle={t("students.subtitle")}
+            icon={<TeamOutlined />}
+            extra={
+                post === "admin" ? (
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<PlusOutlined />}
+                        onClick={handleAddStudent}
+                    >
+                        {t("students.addStudent")}
+                    </Button>
+                ) : undefined
+            }
+        >
+            <div dir={isRTL ? "rtl" : "ltr"}>
+                <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {stats.map((stat) => (
-                        <div key={stat.key}>
-                            <motion.div variants={{ item }} whileHover="hover">
-                                <motion.div variants={cardHover}>
-                                    <Card className="rounded-2xl shadow-sm border-0 h-full">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <div className="text-sm text-gray-500 mb-1">
-                                                    {stat.title}
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-800">
-                                                    {stat.value}
-                                                </div>
-
-                                            </div>
-                                            <div
-                                                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white`}
-                                            >
-                                                {stat.icon}
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-                            </motion.div>
-                        </div>
+                        <StatCard
+                            key={stat.key}
+                            title={stat.title}
+                            value={stat.value}
+                            icon={stat.icon}
+                            trend={stat.change}
+                            color={
+                                stat.key === "total"
+                                    ? "#2563eb"
+                                    : stat.key === "active"
+                                      ? "#17ab5b"
+                                      : "#ef4444"
+                            }
+                        />
                     ))}
                 </div>
 
-                {/* Barre de recherche et filtres */}
-                <motion.div variants={{ item }} className="mb-6">
-                    <Card className="rounded-2xl shadow-sm border-0">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                            <Input
-                                placeholder={t("students.searchPlaceholder")}
-                                prefix={<SearchOutlined className="text-gray-400" />}
-                                className="w-full lg:w-96 rounded-xl"
+                <PageToolbar
+                    search={
+                        <Input
+                            placeholder={t("students.searchPlaceholder")}
+                            prefix={<SearchOutlined className="text-gray-400" />}
+                            size="large"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            allowClear
+                        />
+                    }
+                    filters={
+                        <>
+                            <Select
+                                placeholder={t("students.filters.status.label")}
+                                className="w-40"
                                 size="large"
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                allowClear
-                            />
-                            <Space wrap className={isRTL ? "space-x-reverse" : ""}>
-                                <Select
-                                    placeholder={t("students.filters.status.label")}
-                                    className="w-40"
-                                    value={statusFilter}
-                                    onChange={setStatusFilter}
-                                    suffixIcon={<FilterOutlined />}
-                                >
-                                    {statusOptions.map((option) => (
-                                        <Option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </Option>
-                                    ))}
-                                </Select>
-                                <Select
-                                    placeholder={t("students.filters.year.label")}
-                                    className="w-40"
-                                    value={yearFilter}
-                                    onChange={setYearFilter}
-                                >
-                                    {yearOptions.map((option) => (
-                                        <Option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </Option>
-                                    ))}
-                                </Select>
-                                <Button
-                                    icon={<FilterOutlined />}
-                                    onClick={() => {
-                                        setSearchText("");
-                                        setStatusFilter("all");
-                                        setYearFilter("all");
-                                    }}
-                                >
-                                    {t("students.clearFilters")}
-                                </Button>
-                            </Space>
-                        </div>
-                    </Card>
-                </motion.div>
-
-                {/* Onglets et tableau */}
-                <Table
-                    columns={columns}
-                    dataSource={filteredData}
-                    loading={isPending}
-                    rowKey="id"
-                    scroll={{ x: true }}
-                    className=""
-                    pagination={{
-                        pageSize: 10,
-                        responsive: true,
-                        showSizeChanger: true,
-                    }}
+                                value={statusFilter}
+                                onChange={setStatusFilter}
+                                suffixIcon={<FilterOutlined />}
+                            >
+                                {statusOptions.map((option) => (
+                                    <Option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                            <Select
+                                placeholder={t("students.filters.year.label")}
+                                className="w-40"
+                                size="large"
+                                value={yearFilter}
+                                onChange={setYearFilter}
+                            >
+                                {yearOptions.map((option) => (
+                                    <Option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                            <Button
+                                size="large"
+                                icon={<FilterOutlined />}
+                                onClick={() => {
+                                    setSearchText("");
+                                    setStatusFilter("all");
+                                    setYearFilter("all");
+                                }}
+                            >
+                                {t("students.clearFilters")}
+                            </Button>
+                        </>
+                    }
                 />
+
+                <DataPanel loading={isPending}>
+                    <Table
+                        columns={columns}
+                        dataSource={filteredData}
+                        rowKey="id"
+                        scroll={{ x: true }}
+                        pagination={{
+                            pageSize: 10,
+                            responsive: true,
+                            showSizeChanger: true,
+                        }}
+                    />
+                </DataPanel>
 
                 {/* Modal d'ajout/édition d'étudiant */}
                 <Modal
@@ -422,8 +364,8 @@ const StudentView = () => {
                     visible={isDetailsModalVisible}
                     onClose={() => setIsDetailsModalVisible(false)}
                 />
-
-            </motion.div></>
+            </div>
+        </PageShell>
     );
 };
 

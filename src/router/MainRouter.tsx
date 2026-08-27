@@ -10,11 +10,14 @@ import { GrChapterAdd } from "react-icons/gr";
 import {
   DashboardOutlined,
   BookOutlined,
-  // SettingOutlined,
-  // AppstoreOutlined,
   FileTextOutlined,
-  // SafetyCertificateOutlined,
   AppstoreOutlined,
+  ApartmentOutlined,
+  BulbOutlined,
+  AuditOutlined,
+  BarChartOutlined,
+  SafetyCertificateOutlined,
+  EnvironmentOutlined,
 } from "@ant-design/icons";
 import AuthService from "../Auth-service/AuthService";
 // Admin Components
@@ -30,10 +33,15 @@ const ChapitreViewStudent = lazy(() => import("../Pages/Student-Pages/Chapitres/
 const Content = lazy(() => import("../Pages/Student-Pages/Contenu/ContenuView"));
 const AssignemnetViewStudent = lazy(() => import("../Pages/Student-Pages/Assignements/AssignementViewStudent"));
 const AssignemnetViewAdmin = lazy(() => import("../Pages/Admin/Assignments/AssignmentViewAdmin"));
+const CurriculumView = lazy(() => import("../Pages/Admin/Curriculum/CurriculumView"));
+const SkillsView = lazy(() => import("../Pages/Admin/Skills/SkillsView"));
+const AssessmentView = lazy(() => import("../Pages/Admin/Assessment/AssessmentView"));
+const AnalyticsView = lazy(() => import("../Pages/Admin/Analytics/AnalyticsView"));
+const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
+const AddNewAdmin = lazy(() => import("../Pages/Admin/Admin/AddNewAdmin"));
+const WilayaView = lazy(() => import("../Pages/Admin/Wilaya/WilayaView"));
 
 const NewDashboardAdmin = lazy(() => import("../Pages/Admin/Dashboard/DashboardHomeAdmin"));
-
-// const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 const role = AuthService.getRole()
 
 const MainRouter: RouteType[] = [
@@ -157,8 +165,106 @@ const MainRouter: RouteType[] = [
     }
   },
 
-  // {
-  //   path: "/roles",
+  {
+    path: "/curriculum",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <CurriculumView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "curriculum",
+      label: "sidebar.curriculum",
+      icon: <ApartmentOutlined />,
+    }
+  },
+  {
+    path: "/skills",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <SkillsView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "skills",
+      label: "sidebar.skills",
+      icon: <BulbOutlined />,
+    }
+  },
+  {
+    path: "/assessment",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <AssessmentView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin", "teacher"],
+    sidebar: {
+      key: "assessment",
+      label: "sidebar.assessment",
+      icon: <AuditOutlined />,
+    }
+  },
+  {
+    path: "/analytics",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <AnalyticsView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin", "teacher"],
+    sidebar: {
+      key: "analytics",
+      label: "sidebar.analytics",
+      icon: <BarChartOutlined />,
+    }
+  },
+  {
+    path: "/admins",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <AdminsView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "admins",
+      label: "sidebar.admins",
+      icon: <SafetyCertificateOutlined />,
+    }
+  },
+  {
+    path: "/admins/add",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <AddNewAdmin />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin"],
+  },
+  {
+    path: "/wilayas",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <WilayaView />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin"],
+    sidebar: {
+      key: "wilaya",
+      label: "sidebar.wilaya",
+      icon: <EnvironmentOutlined />,
+    },
+  },
   //   element: (
   //     <Suspense fallback={<SpinnerLoader />}>
   //       <Prapared />

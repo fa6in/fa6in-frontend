@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import { BaseUrl } from '../api/BaseUrl'
+import { API_ENDPOINTS } from '../api/endpoints'
 import AuthService from './AuthService'
 import { ALert_Retourne_check_cnx, ALert_Retourne_Login } from './AlertAuth'
 
@@ -35,7 +36,7 @@ api.interceptors.response.use(
   
         try {
             const refresh = AuthService.getRefreshToken()
-            const res = await axios.post(`${BaseUrl}api/token/refresh/`, {
+            const res = await axios.post(`${BaseUrl}${API_ENDPOINTS.auth.refreshToken}`, {
               refresh
             })
             if (res.data.access) AuthService.setAccessToken(res.data.access)

@@ -40,6 +40,7 @@ import {
 } from 'recharts';
 import { useGetRapportGlobalAdmin } from '../../../Services/Admin/Dashboard/useGetRapportGlobalAdmin';
 import { useGetRapportUsage } from '../../../Services/Admin/Dashboard/useGetRapportUsage';
+import { useGetClassDashboard } from '../../../Services/Analytics/useGetClassDashboard';
 import { useTranslation } from 'react-i18next';
 
 
@@ -96,6 +97,7 @@ const DashboardHomeAdmin: React.FC = () => {
     // Fetch data
     const { data: DataDashboardAdmin, isPending: isPendingGlobal } = useGetRapportGlobalAdmin();
     const { data: dataDashboardUsage, isPending: isPendingUsage } = useGetRapportUsage();
+    const { data: classDashboard } = useGetClassDashboard();
 
     // Update time every minute
     useEffect(() => {
@@ -156,21 +158,22 @@ const DashboardHomeAdmin: React.FC = () => {
     };
 
     // Préparation des données pour les graphiques
-    const peakHoursData = dataDashboardUsage?.peak_usage_hours
+    const peakHoursData = (dataDashboardUsage?.peak_usage_hours ?? [])
+        .slice()
         .sort((a: PeakHour, b: PeakHour) => a.hour - b.hour)
         .map((item: PeakHour) => ({
             ...item,
             hour: formatHour(item.hour)
         }));
 
-    const usageTrendData = dataDashboardUsage?.usage_trend.filter((item: UsageTrend) => {
+    const usageTrendData = (dataDashboardUsage?.usage_trend ?? []).filter((item: UsageTrend) => {
         const date = new Date(item.date);
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         return date >= thirtyDaysAgo;
     });
 
-    const roleDistributionData = DataDashboardAdmin?.user_analytics.role_distribution.map(
+    const roleDistributionData = (DataDashboardAdmin?.user_analytics?.role_distribution ?? []).map(
         (item: RoleDistribution) => ({
             ...item,
             name: t(`dashboard_admin.users.${item.role}`),
@@ -178,7 +181,7 @@ const DashboardHomeAdmin: React.FC = () => {
         })
     );
 
-    const unitsByDifficultyData = DataDashboardAdmin?.content_analytics.units_by_difficulty.map(
+    const unitsByDifficultyData = (DataDashboardAdmin?.content_analytics?.units_by_difficulty ?? []).map(
         (item: UnitByDifficulty) => ({
             ...item,
             name: t(`dashboard_admin.content.${item.difficulty}`),
@@ -189,7 +192,7 @@ const DashboardHomeAdmin: React.FC = () => {
     // Loading state
     if (isPendingGlobal || isPendingUsage) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="min-h-screen flex items-center justify-center bg-surface">
                 <Spin size="large" tip={t('dashboard_admin.common.loading')}>
                     <div className="p-8 rounded-lg bg-white shadow-xl">
                         <div className="text-center">
@@ -203,7 +206,7 @@ const DashboardHomeAdmin: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6" dir="rtl">
+        <div className="min-h-screen bg-surface p-4 md:p-6">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -236,6 +239,27 @@ const DashboardHomeAdmin: React.FC = () => {
                     </div>
                 </motion.div>
 
+                {classDashboard && (
+                    <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
+                        <Alert
+                            type="info"
+                            showIcon
+                            message={t('analytics.class_overview')}
+                            description={
+                                <Row gutter={16} className="mt-2">
+                                    <Col xs={12} md={6}>
+                                        <Statistic title={t('analytics.total_students')} value={classDashboard.total_students ?? classDashboard.summary?.total_students ?? '—'} />
+                                    </Col>
+                                    <Col xs={12} md={6}>
+                                        <Statistic title={t('analytics.avg_progress')} value={classDashboard.avg_progress ?? classDashboard.summary?.avg_progress ?? '—'} suffix="%" />
+                                    </Col>
+                                </Row>
+                            }
+                            className="rounded-xl border-0 shadow-sm"
+                        />
+                    </motion.div>
+                )}
+
                 {/* Quick Stats Cards */}
                 <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
                     <Row gutter={[16, 16]}>
@@ -244,12 +268,12 @@ const DashboardHomeAdmin: React.FC = () => {
                                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-blue-500">
                                     <Statistic
                                         title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_users')}</span>}
-                                        value={DataDashboardAdmin?.user_analytics.total_users}
+                                        value={DataDashboardAdmin?.user_analytics?.total_users ?? 0}
                                         prefix={<TeamOutlined className="text-blue-500" />}
                                         valueStyle={{ color: '#1890ff', fontSize: '24px', fontWeight: 'bold' }}
                                     />
                                     <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.users.new_users')}: {DataDashboardAdmin?.user_analytics.new_users_last_30_days}
+                                        {t('dashboard_admin.users.new_users')}: {DataDashboardAdmin?.user_analytics?.new_users_last_30_days ?? 0}
                                     </div>
                                 </Card>
                             </motion.div>
@@ -260,12 +284,12 @@ const DashboardHomeAdmin: React.FC = () => {
                                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-green-500">
                                     <Statistic
                                         title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_logins')}</span>}
-                                        value={DataDashboardAdmin?.usage_analytics.total_logins}
+                                        value={DataDashboardAdmin?.usage_analytics?.total_logins ?? 0}
                                         prefix={<LoginOutlined className="text-green-500" />}
                                         valueStyle={{ color: '#52c41a', fontSize: '24px', fontWeight: 'bold' }}
                                     />
                                     <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.stats.daily_active_users')}: {DataDashboardAdmin?.usage_analytics.daily_active_users}
+                                        {t('dashboard_admin.stats.daily_active_users')}: {DataDashboardAdmin?.usage_analytics?.daily_active_users ?? 0}
                                     </div>
                                 </Card>
                             </motion.div>
@@ -276,12 +300,12 @@ const DashboardHomeAdmin: React.FC = () => {
                                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-orange-500">
                                     <Statistic
                                         title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_activities')}</span>}
-                                        value={DataDashboardAdmin?.usage_analytics.total_activities_completed}
+                                        value={DataDashboardAdmin?.usage_analytics?.total_activities_completed ?? 0}
                                         prefix={<ExperimentOutlined className="text-orange-500" />}
                                         valueStyle={{ color: '#fa8c16', fontSize: '24px', fontWeight: 'bold' }}
                                     />
                                     <Progress
-                                        percent={Number(DataDashboardAdmin?.performance_analytics.overall_success_rate.toFixed(1))}
+                                        percent={Number((DataDashboardAdmin?.performance_analytics?.overall_success_rate ?? 0).toFixed(1))}
                                         size="small"
                                         status="active"
                                         className="mt-2"
@@ -298,13 +322,13 @@ const DashboardHomeAdmin: React.FC = () => {
                                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-purple-500">
                                     <Statistic
                                         title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.avg_session_duration')}</span>}
-                                        value={DataDashboardAdmin?.usage_analytics.avg_session_duration.toFixed(1)}
+                                        value={(DataDashboardAdmin?.usage_analytics?.avg_session_duration ?? 0).toFixed(1)}
                                         prefix={<ClockCircleOutlined className="text-purple-500" />}
                                         valueStyle={{ color: '#722ed1', fontSize: '24px', fontWeight: 'bold' }}
                                         suffix={t('dashboard_admin.stats.minutes')}
                                     />
                                     <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.users.active_rate')}: {DataDashboardAdmin?.user_analytics.active_users_rate}%
+                                        {t('dashboard_admin.users.active_rate')}: {DataDashboardAdmin?.user_analytics?.active_users_rate ?? 0}%
                                     </div>
                                 </Card>
                             </motion.div>
@@ -420,7 +444,7 @@ const DashboardHomeAdmin: React.FC = () => {
                                     className="hover:shadow-lg transition-shadow duration-300"
                                 >
                                     <Table
-                                        dataSource={DataDashboardAdmin?.performance_analytics.top_performing_students}
+                                        dataSource={DataDashboardAdmin?.performance_analytics?.top_performing_students ?? []}
                                         rowKey="student__username"
                                         pagination={false}
                                         size="small"
@@ -437,10 +461,10 @@ const DashboardHomeAdmin: React.FC = () => {
                                             title={t('dashboard_admin.performance.avg_progress')}
                                             render={(record: TopStudent) => (
                                                 <Progress
-                                                    percent={Number(record.avg_progress.toFixed(1))}
+                                                    percent={Number((record.avg_progress ?? 0).toFixed(1))}
                                                     size="small"
                                                     status="active"
-                                                    strokeColor={record.avg_progress > 70 ? '#52c41a' : '#faad14'}
+                                                    strokeColor={(record.avg_progress ?? 0) > 70 ? '#52c41a' : '#faad14'}
                                                 />
                                             )}
                                         />
@@ -468,7 +492,7 @@ const DashboardHomeAdmin: React.FC = () => {
                                     className="hover:shadow-lg transition-shadow duration-300"
                                 >
                                     <Table
-                                        dataSource={DataDashboardAdmin?.performance_analytics.subject_performance.filter(s => s.total_students > 0)}
+                                        dataSource={(DataDashboardAdmin?.performance_analytics?.subject_performance ?? []).filter(s => s.total_students > 0)}
                                         rowKey="name"
                                         pagination={false}
                                         size="small"
@@ -526,7 +550,7 @@ const DashboardHomeAdmin: React.FC = () => {
                                     className="hover:shadow-lg transition-shadow duration-300"
                                 >
                                     <Table
-                                        dataSource={DataDashboardAdmin?.content_analytics.most_accessed_units.filter(u => u.access_count > 0)}
+                                        dataSource={(DataDashboardAdmin?.content_analytics?.most_accessed_units ?? []).filter(u => u.access_count > 0)}
                                         rowKey="id"
                                         pagination={false}
                                         size="small"
@@ -593,14 +617,14 @@ const DashboardHomeAdmin: React.FC = () => {
                                         <div className="text-center">
                                             <Statistic
                                                 title={t('dashboard_admin.stats.total_units')}
-                                                value={DataDashboardAdmin?.content_analytics.total_units}
+                                                value={DataDashboardAdmin?.content_analytics?.total_units ?? 0}
                                                 valueStyle={{ fontSize: '20px' }}
                                             />
                                         </div>
                                         <div className="text-center">
                                             <Statistic
                                                 title={t('dashboard_admin.stats.published_units')}
-                                                value={DataDashboardAdmin?.content_analytics.published_units}
+                                                value={DataDashboardAdmin?.content_analytics?.published_units ?? 0}
                                                 valueStyle={{ fontSize: '20px', color: '#52c41a' }}
                                             />
                                         </div>
@@ -612,7 +636,7 @@ const DashboardHomeAdmin: React.FC = () => {
                 </motion.div>
 
                 {/* Struggling Students Alert */}
-                {DataDashboardAdmin?.performance_analytics.struggling_students.length === 0 && (
+                {(DataDashboardAdmin?.performance_analytics?.struggling_students?.length ?? 0) === 0 && (
                     <motion.div variants={{ itemVariants }}>
                         <Alert
                             message={t('dashboard_admin.performance.no_struggling')}

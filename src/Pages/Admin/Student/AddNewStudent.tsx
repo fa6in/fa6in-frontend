@@ -35,9 +35,7 @@ type FormValues = {
 export default function AddNewStudent({ handleModalCancel }: Props) {
     const { t } = useTranslation();
     const [form] = Form.useForm<FormValues>();
-    const { data: getWilaya, isPending: isPendingWilaya } = useGetWilaya()
-
-    console.log("wilaya : ", getWilaya)
+    const { data: wilayas = [], isPending: isPendingWilaya } = useGetWilaya();
     const { mutate: addStudent, isPending } = useAddStudent()
 
     const handleModalOk = () => {
@@ -265,9 +263,10 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                         >
                             <Select
                                 size="large"
+                                loading={isPendingWilaya}
                                 placeholder={t("students1.form.gradePlaceholder")}
                             >
-                                {getWilaya?.map(wilaya => (
+                                {wilayas.map((wilaya) => (
                                     <Option key={wilaya.id} value={wilaya.id}>
                                         {wilaya.name}
                                     </Option>

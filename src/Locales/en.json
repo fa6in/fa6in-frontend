@@ -170,7 +170,173 @@
     "admin": "Admin",
     "teacher": "Teacher",
     "student": "Student",
-    "guest": "Guest"
+    "guest": "Guest",
+    "confirm_delete": "Confirm deletion?",
+    "no_data": "No data"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "teachers": "Teachers",
+    "courses": "Courses",
+    "classes": "Classes",
+    "subjects": "Subjects",
+    "exams": "Exams",
+    "content": "Content",
+    "grades": "Grades",
+    "assignments": "Assignments",
+    "curriculum": "Curriculum",
+    "skills": "Skills",
+    "assessment": "Assessment",
+    "analytics": "Analytics",
+    "users": "Users",
+    "wilaya": "Wilayas",
+    "admins": "Administrators",
+    "roles": "Roles & Permissions",
+    "reports": "Reports",
+    "settings": "Settings",
+    "version": "Version",
+    "copyright": "© 2026 Ed-Tech Platform",
+    "logout": "Logout"
+  },
+  "wilaya": {
+    "title": "Wilayas",
+    "subtitle": "Manage wilayas",
+    "add": "New wilaya",
+    "edit": "Edit wilaya",
+    "list": "Wilaya list",
+    "table": {
+      "code": "Code",
+      "name": "Name"
+    },
+    "duplicate_code": "This code already exists",
+    "duplicate_name": "This name already exists"
+  },
+  "navbar": {
+    "titles": {
+      "dashboard": "Dashboard",
+      "students": "Students",
+      "teachers": "Teachers",
+      "courses": "Courses",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "exams": "Units",
+      "grades": "Grades",
+      "assignments": "Assignments",
+      "curriculum": "Curriculum",
+      "skills": "Skills",
+      "assessment": "Assessment",
+      "analytics": "Analytics",
+      "admins": "Administrators",
+      "wilaya": "Wilayas",
+      "users": "Users",
+      "roles": "Roles",
+      "reports": "Reports",
+      "settings": "Settings"
+    },
+    "profile": {
+      "editProfile": "Edit profile",
+      "adminUser": "Admin User",
+      "administrator": "Administrator",
+      "logout": "Logout",
+      "buttn_confirm": "Confirm",
+      "btn_annuler": "Cancel",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone number",
+      "avatar": "Profile photo",
+      "formSubtitle": "Update your personal information",
+      "requiredFields": "All fields are required"
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "student": "Student"
+    }
+  },
+  "curriculum": {
+    "title_page": "Curriculum management",
+    "subtitle": "Stages, levels, goals and lessons",
+    "stages": "Stages",
+    "levels": "Levels",
+    "goals": "Goals",
+    "lessons": "Lessons",
+    "code": "Code",
+    "name": "Name",
+    "title": "Title",
+    "type": "Type",
+    "order": "Order",
+    "description": "Description",
+    "content": "Content",
+    "published": "Published",
+    "publish": "Publish",
+    "stage": "Stage",
+    "lesson": "Lesson",
+    "unit": "Unit",
+    "required": "This field is required",
+    "goal_types": {
+      "conceptual": "Conceptual",
+      "operational": "Operational"
+    },
+    "placeholders": {
+      "code": "e.g. PRI, 5AP, MATH-01",
+      "name": "Enter the name",
+      "title": "Enter the title",
+      "description": "Enter the description",
+      "content": "Enter the lesson content",
+      "stage": "Select a stage",
+      "type": "Select a type",
+      "lesson": "Select a lesson",
+      "unit": "Select a unit"
+    },
+    "modal": {
+      "edit": "Edit",
+      "add_stages": "Add a stage",
+      "add_levels": "Add a level",
+      "add_goals": "Add a goal",
+      "add_lessons": "Add a lesson"
+    }
+  },
+  "assessment": {
+    "title_page": "Assessment",
+    "subtitle": "Learning errors and student progress",
+    "errors": "Errors",
+    "progress": "Progress",
+    "add_error": "Add error",
+    "error_type": "Error type",
+    "category": "Category",
+    "severity": "Severity",
+    "root_cause": "Root cause",
+    "mastery": "Mastery",
+    "attempts": "Attempts",
+    "filter_skill": "Filter by skill",
+    "progress_records": "Progress records",
+    "code": "Code",
+    "student": "Student",
+    "severity_levels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "skills": {
+    "title_page": "Skills & Chunks",
+    "subtitle": "Skills, prerequisites and micro-content",
+    "title": "Skills",
+    "name": "Name",
+    "type": "Type",
+    "difficulty": "Difficulty",
+    "prerequisites": "Prerequisites",
+    "prerequisite": "Prerequisite",
+    "skill": "Skill",
+    "strength": "Strength",
+    "chunks": "Chunks",
+    "chunk_title": "Chunk title",
+    "placeholders": {
+      "goal": "Select a goal",
+      "skill": "Select a skill",
+      "prerequisite": "Select a prerequisite"
+    }
   },
   
   "auth": {
@@ -766,7 +932,36 @@
     "privacy": "Privacy",
     "compliance": "Compliance",
     "audit": "Audit",
-    "logs": "Logs"
+    "logs": "Logs",
+    "title_page": "Analytics",
+    "subtitle": "Class dashboard and error analysis",
+    "filter_level": "Filter by level",
+    "total_students": "Total Students",
+    "avg_progress": "Average Progress",
+    "active_today": "Active Today",
+    "error_rate": "Error Rate",
+    "class_overview": "Class Overview",
+    "student_errors": "Student Errors",
+    "select_student": "Select a student",
+    "select_student_hint": "Select a student to view their errors",
+    "no_errors_found": "No errors found for this student",
+    "no_dashboard_data": "No dashboard data available",
+    "progress_description": "Average progress of all students",
+    "error_description": "Average error rate in assessments",
+    "count": "Count",
+    "fields": {
+      "total_students": "Total Students",
+      "students_count": "Students Count",
+      "avg_progress": "Average Progress",
+      "average_progress": "Average Progress",
+      "active_today": "Active Today",
+      "daily_active": "Daily Active",
+      "error_rate": "Error Rate",
+      "total_lessons": "Total Lessons",
+      "total_activities": "Total Activities",
+      "completion_rate": "Completion Rate",
+      "average_score": "Average Score"
+    }
   },
   
   "system": {

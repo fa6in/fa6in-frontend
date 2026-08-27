@@ -1,19 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../Auth-service/axios";
+import { API_ENDPOINTS } from "../../../api/endpoints";
+import { unwrapList } from "../../../api/unwrapList";
 import type { typeChapitre } from "./typeChapitre";
 
 export const chapitreKey = ["Chapitre"]
 
 
 async function getchapitre(): Promise<typeChapitre[]> {
-    try {
-        const res = await api.get("/api/curriculum/units/")
-        return res.data
-    } catch (error: any) {
-        if (error.response) {
-        }
-        throw error
-    }
+    const res = await api.get(API_ENDPOINTS.curriculum.units)
+    return unwrapList<typeChapitre>(res.data)
 }
 
 export function useGetChapitre() {

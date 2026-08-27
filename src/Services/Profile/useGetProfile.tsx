@@ -26,7 +26,7 @@ export type UserInfo = {
 
 async function getMe():Promise<UserInfo>{
     try{
-        const res = await api.get("api/auth/profile/")
+        const res = await api.get("api/auth/me/")
     return res.data
     }catch(error:any){
         if(error.response){

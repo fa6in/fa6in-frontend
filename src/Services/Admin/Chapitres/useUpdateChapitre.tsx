@@ -14,11 +14,11 @@ export const useUpdateChapitre = () => {
 
         formData.append("subject", String(chapitre.subject));
         formData.append("title", chapitre.title);
-        formData.append("description", chapitre.description);
-        formData.append("learning_objective", chapitre.learning_objective);
-        formData.append("duration_minutes", String(chapitre.duration_minutes));
-        formData.append("difficulty", chapitre.difficulty);
-        formData.append("order", String(chapitre.order));
+        formData.append("description", chapitre.description ?? "");
+        formData.append("learning_objective", chapitre.learning_objective ?? "");
+        formData.append("duration_minutes", String(chapitre.duration_minutes ?? 0));
+        formData.append("difficulty", chapitre.difficulty ?? "");
+        formData.append("order", String(chapitre.order ?? chapitre.order_index ?? 0));
 
         if (chapitre.thumbnail && chapitre?.thumbnail! instanceof File) {
             formData.append("thumbnail", chapitre.thumbnail);

@@ -1,12 +1,10 @@
 import { useState } from "react";
 import {
     Table,
-    Card,
     Button,
     Tag,
     Input,
     Select,
-    Space,
     Modal,
     Badge,
     Dropdown,
@@ -29,7 +27,6 @@ import {
     ExclamationCircleOutlined,
     CloseOutlined
 } from "@ant-design/icons";
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useGetMatiere } from "../../../Services/Admin/Matieres/useGetMatiere";
 import AddNewMatiere from "./AddNewMatiere";
@@ -38,39 +35,13 @@ import { usedeleteMatiere } from "../../../Services/Admin/Matieres/useDeleteMati
 import UpdateMatiere from "./UpdateMatiere";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
 import AuthService from "../../../Auth-service/AuthService";
+import PageShell from "../../../ui/PageShell";
+import StatCard from "../../../ui/StatCard";
+import PageToolbar from "../../../ui/PageToolbar";
+import DataPanel from "../../../ui/DataPanel";
 
 const { Option } = Select;
 
-/* =======================
-Animations
-======================= */
-const container = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
-};
-
-const item = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { type: "spring", damping: 14 }
-    }
-};
-
-const cardHover = {
-    hover: {
-        y: -4,
-        boxShadow: "0 12px 30px rgba(0,0,0,0.12)"
-    }
-};
-
-/* =======================
-Component
-======================= */
 const MatiereView = () => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === "ar";
@@ -318,93 +289,69 @@ const MatiereView = () => {
         return <SpinnerLoader />
     }
     return (
-        <motion.div
-            variants={container}
-            initial="hidden"
-            animate="visible"
-            dir={isRTL ? "rtl" : "ltr"}
-            className="min-h-screen bg-gray-50 p-6"
+        <PageShell
+            title={t("matieres.title")}
+            subtitle={t("matieres.subtitle")}
+            icon={<BookOutlined />}
+            extra={
+                post === "admin" ? (
+                    <Button
+                        type="primary"
+                        size="large"
+                        icon={<PlusOutlined />}
+                        onClick={() => setIsModalVisible(true)}
+                    >
+                        {t("matieres.add")}
+                    </Button>
+                ) : undefined
+            }
         >
-            {/* Header */}
-            <motion.div variants={{ item }} className="mb-8 flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-800">
-                        {t("matieres.title")}
-                    </h1>
-                    <p className="text-gray-600 mt-2">
-                        {t("matieres.subtitle")}
-                    </p>
+            <div dir={isRTL ? "rtl" : "ltr"}>
+                <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {stats?.map((stat) => (
+                        <StatCard
+                            key={stat.key}
+                            title={stat.title}
+                            value={stat.value}
+                            icon={stat.icon}
+                            color={
+                                stat.key === "total"
+                                    ? "#2563eb"
+                                    : stat.key === "active"
+                                      ? "#17ab5b"
+                                      : stat.key === "inactive"
+                                        ? "#ef4444"
+                                        : "#f89b22"
+                            }
+                        />
+                    ))}
                 </div>
-                {post === "admin" && (<Button
-                    icon={<PlusOutlined />}
-                    className="!bg-main-color !text-white"
-                    onClick={() => setIsModalVisible(true)}
-                >
-                    {t("matieres.add")}
-                </Button>)}
-            </motion.div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {stats?.map(stat => (
-                    <motion.div key={stat.key} variants={{ item }} whileHover="hover">
-                        <motion.div variants={cardHover}>
-                            <Card className="rounded-2xl border-0 shadow-sm h-full">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <div className="text-sm text-gray-500 mb-1">
-                                            {stat.title}
-                                        </div>
-                                        <div className="text-2xl font-bold text-gray-800">
-                                            {stat.value}
-                                        </div>
-                                    </div>
-                                    <div
-                                        className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white`}
-                                    >
-                                        {stat.icon}
-                                    </div>
-                                </div>
-                            </Card>
-                        </motion.div>
-                    </motion.div>
-                ))}
-            </div>
-
-            {/* Filters */}
-            <motion.div variants={{ item }} className="mb-6">
-                <Card className="rounded-2xl shadow-sm border-0">
-                    <div className="flex flex-col lg:flex-row justify-between gap-4">
+                <PageToolbar
+                    search={
                         <Input
                             placeholder={t("matieres.search")}
                             prefix={<SearchOutlined />}
                             value={searchText}
-                            onChange={e => setSearchText(e.target.value)}
-                            className="w-full lg:w-80"
+                            onChange={(e) => setSearchText(e.target.value)}
                             allowClear
+                            size="large"
                         />
-                        <Space wrap>
-                            {/* <Select
-                                    value={semesterFilter}
-                                    onChange={setSemesterFilter}
-                                    className="w-32"
-                                >
-                                    <Option value="all">{t("matieres.filters.all")}</Option>
-                                    <Option value="S1">S1</Option>
-                                    <Option value="S2">S2</Option>
-                                    <Option value="S3">S3</Option>
-                                    <Option value="S4">S4</Option>
-                                </Select> */}
+                    }
+                    filters={
+                        <>
                             <Select
                                 value={statusFilter}
                                 onChange={setStatusFilter}
-                                className="w-32"
+                                className="w-36"
+                                size="large"
                             >
                                 <Option value="all">{t("matieres.filters.all")}</Option>
                                 <Option value="active">{t("matieres.filters.active")}</Option>
                                 <Option value="inactive">{t("matieres.filters.inactive")}</Option>
                             </Select>
                             <Button
+                                size="large"
                                 icon={<FilterOutlined />}
                                 onClick={() => {
                                     setSearchText("");
@@ -414,28 +361,24 @@ const MatiereView = () => {
                             >
                                 {t("matieres.filters.reset")}
                             </Button>
-                        </Space>
-                    </div>
-                </Card>
-            </motion.div>
+                        </>
+                    }
+                />
 
-            {/* Table */}
-            <motion.div variants={{ item }}>
-                <Card className="rounded-2xl shadow-sm border-0">
+                <DataPanel loading={isPending}>
                     <Table
                         columns={columns}
                         dataSource={filteredMatieres}
                         pagination={{
                             pageSize: 20,
                             showSizeChanger: true,
-                            showQuickJumper: true
+                            showQuickJumper: true,
                         }}
                         scroll={{ x: true }}
-                        rowClassName="hover:bg-gray-50"
-                        loading={isPending}
+                        rowClassName="hover:bg-[#f6faf7]"
                     />
-                </Card>
-            </motion.div>
+                </DataPanel>
+            </div>
 
             {/* Modal */}
             <Modal
@@ -553,7 +496,7 @@ const MatiereView = () => {
                     </p>
                 </div>
             </Modal>
-        </motion.div>
+        </PageShell>
     );
 };
 

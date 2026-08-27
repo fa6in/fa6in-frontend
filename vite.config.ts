@@ -19,12 +19,15 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://api.newat.ai/",
+        target: "http://159.223.114.190/",
         changeOrigin: true,
-        secure: false, 
+        secure: false,
+      },
+      "/media": {
+        target: "http://159.223.114.190/",
+        changeOrigin: true,
+        secure: false,
       },
     },
-    // host : "10", 
-    // port : 5173
   },
 });
