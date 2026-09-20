@@ -67,8 +67,17 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
     useEffect(() => {
         if (chapitre && visible) {
             form.setFieldsValue({
-                ...chapitre,
+                code: chapitre.code ?? '',
+                title: chapitre.title ?? '',
                 subject: normalizeRelationId(chapitre.subject),
+                order: chapitre.order ?? chapitre.order_index ?? 1,
+                learning_objective: chapitre.learning_objective ?? '',
+                description: chapitre.description ?? '',
+                duration_minutes: chapitre.duration_minutes ?? 1,
+                difficulty: chapitre.difficulty ?? 'medium',
+                video_url: chapitre.video_url ?? '',
+                audio_url: chapitre.audio_url ?? '',
+                is_published: chapitre.is_published ?? false,
             });
             setThumbnailFile(null);
             setThumbnailPreview('');
@@ -176,6 +185,13 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                     <Card className="shadow-sm border-0">
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-3'>
                             <Form.Item
+                                name="code"
+                                label={t('curriculum.code')}
+                                rules={[{ required: true, message: t('curriculum.required') }]}
+                            >
+                                <Input size="large" placeholder="UNIT-001" />
+                            </Form.Item>
+                            <Form.Item
                                 name="title"
                                 label={t('chapitres.form.title')}
                                 rules={[
@@ -220,7 +236,6 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                             <Form.Item
                                 name="learning_objective"
                                 label={t('chapitres.form.learningObjective')}
-                                rules={[{ required: true, message: t('chapitres.validation.learningObjectiveRequired') }]}
                             >
                                 <Input
                                     placeholder={t('chapitres.form.learningObjectivePlaceholder')}
@@ -233,10 +248,6 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                             <Form.Item
                                 name="description"
                                 label={t('chapitres.form.description')}
-                                rules={[
-                                    { required: true, message: t('chapitres.validation.descriptionRequired') },
-                                    { min: 5, message: t('chapitres.validation.descriptionMinLength') }
-                                ]}
                                 className="md:col-span-2"
                             >
                                 <TextArea
@@ -265,7 +276,6 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                                 <div className="mb-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         {t('chapitres.form.thumbnail')}
-                                        <span className="text-red-500 ml-1">*</span>
                                     </label>
                                     <div className="flex flex-col gap-4">
                                         {/* Upload Button */}

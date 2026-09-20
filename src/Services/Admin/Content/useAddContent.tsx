@@ -3,15 +3,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { message } from "antd";
 import api from "../../../Auth-service/axios";
 import { handleError } from "../../../Auth-service/handleError";
+import { API_ENDPOINTS } from "../../../api/endpoints";
 import { KEY_CONTENT } from "./useGetContent";
 import type { TypeContent } from "./typeContent";
+import { getContentUnitId } from "./typeContent";
 
 export const useAddContent = () => {
     const queryClient = useQueryClient();
 
     async function addcontent(content: TypeContent) {
 
-        const res = await api.post(`api/curriculum/units/${content?.unit}/sections/`, content);
+        const unitId = getContentUnitId(content.unit);
+        const { id: _id, ...payload } = content;
+        const res = await api.post(API_ENDPOINTS.curriculum.lessons, {
+            code: payload.code,
+            title: payload.title,
+            unit: unitId,
+            content: payload.content,
+            is_published: payload.is_published,
+        });
         return res.data;
     }
 

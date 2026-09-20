@@ -226,8 +226,8 @@
     "required": "مطلوب"
   },
   "page": {
-    "title": "محتوى جديد",
-    "description": "قم بإنشاء محتوى جديد للمنهج الدراسي"
+    "title": "درس جديد",
+    "description": "قم بإنشاء درس جديد للمنهج الدراسي"
   },
   "form": {
     "steps": {
@@ -407,7 +407,7 @@
     "back_to_login": "العودة لتسجيل الدخول"
   },
   "sidebar": {
-    "content": "المكتبة",
+    "content": "الدروس",
     "contentByUnit": "المحتوى حسب الوحدة",
     "dashboard": "الرئيسية",
     "students": "الطلاب",
@@ -419,6 +419,7 @@
     "grades": "الدرجات",
     "assignments": "الأنشطة",
     "curriculum": "المنهج",
+    "levels": "المستويات",
     "skills": "المهارات",
     "assessment": "التقييم",
     "analytics": "التحليلات",
@@ -1031,7 +1032,7 @@
     },
     "title": "إدارة المواد",
     "subtitle": "إدارة ومتابعة الوحدات الأكاديمية",
-    "add": "إضافة مادة",
+    "add": "إضافة درس",
     "search": "البحث عن مادة...",
     "filters": {
       "status": "الحالة",
@@ -1066,7 +1067,7 @@
       "delete": "حذف"
     },
     "modal": {
-      "addTitle": "إضافة مادة",
+      "addTitle": "إضافة درس",
       "editTitle": "تعديل المادة",
       "supprimer": "حذف المادة"
     },
@@ -1381,7 +1382,7 @@
     "questions": "أسئلة",
     "open": "فتح",
     "yourProgress": "تقدمك",
-    "content": "المكتبة",
+    "content": "الدروس",
     "inProgress": "قيد التنفيذ",
     "status": "الحالة",
     "watchNow": "شاهد الآن",

@@ -13,6 +13,7 @@ export const useUpdateChapitre = () => {
         const formData = new FormData();
 
         formData.append("subject", String(chapitre.subject));
+        formData.append("code", chapitre.code ?? "");
         formData.append("title", chapitre.title);
         formData.append("description", chapitre.description ?? "");
         formData.append("learning_objective", chapitre.learning_objective ?? "");

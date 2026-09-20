@@ -7,15 +7,19 @@ import type { typeMatiere } from "./typeMatiere";
 
 export const matiereKey = ["Matiere"]
 
+export type MatiereFilters = {
+    level?: number;
+    is_active?: boolean;
+};
 
-async function getmatiere(): Promise<typeMatiere[]> {
-    const res = await api.get(API_ENDPOINTS.curriculum.subjects)
+async function getmatiere(filters: MatiereFilters = {}): Promise<typeMatiere[]> {
+    const res = await api.get(API_ENDPOINTS.curriculum.subjects, { params: filters })
     return unwrapList<typeMatiere>(res.data)
 }
 
-export function useGetMatiere() {
+export function useGetMatiere(filters: MatiereFilters = {}) {
     return useQuery({
-        queryKey: ["Matiere"],
-        queryFn: () => getmatiere(),
+        queryKey: ["Matiere", filters],
+        queryFn: () => getmatiere(filters),
     })
 }

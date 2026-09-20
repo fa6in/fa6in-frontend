@@ -35,8 +35,8 @@ import {
     BookOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { useGetChapitre } from '../../../Services/Admin/Chapitres/useGetChapitres';
-import type { typeChapitre } from '../../../Services/Admin/Chapitres/typeChapitre';
+import { useGetLevels } from '../../../Services/Curriculum/Levels/useGetLevels';
+import type { Level } from '../../../Services/Curriculum/Levels/typeLevel';
 import { useAddActivite } from '../../../Services/Admin/Assignments/useAddAssignement';
 import type { Activitytype } from '../../../Services/Admin/Assignments/typeAssignement';
 
@@ -56,7 +56,7 @@ interface BaseActivity {
     time_limit?: number;
     order: number;
     is_active: boolean;
-    unit?: number;
+    level?: number;
 }
 
 interface MultipleChoiceActivity extends BaseActivity {
@@ -91,7 +91,7 @@ const AddNewActivity = ({ onCancel }: props) => {
     const [previewMode, setPreviewMode] = useState(true);
     const [formValues, setFormValues] = useState<any>({});
 
-    const { data: chapitres, isPending: isChapitresPending } = useGetChapitre();
+    const { data: levels, isPending: isLevelsPending } = useGetLevels();
     const { mutate: addActivity, isPending: isPendigAdd } = useAddActivite();
 
     // Animation variants
@@ -159,7 +159,7 @@ const AddNewActivity = ({ onCancel }: props) => {
 
             switch (currentStep) {
                 case 0:
-                    fieldsToValidate = ['activity_type', "unit"];
+                    fieldsToValidate = ['activity_type', "level"];
                     break;
                 case 1:
                     fieldsToValidate = ['title', 'question', 'points'];
@@ -255,7 +255,7 @@ const AddNewActivity = ({ onCancel }: props) => {
             order: activityData.order ? activityData.order : 1,
             points: activityData.points ? activityData.points : 10,
             question: activityData.question ? activityData.question : "",
-            unit: activityData?.unit!,
+            level: activityData?.level!,
             explanation: activityData.explanation ? activityData.explanation : "",
 
         }
@@ -593,31 +593,31 @@ const AddNewActivity = ({ onCancel }: props) => {
                                             </Form.Item>
 
                                             <Form.Item
-                                                name="unit"
-                                                label={t('addActivity.chapter.label')}
-                                                rules={[{ required: true, message: t('addActivity.chapter.required') }]}
+                                                name="level"
+                                                label={t('curriculum.levels')}
+                                                rules={[{ required: true, message: t('curriculum.required') }]}
                                             >
                                                 <Select
                                                     size="large"
-                                                    placeholder={t('addActivity.chapter.placeholder')}
-                                                    loading={isChapitresPending}
+                                                    placeholder={t('curriculum.levels')}
+                                                    loading={isLevelsPending}
                                                     className="w-full"
                                                     showSearch
                                                     optionFilterProp="label" // Changé de "children" à "label"
                                                     filterOption={(input, option) =>
                                                         (option?.label as unknown as string)?.toLowerCase()?.includes(input.toLowerCase())
                                                     }
-                                                    notFoundContent={t('addActivity.chapter.noData')}
+                                                    notFoundContent={t('curriculum.levels')}
                                                 >
-                                                    {chapitres?.map((chapitre: typeChapitre) => (
+                                                    {levels?.map((level: Level) => (
                                                         <Option
-                                                            key={chapitre.id}
-                                                            value={chapitre.id}
-                                                            label={chapitre.title} // Ajout de la propriété label
+                                                            key={level.id}
+                                                            value={level.id}
+                                                            label={level.name}
                                                         >
                                                             <Space>
                                                                 <BookOutlined className="text-blue-500" />
-                                                                <Text>{chapitre.title}</Text>
+                                                                <Text>{level.name}</Text>
                                                             </Space>
                                                         </Option>
                                                     ))}

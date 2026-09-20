@@ -288,7 +288,7 @@ const ChapitresView: React.FC = () => {
                                                 </h3>
                                             </div>
                                             <div className="flex flex-col items-end">
-                                                <Tooltip title={t(`chapitres.difficulty.${chapitre.difficulty}`)}>
+                                                <Tooltip title={t(`chapitres.difficulty.${chapitre.difficulty || "medium"}`)}>
                                                     <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-${difficultyColorClass}-500 to-${difficultyColorClass}-600 flex items-center justify-center text-white`}>
                                                         {getDifficultyIcon(chapitre.difficulty)}
                                                     </div>
@@ -496,7 +496,7 @@ const ChapitresView: React.FC = () => {
                                     <div className="flex items-center">
                                         <span className="text-gray-700 font-medium w-32">{t('chapitres.table.difficulty')}:</span>
                                         <Tag color={difficultyColor(selectedChapitre.difficulty)}>
-                                            {t(`chapitres.difficulty.${selectedChapitre.difficulty}`)}
+                                            {t(`chapitres.difficulty.${selectedChapitre.difficulty || "medium"}`)}
                                         </Tag>
                                     </div>
                                     <div className="flex items-center">

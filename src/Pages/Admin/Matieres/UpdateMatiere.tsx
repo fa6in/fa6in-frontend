@@ -26,6 +26,9 @@ import {
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useUpdateMatiere } from '../../../Services/Admin/Matieres/useUpdateMatiere';
+import { useGetLevels } from '../../../Services/Curriculum/Levels/useGetLevels';
+import type { Level } from '../../../Services/Curriculum/Levels/typeLevel';
+import { normalizeRelationId } from '../../../ui/RelationSelect';
 import type { typeMatiere } from '../../../Services/Admin/Matieres/typeMatiere';
 
 const { TextArea } = Input;
@@ -44,6 +47,7 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
     const [selectedColor, setSelectedColor] = useState('#4CAF50');
     // const [isFormInitialized, setIsFormInitialized] = useState(false);
     const { mutate: updateMatiere, isPending } = useUpdateMatiere()
+    const { data: levels = [], isPending: isLevelsPending } = useGetLevels();
 
     // Supprimez isFormInitialized et utilisez une référence pour suivre la matière précédente
     const prevMatiereRef = React.useRef<typeMatiere | null>(null);
@@ -56,8 +60,9 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
 
             // Ensuite, définissez les nouvelles valeurs
             form.setFieldsValue({
+                code: matiere?.code || '',
                 name: matiere?.name || '',
-                grade: matiere.grade || 1,
+                level: normalizeRelationId(matiere.level),
                 description: matiere?.description || '',
                 icon: matiere?.icon || 'book',
                 is_active: matiere.is_active ?? true,
@@ -90,16 +95,6 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
         { value: "futbol", label: t("matieresAdd.icons.futbol") },
         { value: "landmark", label: t("matieresAdd.icons.landmark") },
         { value: "globe", label: t("matieresAdd.icons.globe") },
-    ];
-
-    // Options de niveaux
-    const gradeOptions = [
-        { value: 1, label: t('matieresAdd.grades.grade1'), color: 'blue' },
-        { value: 2, label: t('matieresAdd.grades.grade2'), color: 'green' },
-        { value: 3, label: t('matieresAdd.grades.grade3'), color: 'orange' },
-        { value: 4, label: t('matieresAdd.grades.grade4'), color: 'purple' },
-        { value: 5, label: t('matieresAdd.grades.grade5'), color: 'red' },
-        { value: 6, label: t('matieresAdd.grades.grade6'), color: 'cyan' },
     ];
 
     // Couleurs prédéfinies
@@ -170,6 +165,16 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                         <Row gutter={[16, 16]}>
                             <Col span={24}>
                                 <Form.Item
+                                    name="code"
+                                    label={t('curriculum.code')}
+                                    rules={[{ required: true, message: t('curriculum.required') }]}
+                                >
+                                    <Input size="large" placeholder="MATH" />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                                <Form.Item
                                     name="name"
                                     label={t('matieresAdd.form.name')}
                                     rules={[
@@ -188,20 +193,23 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
 
                             <Col span={12}>
                                 <Form.Item
-                                    name="grade"
+                                    name="level"
                                     label={t('matieresAdd.form.grade')}
                                     rules={[{ required: true, message: t('matieresAdd.validation.gradeRequired') }]}
                                 >
                                     <Select
                                         size="large"
                                         placeholder={t('matieresAdd.form.gradePlaceholder')}
+                                        loading={isLevelsPending}
+                                        showSearch
+                                        optionFilterProp="label"
                                     >
-                                        {gradeOptions.map(grade => (
-                                            <Option key={grade.value} value={grade.value}>
-                                                <Tag color={grade.color} className="mr-2">
-                                                    {grade.value}
+                                        {levels.map((level: Level) => (
+                                            <Option key={level.id} value={level.id} label={`${level.code} ${level.name}`}>
+                                                <Tag color="blue" className="mr-2">
+                                                    {level.code}
                                                 </Tag>
-                                                {grade.label}
+                                                {level.name}
                                             </Option>
                                         ))}
                                     </Select>
@@ -395,8 +403,8 @@ const UpdateMatiere: React.FC<UpdateMatiereProps> = ({ onCancel, matiere }) => {
                                                 {form.getFieldValue('name') || t('matieresAdd.form.sampleName')}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                {form.getFieldValue('grade')
-                                                    ? `${t('matieresAdd.grades.grade')} ${form.getFieldValue('grade')}`
+                                                {form.getFieldValue('level')
+                                                    ? `${t('matieresAdd.grades.grade')} ${form.getFieldValue('level')}`
                                                     : t('matieresAdd.form.sampleGrade')
                                                 }
                                             </div>

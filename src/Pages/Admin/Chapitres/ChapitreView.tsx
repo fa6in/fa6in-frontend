@@ -210,7 +210,7 @@ const ChapitresView: React.FC = () => {
                 key: 'difficulty',
                 render: (difficulty: string) => (
                     <Tag color={difficultyColor(difficulty)} className="w-full text-center">
-                        {t(`chapitres.difficulty.${difficulty}`)}
+                        {t(`chapitres.difficulty.${difficulty || "medium"}`)}
                     </Tag>
                 ),
             },
@@ -322,7 +322,7 @@ const ChapitresView: React.FC = () => {
                 key: 'difficulty',
                 render: (difficulty: string) => (
                     <Tag color={difficultyColor(difficulty)} className="w-full text-center">
-                        {t(`chapitres.difficulty.${difficulty}`)}
+                        {t(`chapitres.difficulty.${difficulty || "medium"}`)}
                     </Tag>
                 ),
             },

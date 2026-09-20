@@ -39,6 +39,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetChapitre } from '../../../Services/Admin/Chapitres/useGetChapitres';
 import SpinnerLoader from '../../../ui/SpinnerLoader';
 import { useAddContent } from '../../../Services/Admin/Content/useAddContent';
+import type { TypeContent } from '../../../Services/Admin/Content/typeContent';
 import { useGetOnceChapitre } from '../../../Services/Admin/Chapitres/useGetOnceChapiter';
 
 const { Option } = Select;
@@ -142,11 +143,6 @@ export default function AddNewContenu({ onCancel }: props) {
 
     const steps = [
         {
-            title: t('form.steps.step1.title'),
-            description: t('form.steps.step1.description'),
-            icon: <FileTextOutlined />
-        },
-        {
             title: t('form.steps.step2.title'),
             description: t('form.steps.step2.description'),
             icon: <InfoCircleOutlined />
@@ -163,13 +159,7 @@ export default function AddNewContenu({ onCancel }: props) {
         }
     ];
 
-    const handleContentTypeChange = (value: string) => {
-        setContentType(value);
-        form.setFieldsValue({
-            content_type: value,
-            metadata: getDefaultMetadata(value)
-        });
-    };
+    
 
     const getDefaultMetadata = (type: string) => {
         switch (type) {
@@ -426,9 +416,12 @@ export default function AddNewContenu({ onCancel }: props) {
         try {
             const values = form.getFieldsValue(true);
 
-            const formattedData = {
-                ...values,
-                unit: selectedUnitId
+            const formattedData: TypeContent = {
+                code: values.code,
+                title: values.title,
+                unit: selectedUnitId!,
+                content: values.content,
+                is_published: values.is_published ?? true,
             };
 
             console.log('Data to submit:', formattedData);
@@ -470,88 +463,6 @@ export default function AddNewContenu({ onCancel }: props) {
             case 0:
                 return (
                     <motion.div
-                        key="step-0"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <div className="text-center mb-8">
-                            {/* <Badge.Ribbon text={t('form.contentType.choose')} color="blue"> */}
-                            {/* <Badge.Ribbon  color="blue"> */}
-                            <Title level={3} className="!text-gray-800 mb-2">
-                                {t('form.contentType.title')}
-                            </Title>
-                            {/* </Badge.Ribbon> */}
-                            <Text type="secondary" className="text-lg">
-                                {/* {t('form.contentType.description')} */}
-                            </Text>
-                        </div>
-
-                        <Form.Item
-                            name="content_type"
-                            rules={[{ required: true, message: t('form.validation.requiredContentType') }]}
-                            initialValue="text"
-                        >
-                            <Radio.Group
-                                className="w-full"
-                                onChange={(e) => handleContentTypeChange(e.target.value)}
-                                value={contentType}
-                            >
-                                <Row gutter={[16, 16]} className="w-full">
-                                    {contentTypes.map(type => (
-                                        <Col xs={24} sm={12} md={8} key={type.value}>
-                                            <motion.div
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                            >
-                                                <Radio.Button
-                                                    value={type.value}
-                                                    className={`w-full h-36 border-2 transition-all duration-300
-                                                        ${contentType === type.value
-                                                            ? `border-${type.color}-500 bg-gradient-to-br ${type.gradient} shadow-lg`
-                                                            : 'border-gray-200 hover:border-gray-300'
-                                                        }`}
-                                                    style={{
-                                                        borderRadius: '12px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        padding: '1rem'
-                                                    }}
-                                                >
-                                                    <Space direction="vertical" align="center" size={8}>
-                                                        <div className={`p-3 rounded-full 
-                                                            ${contentType === type.value
-                                                                ? `bg-${type.color}-100`
-                                                                : 'bg-gray-50'
-                                                            }`}>
-                                                            {type.icon}
-                                                        </div>
-                                                        <Text strong={contentType === type.value}>
-                                                            {type.label}
-                                                        </Text>
-                                                        {contentType === type.value && (
-                                                            <Badge
-                                                                count={<CheckCircleOutlined className={`text-${type.color}-500`} />}
-                                                            />
-                                                        )}
-                                                    </Space>
-                                                </Radio.Button>
-                                            </motion.div>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Radio.Group>
-                        </Form.Item>
-
-
-                    </motion.div>
-                );
-
-            case 1:
-                return (
-                    <motion.div
                         key="step-1"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -565,6 +476,15 @@ export default function AddNewContenu({ onCancel }: props) {
                             </Title> */}
 
                             <Row gutter={[16, 16]}>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        name="code"
+                                        label={<Text strong>{t('curriculum.code')}</Text>}
+                                        rules={[{ required: true, message: t('curriculum.required') }]}
+                                    >
+                                        <Input placeholder="MATH-5AP-01-02" size="large" />
+                                    </Form.Item>
+                                </Col>
                                 <Col xs={24} md={12}>
                                     <Form.Item
                                         name="title"
@@ -654,12 +574,19 @@ export default function AddNewContenu({ onCancel }: props) {
                                 </Select>
                             </Form.Item>
 
+                            <Form.Item name="is_published" valuePropName="checked" initialValue={false}>
+                                <Radio.Group>
+                                    <Radio value={true} disabled>{t('common.yes')}</Radio>
+                                    <Radio value={false}>{t('common.no')}</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+
 
                         </div>
                     </motion.div>
                 );
 
-            case 2:
+            case 1:
                 return (
                     <motion.div
                         key="step-2"
@@ -694,7 +621,7 @@ export default function AddNewContenu({ onCancel }: props) {
                     </motion.div>
                 );
 
-            case 3:
+            case 2:
                 // const formValues = form.getFieldsValue();
                 const formValues = form.getFieldsValue(true);
 

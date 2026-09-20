@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
     Card,
+    Table,
     Button,
     Tag,
     Input,
@@ -34,6 +35,7 @@ import {
     PlusOutlined,
     MoreOutlined,
     EditFilled,
+    DeleteFilled,
     ClockCircleOutlined,
     OrderedListOutlined,
     FormatPainterOutlined,
@@ -50,6 +52,8 @@ import AddNewContenu from './AddNewContenu';
 import { FcViewDetails } from 'react-icons/fc';
 import UpdateContenu from './UpdateContent';
 import AuthService from '../../../Auth-service/AuthService';
+import { useDeleteContent } from '../../../Services/Admin/Content/useDeleteContent';
+import { getContentUnitId } from '../../../Services/Admin/Content/typeContent';
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -187,7 +191,7 @@ const ContenuView = () => {
     // États
     const [searchText, setSearchText] = useState('');
     const [sortBy, setSortBy] = useState('order');
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [viewMode, setViewMode] = useState<'grid' | 'list' | 'table'>('grid');
     const [selectedContent, setSelectedContent] = useState<TypeContent | null>(null);
     const [isDetailVisible, setIsDetailVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -198,6 +202,7 @@ const ContenuView = () => {
     const [hoveredContentId, setHoveredContentId] = useState<number | null>(null);
 
     const role = AuthService.getRole()
+    const { mutate: deleteContent } = useDeleteContent();
     const { data: chapitreData, isPending: isPendingChapitre } = useGetChapitre();
 
    
@@ -275,6 +280,17 @@ const ContenuView = () => {
             icon: <EditFilled />,
             onClick: () => handleShow(content, "update"),
         },
+        {
+            key: '3',
+            label: t("common.delete"),
+            icon: <DeleteFilled />,
+            danger: true,
+            onClick: () => {
+                if (content.id && getContentUnitId(content.unit)) {
+                    handleDeleteContent(content);
+                }
+            },
+        },
     ] : [
         {
             key: '1',
@@ -329,6 +345,20 @@ const ContenuView = () => {
         setIsModalShow({ visible: true, content, type });
     };
 
+    const handleDeleteContent = (content: TypeContent) => {
+        const unitId = getContentUnitId(content.unit);
+        if (!content.id || !unitId) return;
+
+        Modal.confirm({
+            title: t('common.confirm_delete'),
+            content: content.title,
+            okText: t('common.delete'),
+            cancelText: t('common.cancel'),
+            okButtonProps: { danger: true },
+            onOk: () => deleteContent({ unitId, contentId: content.id! }),
+        });
+    };
+
     const CancelShow = () => {
         setIsModalShow({ visible: false, content: null!, type: null });
     };
@@ -338,6 +368,7 @@ const ContenuView = () => {
         if (!searchTerm) return true;
 
         return content?.title?.toLowerCase().includes(searchTerm) ||
+            content?.code?.toLowerCase().includes(searchTerm) ||
             content?.content_type?.toLowerCase().includes(searchTerm) ||
             content?.content?.toLowerCase().includes(searchTerm);
     }) || [];
@@ -346,13 +377,13 @@ const ContenuView = () => {
     const sortedContents = [...filterContents].sort((a, b) => {
         switch (sortBy) {
             case 'order':
-                return a.order - b.order;
+                return (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0);
             case 'title':
                 return a.title.localeCompare(b.title);
             case 'duration':
                 return (a.metadata?.duration || 0) - (b.metadata?.duration || 0);
             default:
-                return a.order - b.order;
+                return (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0);
         }
     });
 
@@ -365,11 +396,11 @@ const ContenuView = () => {
         totalDuration: contents?.reduce((acc, c) => acc + (c.metadata?.duration || 0), 0) || 0
     };
 
-    const getContentTypeConfig = (type: string) => {
+    const getContentTypeConfig = (type?: string) => {
         return contentColors[type as keyof typeof contentColors] || contentColors.default;
     };
 
-    const getContentTypeIcon = (type: string) => {
+    const getContentTypeIcon = (type?: string) => {
         switch (type) {
             case 'text': return <FileTextOutlined />;
             case 'video': return <VideoCameraOutlined />;
@@ -378,6 +409,18 @@ const ContenuView = () => {
             case 'image': return <FormatPainterOutlined />;
             default: return <FileTextOutlined />;
         }
+    };
+
+    const getContentTypeLabel = (type?: string | null) => {
+        if (!type) return "—";
+        return t(`content.type.${type}`, { defaultValue: type });
+    };
+
+    const getContentUnitLabel = (content: TypeContent) => {
+        if (typeof content.unit === 'object') {
+            return content.unit.title || content.unit.code || `#${content.unit.id}`;
+        }
+        return content.unit ? `#${content.unit}` : "—";
     };
 
     const renderContentPreview = (content: TypeContent) => {
@@ -424,10 +467,10 @@ const ContenuView = () => {
                             ) : (
                                 <>
                                     <PlayCircleOutlined className="text-white text-5xl opacity-90 group-hover/video:opacity-100 group-hover/video:scale-110 transition-all duration-300" />
-                                    {content.metadata?.duration > 0 && (
+                                    {content.metadata?.duration! > 0 && (
                                         <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
                                             <ClockCircleOutlined className="mr-1" />
-                                            {content.metadata.duration} min
+                                            {content.metadata?.duration ?? 0} min
                                         </div>
                                     )}
                                 </>
@@ -475,8 +518,8 @@ const ContenuView = () => {
                                     </Text>
                                     {/* {content.metadata?.duration > 0 && (
                                         <Text className="text-white text-xs font-medium">
-                                            {Math.floor(content.metadata.duration / 60)}:
-                                            {(content.metadata.duration % 60).toString().padStart(2, '0')} min
+                                            {Math.floor((content.metadata?.duration ?? 0) / 60)}:
+                                            {((content.metadata?.duration ?? 0) % 60).toString().padStart(2, '0')} min
                                         </Text>
                                     )} */}
                                 </div>
@@ -741,6 +784,13 @@ const ContenuView = () => {
                                     size="large"
                                     className={viewMode === 'list' ? '!bg-emerald-500' : ''}
                                 />
+                                <Button
+                                    type={viewMode === 'table' ? 'primary' : 'default'}
+                                    icon={<OrderedListOutlined />}
+                                    onClick={() => setViewMode('table')}
+                                    size="large"
+                                    className={viewMode === 'table' ? '!bg-emerald-500' : ''}
+                                />
                             </Button.Group>
 
                             <Tooltip title={t('content.filter.reset')}>
@@ -773,6 +823,46 @@ const ContenuView = () => {
             </motion.div>
 
             {/* Contenu principal */}
+            {viewMode === 'table' && (
+                <Card className="rounded-2xl border-0 shadow-lg overflow-hidden">
+                    <Table
+                        rowKey="id"
+                        dataSource={sortedContents}
+                        pagination={{ pageSize: 8 }}
+                        columns={[
+                            { title: t('curriculum.code'), dataIndex: 'code', key: 'code', render: (value: string, record: TypeContent) => value || `#${record.id}` },
+                            { title: t('form.fields.title'), dataIndex: 'title', key: 'title' },
+                            { title: t('content.unit'), key: 'unit', render: (_: unknown, record: TypeContent) => getContentUnitLabel(record) },
+                            { title: t('curriculum.order'), key: 'order', render: (_: unknown, record: TypeContent) => record.order ?? record.order_index ?? 0 },
+                            {
+                                title: t('common.status'),
+                                key: 'status',
+                                render: (_: unknown, record: TypeContent) => (
+                                    <Tag color={record.is_published ? 'success' : 'default'}>
+                                        {record.is_published ? t('common.yes') : t('common.no')}
+                                    </Tag>
+                                ),
+                            },
+                            {
+                                title: t('common.actions'),
+                                key: 'actions',
+                                render: (_: unknown, record: TypeContent) => (
+                                    <Space>
+                                        <Button type="link" onClick={() => handleContentSelect(record)}>{t('content.view')}</Button>
+                                        {role !== 'student' && (
+                                            <>
+                                                <Button type="link" onClick={() => handleShow(record, 'update')}>{t('common.edit')}</Button>
+                                                <Button type="link" danger onClick={() => handleDeleteContent(record)}>{t('common.delete')}</Button>
+                                            </>
+                                        )}
+                                    </Space>
+                                ),
+                            },
+                        ]}
+                    />
+                </Card>
+            )}
+            <div className={viewMode === 'table' ? 'hidden' : ''}>
             <AnimatePresence mode="wait">
                 {viewMode === 'grid' ? (
                     // Vue Grille améliorée
@@ -812,16 +902,12 @@ const ContenuView = () => {
                                                 <div className="flex justify-between items-start relative">
                                                     <div className="flex items-center gap-2">
                                                         <Badge
-                                                            count={content.order}
+                                                            count={content.order ?? content.order_index ?? 0}
                                                             className="bg-white/20 text-white border-0"
                                                             style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
                                                         />
-                                                        <Tag
-                                                            color="white"
-                                                            className="!bg-white/20 !text-white border-0 rounded-full px-3"
-                                                            icon={getContentTypeIcon(content.content_type)}
-                                                        >
-                                                            {t(`content.type.${content.content_type}`)}
+                                                        <Tag color="white" className="!bg-white/20 !text-white border-0 rounded-full px-3">
+                                                            {content.code || `#${content.id}`}
                                                         </Tag>
                                                     </div>
 
@@ -842,6 +928,9 @@ const ContenuView = () => {
                                                 <Title level={4} className="!text-white !mt-4 !mb-0 line-clamp-2">
                                                     {content.title}
                                                 </Title>
+                                                <Text className="!text-white/80 text-xs block mt-1">
+                                                    {getContentUnitLabel(content)}
+                                                </Text>
                                             </div>
 
                                             {/* Aperçu du contenu */}
@@ -852,14 +941,14 @@ const ContenuView = () => {
                                             {/* Métadonnées et actions */}
                                             <div className="px-4 pb-4">
                                                 <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                                                    <Space size="small" className="text-gray-500">
-                                                        <ClockCircleOutlined />
-                                                        <Text type="secondary" className="text-xs">
-                                                            {content.metadata?.duration || 0} min
-                                                        </Text>
-                                                    </Space>
+                                                    <Text type="secondary" className="text-xs">
+                                                        {t('content.unit')}: {getContentUnitLabel(content)}
+                                                    </Text>
 
                                                     <Space size="small">
+                                                        <Tag color={content.is_published ? 'success' : 'default'}>
+                                                            {content.is_published ? t('common.yes') : t('common.no')}
+                                                        </Tag>
                                                         <Tooltip title={t('content.view')}>
                                                             <Button
                                                                 type="text"
@@ -948,7 +1037,7 @@ const ContenuView = () => {
                                                         {getContentTypeIcon(content.content_type)}
                                                     </motion.div>
                                                     <div className="text-2xl font-bold text-gray-300">
-                                                        #{content.order}
+                                                        #{content.order ?? content.order_index ?? 0}
                                                     </div>
                                                 </div>
 
@@ -959,6 +1048,9 @@ const ContenuView = () => {
                                                             <Title level={5} className="!mb-1">
                                                                 {content.title}
                                                             </Title>
+                                                            <Text type="secondary" className="text-xs block mb-1">
+                                                                {content.code || `#${content.id}`} · {getContentUnitLabel(content)}
+                                                            </Text>
                                                             <Text type="secondary" className="line-clamp-2 block">
                                                                 {content.content}
                                                             </Text>
@@ -968,7 +1060,7 @@ const ContenuView = () => {
                                                             className="rounded-full px-3 ml-4"
                                                             icon={getContentTypeIcon(content.content_type)}
                                                         >
-                                                            {t(`content.type.${content.content_type}`)}
+                                                            {getContentTypeLabel(content.content_type)}
                                                         </Tag>
                                                     </div>
 
@@ -999,6 +1091,7 @@ const ContenuView = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+            </div>
 
             {/* Modal de détails amélioré avec animations */}
             <AnimatePresence>
@@ -1051,11 +1144,14 @@ const ContenuView = () => {
                                         </motion.div>
                                         <div>
                                             <Tag color="white" className="!bg-white/20 !text-white border-0 rounded-full">
-                                                #{selectedContent.order} • {t('content.unit')} {selectedContent.unit}
+                                                {selectedContent.code || `#${selectedContent.id}`} • {getContentUnitLabel(selectedContent)}
                                             </Tag>
                                             <Title level={3} className="!text-white !mt-2 !mb-0">
                                                 {selectedContent.title}
                                             </Title>
+                                            <Tag color={selectedContent.is_published ? 'success' : 'default'}>
+                                                {selectedContent.is_published ? t('common.yes') : t('common.no')}
+                                            </Tag>
                                         </div>
                                     </div>
                                 </div>
@@ -1069,7 +1165,7 @@ const ContenuView = () => {
                                                 {t('content.type.label')}
                                             </Text>
                                             <Tag color={getContentTypeConfig(selectedContent.content_type).primary} className="mt-1">
-                                                {t(`content.type.${selectedContent.content_type}`)}
+                                                {getContentTypeLabel(selectedContent.content_type)}
                                             </Tag>
                                         </Card>
 

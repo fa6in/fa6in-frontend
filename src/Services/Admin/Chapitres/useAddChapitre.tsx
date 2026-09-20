@@ -18,6 +18,7 @@ export const useAddChapitre = () => {
 
 
         formData.append("subject", chapitre.subject ? String(chapitre.subject) : "");
+        formData.append("code", chapitre.code ? chapitre.code : "");
         formData.append("title", chapitre.title ? chapitre.title : "");
         formData.append("description", chapitre.description ? chapitre.description : "");
         formData.append("learning_objective", chapitre.learning_objective ? chapitre.learning_objective : "");

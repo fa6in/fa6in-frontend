@@ -10,6 +10,7 @@ import {
     InputNumber,
     Button,
     Card,
+    Alert,
     message,
     Row,
     Col,
@@ -44,6 +45,9 @@ import { useUpdateContent } from '../../../Services/Admin/Content/useUpdateConte
 import { useGetOnceChapitre } from '../../../Services/Admin/Chapitres/useGetOnceChapiter';
 import { useGetOnceContent } from '../../../Services/Admin/Content/useGetOnceContent';
 import type { TypeContent } from '../../../Services/Admin/Content/typeContent';
+import { getContentUnitId } from '../../../Services/Admin/Content/typeContent';
+import { useGetGoals } from '../../../Services/Curriculum/Goals/useGetGoals';
+import { normalizeRelationId } from '../../../ui/RelationSelect';
 
 const { Option } = Select;
 const { Step } = Steps;
@@ -64,6 +68,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
     const [loading, setLoading] = useState(false);
     const [selectedUnitId, setSelectedUnitId] = useState<string | null | number>(null);
     const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+    const [goalsComplete, setGoalsComplete] = useState(false);
 
     const selectedUnit = Form.useWatch('unit', form);
 
@@ -72,11 +77,12 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
     //     enabled: !!contentId,
     // });
 
-    const { data: contentData, isPending: isPendingContent } = useGetOnceContent(String(content?.unit!), String(content?.id!), {
-        enabled: !!(content?.unit! && contentId),
+    const { data: contentData, isPending: isPendingContent } = useGetOnceContent(String(getContentUnitId(content?.unit) ?? ''), String(content?.id ?? ''), {
+        enabled: !!(getContentUnitId(content?.unit) && contentId),
     });
 
     const { data: chapitreData, isPending: isPendingChapitre } = useGetChapitre();
+    const { data: goals = [] } = useGetGoals();
 
     const { data: onceChapitre, isPending: isPendingChapitreOnce } =
         useGetOnceChapitre(String(selectedUnitId)!, {
@@ -97,19 +103,26 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
         if (contentData && !initialDataLoaded) {
             // Définir le type de contenu
             setContentType(contentData.content_type || 'text');
+            const lessonId = Number(contentId);
+            const lessonGoals = goals.filter((goal) => normalizeRelationId(goal.lesson) === lessonId);
+            const hasConceptual = lessonGoals.filter((goal) => goal.goal_type === 'conceptual').length === 1;
+            const hasOperational = lessonGoals.filter((goal) => goal.goal_type === 'operational').length === 1;
+            setGoalsComplete(hasConceptual && hasOperational);
 
             // Récupérer l'ID de l'unité
             if (contentData.unit) {
-                setSelectedUnitId(contentData.unit!);
+                setSelectedUnitId(getContentUnitId(contentData.unit) ?? null);
             }
 
             // Préparer les données du formulaire
             const formData = {
+                code: contentData.code || '',
                 title: contentData.title || '',
                 content: contentData.content || '',
                 content_type: contentData.content_type || 'text',
                 order: contentData.order || 1,
-                unit: contentData.unit || undefined,
+                unit: getContentUnitId(contentData.unit),
+                is_published: contentData.is_published ?? true,
                 metadata: contentData.metadata || getDefaultMetadata(contentData.content_type || 'text')
             };
 
@@ -117,7 +130,15 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
             form.setFieldsValue(formData);
             setInitialDataLoaded(true);
         }
-    }, [contentData, form, initialDataLoaded]);
+    }, [contentData, contentId, goals, form, initialDataLoaded]);
+
+    useEffect(() => {
+        const lessonId = Number(contentId);
+        const lessonGoals = goals.filter((goal) => normalizeRelationId(goal.lesson) === lessonId);
+        const hasConceptual = lessonGoals.filter((goal) => goal.goal_type === 'conceptual').length === 1;
+        const hasOperational = lessonGoals.filter((goal) => goal.goal_type === 'operational').length === 1;
+        setGoalsComplete(hasConceptual && hasOperational);
+    }, [contentId, goals]);
 
     const funHanldeOnCancel = () => {
         form.resetFields();
@@ -180,11 +201,6 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
     ];
 
     const steps = [
-        {
-            title: t('form.steps.step1.title'),
-            description: t('form.steps.step1.description'),
-            icon: <FileTextOutlined />
-        },
         {
             title: t('form.steps.step2.title'),
             description: t('form.steps.step2.description'),
@@ -405,10 +421,19 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
         try {
             const values = form.getFieldsValue(true);
 
-            const formattedData = {
-                ...values,
-                unit: selectedUnitId,
-                id: contentId
+            if (values.is_published === true && !goalsComplete) {
+                message.error('Impossible de publier : la leçon doit avoir exactement 1 Goal Conceptual et 1 Goal Operational.');
+                form.setFieldValue('is_published', false);
+                return;
+            }
+
+            const formattedData: TypeContent = {
+                id: contentId,
+                code: values.code,
+                title: values.title,
+                unit: selectedUnitId!,
+                content: values.content,
+                is_published: goalsComplete ? (values.is_published ?? true) : false,
             };
 
             console.log('Data to update:', formattedData);
@@ -446,7 +471,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
 
     const renderStepContent = () => {
         switch (currentStep) {
-            case 0:
+            case -1:
                 return (
                     <motion.div
                         key="step-0"
@@ -522,7 +547,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                     </motion.div>
                 );
 
-            case 1:
+            case 0:
                 return (
                     <motion.div
                         key="step-1"
@@ -533,6 +558,15 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                     >
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <Row gutter={[16, 16]}>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        name="code"
+                                        label={<Text strong>{t('curriculum.code')}</Text>}
+                                        rules={[{ required: true, message: t('curriculum.required') }]}
+                                    >
+                                        <Input placeholder="MATH-5AP-01-02" size="large" />
+                                    </Form.Item>
+                                </Col>
                                 <Col xs={24} md={12}>
                                     <Form.Item
                                         name="title"
@@ -621,11 +655,26 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                                     ))}
                                 </Select>
                             </Form.Item>
+
+                            <Form.Item name="is_published" valuePropName="checked">
+                                {!goalsComplete && (
+                                    <Alert
+                                        type="warning"
+                                        showIcon
+                                        className="mb-3"
+                                        message="La publication nécessite 1 Goal Conceptual et 1 Goal Operational."
+                                    />
+                                )}
+                                <Radio.Group>
+                                    <Radio value={true} disabled={!goalsComplete}>{t('common.yes')}</Radio>
+                                    <Radio value={false}>{t('common.no')}</Radio>
+                                </Radio.Group>
+                            </Form.Item>
                         </div>
                     </motion.div>
                 );
 
-            case 2:
+            case 1:
                 return (
                     <motion.div
                         key="step-2"
@@ -660,7 +709,7 @@ export default function UpdateContenu({ onCancel, contentId, content }: props) {
                     </motion.div>
                 );
 
-            case 3:
+            case 2:
                 const formValues = form.getFieldsValue(true);
 
                 return (

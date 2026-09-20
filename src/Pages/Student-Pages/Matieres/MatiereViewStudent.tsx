@@ -28,6 +28,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useGetMatiere } from "../../../Services/Admin/Matieres/useGetMatiere";
+import { getMatiereLevelId } from "../../../Services/Admin/Matieres/typeMatiere";
 import type { typeMatiere } from "../../../Services/Admin/Matieres/typeMatiere";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
 
@@ -98,7 +99,7 @@ const MatieresViewStudent = () => {
     total: safeMatieres.length,
     active: safeMatieres.filter(m => m?.is_active === true).length,
     credits: safeMatieres.reduce((acc, curr) => acc + (curr?.unit_count || 0), 0),
-    semesters: new Set(safeMatieres.map(m => m?.grade)).size
+    semesters: new Set(safeMatieres.map(m => getMatiereLevelId(m?.level))).size
   };
 
   // Niveaux de difficulté (exemple)
@@ -119,7 +120,7 @@ const MatieresViewStudent = () => {
 
       const matchesSemester =
         semesterFilter === "all" ||
-        matiere?.grade?.toString() === semesterFilter;
+        getMatiereLevelId(matiere?.level)?.toString() === semesterFilter;
 
       const difficulty = getDifficultyLevel(matiere);
 
@@ -312,7 +313,7 @@ const MatieresViewStudent = () => {
                           color="blue"
                           className="rounded-full px-3 py-1 font-semibold mb-2"
                         >
-                          {t("matieres.semester")} {matiere.grade}
+                          {t("matieres.semester")} {getMatiereLevelId(matiere.level) ?? "—"}
                         </Tag>
                         <Tooltip title={matiere.name}>
                           <div
@@ -422,7 +423,7 @@ const MatieresViewStudent = () => {
                     />
                   </div>
                   <Tag color="blue" className="rounded-full px-4 py-1 text-base">
-                    {t("matieres.semester")} {selectedMatiere.grade}
+                    {t("matieres.semester")} {getMatiereLevelId(selectedMatiere.level) ?? "—"}
                   </Tag>
                 </div>
 
@@ -466,7 +467,7 @@ const MatieresViewStudent = () => {
                   <Card className="rounded-xl border border-gray-200">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-purple-600 mb-2">
-                        {selectedMatiere.grade}
+                        {getMatiereLevelId(selectedMatiere.level) ?? "—"}
                       </div>
                       <div className="text-gray-600">{t("matieres.semester")}</div>
                     </div>

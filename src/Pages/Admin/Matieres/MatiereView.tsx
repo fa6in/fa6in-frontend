@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
     Table,
     Button,
@@ -30,7 +30,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { useGetMatiere } from "../../../Services/Admin/Matieres/useGetMatiere";
 import AddNewMatiere from "./AddNewMatiere";
+import { getMatiereLevelId, getMatiereLevelName } from "../../../Services/Admin/Matieres/typeMatiere";
 import type { typeMatiere } from "../../../Services/Admin/Matieres/typeMatiere";
+import { useGetLevels } from "../../../Services/Curriculum/Levels/useGetLevels";
 import { usedeleteMatiere } from "../../../Services/Admin/Matieres/useDeleteMatiere";
 import UpdateMatiere from "./UpdateMatiere";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
@@ -47,7 +49,7 @@ const MatiereView = () => {
     const isRTL = i18n.language === "ar";
 
     const [searchText, setSearchText] = useState("");
-    const [semesterFilter, setSemesterFilter] = useState("all");
+    const [levelFilter, setLevelFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [popupState, setPopupState] = useState<{ open: boolean; matiere: typeMatiere | null; type: string | null }>({
@@ -65,7 +67,12 @@ const MatiereView = () => {
         setPopupState({ open: false, matiere: null, type: null });
 
     };
-    const { data: matieresData, isPending } = useGetMatiere()
+    const { data: levels = [] } = useGetLevels();
+    const apiFilters = useMemo(() => ({
+        ...(levelFilter !== "all" ? { level: Number(levelFilter) } : {}),
+        ...(statusFilter !== "all" ? { is_active: statusFilter === "active" } : {}),
+    }), [levelFilter, statusFilter]);
+    const { data: matieresData, isPending } = useGetMatiere(apiFilters)
     const matieres = Array.isArray(matieresData)
         ? matieresData
         : Array.isArray(matieresData)
@@ -156,15 +163,15 @@ const MatiereView = () => {
         },
         {
             title: t("matieres.table.semester"),
-            dataIndex: "grade",
+            dataIndex: "level",
             key: "semester",
-            sorter: (a: any, b: any) => a.grade - b.grade,
-            render: (grade: number) => (
+            sorter: (a: typeMatiere, b: typeMatiere) => (getMatiereLevelId(a.level) ?? 0) - (getMatiereLevelId(b.level) ?? 0),
+            render: (level: typeMatiere["level"], record: typeMatiere) => (
                 <Tag
-                    color={grade === 1 ? "blue" : grade === 2 ? "green" : "orange"}
+                    color={getMatiereLevelId(level) === 1 ? "blue" : getMatiereLevelId(level) === 2 ? "green" : "orange"}
                     className="rounded-full px-3 py-1"
                 >
-                    {`${grade}`}
+                    {getMatiereLevelName(level, record.level_name)}
 
                 </Tag>
             )
@@ -227,15 +234,15 @@ const MatiereView = () => {
         },
         {
             title: t("matieres.table.semester"),
-            dataIndex: "grade",
+            dataIndex: "level",
             key: "semester",
-            sorter: (a: any, b: any) => a.grade - b.grade,
-            render: (grade: number) => (
+            sorter: (a: typeMatiere, b: typeMatiere) => (getMatiereLevelId(a.level) ?? 0) - (getMatiereLevelId(b.level) ?? 0),
+            render: (level: typeMatiere["level"], record: typeMatiere) => (
                 <Tag
-                    color={grade === 1 ? "blue" : grade === 2 ? "green" : "orange"}
+                    color={getMatiereLevelId(level) === 1 ? "blue" : getMatiereLevelId(level) === 2 ? "green" : "orange"}
                     className="rounded-full px-3 py-1"
                 >
-                    {`${grade}`}
+                    {getMatiereLevelName(level, record.level_name)}
 
                 </Tag>
             )
@@ -273,8 +280,8 @@ const MatiereView = () => {
             matiere?.description?.toLowerCase()?.includes(searchText.toLowerCase());
 
         const matchesSemester =
-            semesterFilter === "all" ||
-            matiere?.grade?.toString() === semesterFilter;
+            levelFilter === "all" ||
+            getMatiereLevelId(matiere?.level)?.toString() === levelFilter;
 
         const matchesStatus =
             statusFilter === "all" ||
@@ -341,6 +348,22 @@ const MatiereView = () => {
                     filters={
                         <>
                             <Select
+                                value={levelFilter}
+                                onChange={setLevelFilter}
+                                className="w-48"
+                                size="large"
+                                showSearch
+                                optionFilterProp="label"
+                                placeholder={t("matieresAdd.form.gradePlaceholder")}
+                            >
+                                <Option value="all">{t("matieres.filters.all")}</Option>
+                                {levels.map((level) => (
+                                    <Option key={level.id} value={String(level.id)} label={`${level.code} ${level.name}`}>
+                                        {level.code} - {level.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                            <Select
                                 value={statusFilter}
                                 onChange={setStatusFilter}
                                 className="w-36"
@@ -355,7 +378,7 @@ const MatiereView = () => {
                                 icon={<FilterOutlined />}
                                 onClick={() => {
                                     setSearchText("");
-                                    setSemesterFilter("all");
+                                    setLevelFilter("all");
                                     setStatusFilter("all");
                                 }}
                             >
@@ -457,7 +480,7 @@ const MatiereView = () => {
                                 <div className="">
                                     <p className="font-medium text-gray-900">{popupState?.matiere!.name}</p>
                                     <p className="text-sm text-gray-500">
-                                        {t("matieres.grades.grade")} {popupState?.matiere!.grade}
+                                        {t("matieres.grades.grade")} {getMatiereLevelId(popupState?.matiere!.level) ?? "—"}
                                     </p>
                                 </div>
                             </div>

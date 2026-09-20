@@ -149,6 +149,13 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                     <Card className="shadow-sm border-0">
                         <div className='grid md:grid-cols-2 grid-cols-1 gap-3'>
                             <Form.Item
+                                name="code"
+                                label={t('curriculum.code')}
+                                rules={[{ required: true, message: t('curriculum.required') }]}
+                            >
+                                <Input size="large" placeholder="UNIT-001" />
+                            </Form.Item>
+                            <Form.Item
                                 name="title"
                                 label={t('chapitres.form.title')}
                                 rules={[
@@ -242,7 +249,6 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                                     </label>
                                     <Form.Item
                                         name="thumbnail"
-                                        rules={[{ required: true, message: t('chapitres.validation.thumbnailRequired') }]}
                                     >
                                         <Upload
                                             beforeUpload={handleFileUpload}

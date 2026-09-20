@@ -4,13 +4,15 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../Auth-service/axios";
 import type { TypeContent } from "./typeContent";
+import { API_ENDPOINTS } from "../../../api/endpoints";
 
 export const KEY_CONTENT = ["Content"];
 
 // Option 1: Si vous avez besoin de l'ID de l'unité et de l'ID de la section
 async function getOnceContent(unitId: string, sectionId: string): Promise<TypeContent> {
+    console.log("Fetching content for unitId:", unitId, "and sectionId:", sectionId);
     try {
-        const res = await api.get(`/api/curriculum/units/${unitId}/sections/${sectionId}/`);
+        const res = await api.get(API_ENDPOINTS.curriculum.lessonDetail(sectionId));
         return res.data;
     } catch (error: any) {
         if (error.response) {

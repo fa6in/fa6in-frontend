@@ -57,9 +57,13 @@ import RelationSelect, {
   toRelationItems,
 } from "../../../ui/RelationSelect";
 
-export default function CurriculumView() {
+type CurriculumViewProps = {
+  initialTab?: string;
+};
+
+export default function CurriculumView({ initialTab = "stages" }: CurriculumViewProps) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState("stages");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Stage | Level | Goal | Lesson | null>(
     null

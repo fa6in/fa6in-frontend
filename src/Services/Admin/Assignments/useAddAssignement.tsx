@@ -11,7 +11,7 @@ export const useAddActivite = () => {
     const queryClient = useQueryClient();
 
     async function addactivite(activite: Activitytype) {
-        const res = await api.post(`/api/assessment/units/${activite?.unit}/activities/`, activite);
+        const res = await api.post(`/api/assessment/levels/${activite?.level}/activities/`, activite);
         return res.data;
     }
 

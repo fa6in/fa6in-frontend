@@ -198,7 +198,7 @@ const TeacherDashboard: React.FC = () => {
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-blue-500">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_students')}</span>}
-                    value={dataOverview?.quick_stats.total_students}
+                    value={dataOverview?.quick_stats?.total_students ?? 0}
                     prefix={<TeamOutlined className="text-blue-500" />}
                     valueStyle={{ color: '#1890ff', fontSize: '24px', fontWeight: 'bold' }}
                   />
@@ -218,12 +218,12 @@ const TeacherDashboard: React.FC = () => {
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-green-500">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_units')}</span>}
-                    value={dataOverview?.quick_stats.total_units}
+                    value={dataOverview?.quick_stats?.total_units ?? 0}
                     prefix={<BookOutlined className="text-green-500" />}
                     valueStyle={{ color: '#52c41a', fontSize: '24px', fontWeight: 'bold' }}
                   />
                   <div className="mt-2 text-xs md:text-sm text-gray-500">
-                    {t('dashboard_teacher.dashboard.stats.published_units')}: {dataOverview?.quick_stats.published_units}
+                    {t('dashboard_teacher.dashboard.stats.published_units')}: {dataOverview?.quick_stats?.published_units ?? 0}
                   </div>
                 </Card>
               </motion.div>
@@ -238,7 +238,7 @@ const TeacherDashboard: React.FC = () => {
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-orange-500">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_activities')}</span>}
-                    value={dataOverview?.quick_stats.total_activities}
+                    value={dataOverview?.quick_stats?.total_activities ?? 0}
                     prefix={<ExperimentOutlined className="text-orange-500" />}
                     valueStyle={{ color: '#fa8c16', fontSize: '24px', fontWeight: 'bold' }}
                   />
@@ -264,13 +264,13 @@ const TeacherDashboard: React.FC = () => {
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-purple-500">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.avg_progress')}</span>}
-                    value={dataOverview?.quick_stats.avg_student_progress}
+                    value={dataOverview?.quick_stats?.avg_student_progress ?? 0}
                     prefix={<RiseOutlined className="text-purple-500" />}
                     valueStyle={{ color: '#722ed1', fontSize: '24px', fontWeight: 'bold' }}
                     suffix="%"
                   />
                   <Progress
-                    percent={dataOverview?.quick_stats.avg_student_progress || 0}
+                    percent={dataOverview?.quick_stats?.avg_student_progress ?? 0}
                     size="small"
                     status="active"
                     strokeColor="#722ed1"
@@ -305,7 +305,7 @@ const TeacherDashboard: React.FC = () => {
                     >
                       <span className="text-gray-600 text-sm md:text-base">{t('dashboard_teacher.dashboard.recent_activity.period')}</span>
                       <span className="text-base md:text-lg font-bold text-blue-500">
-                        {dataOverview?.recent_activity.period}
+                        {dataOverview?.recent_activity?.period ?? '—'}
                       </span>
                     </motion.div>
                     <motion.div
@@ -316,7 +316,7 @@ const TeacherDashboard: React.FC = () => {
                     >
                       <span className="text-gray-600 text-sm md:text-base">{t('dashboard_teacher.dashboard.recent_activity.attempts')}</span>
                       <span className="text-base md:text-lg font-bold text-green-500">
-                        {dataOverview?.recent_activity.total_attempts}
+                        {dataOverview?.recent_activity?.total_attempts ?? 0}
                       </span>
                     </motion.div>
                     <motion.div
@@ -327,7 +327,7 @@ const TeacherDashboard: React.FC = () => {
                     >
                       <span className="text-gray-600 text-sm md:text-base">{t('dashboard_teacher.dashboard.recent_activity.unique_students')}</span>
                       <span className="text-base md:text-lg font-bold text-orange-500">
-                        {dataOverview?.recent_activity.unique_students}
+                        {dataOverview?.recent_activity?.unique_students ?? 0}
                       </span>
                     </motion.div>
                   </div>
@@ -347,7 +347,7 @@ const TeacherDashboard: React.FC = () => {
                   className="hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="space-y-3">
-                    {dataOverview?.upcoming_deadlines.map((deadline, index) => (
+                    {(dataOverview?.upcoming_deadlines ?? []).map((deadline, index) => (
                       <motion.div
                         key={index}
                         initial={{ x: -20, opacity: 0 }}

@@ -13,8 +13,8 @@ export const useUpdateMatiere = () => {
     const queryClient = useQueryClient();
 
     async function updatematiere(matiere: typeMatiere) {
-
-        const res = await api.put(`api/curriculum/subjects/${matiere?.id}/`, matiere);
+        const { id, ...payload } = matiere;
+        const res = await api.put(`api/curriculum/subjects/${id}/`, payload);
         return res.data;
     }
 
