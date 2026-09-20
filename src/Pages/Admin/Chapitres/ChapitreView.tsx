@@ -158,10 +158,10 @@ const ChapitresView: React.FC = () => {
         [
             {
                 title: t('chapitres.table.order'),
-                dataIndex: 'order',
+                dataIndex: 'order_index',
                 sorter: (a: typeChapitre, b: typeChapitre) => (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0),
-                render: (order: number) => (
-                    <Badge count={order} style={{ backgroundColor: '#1890ff' }} />
+                render: (order: number | undefined) => (
+                    <Badge count={order ?? 0} style={{ backgroundColor: '#1890ff' }} />
                 ),
             },
             {
@@ -172,7 +172,7 @@ const ChapitresView: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             <img
-                                src={String(record?.thumbnail)}
+                                src={record?.thumbnail ? String(record.thumbnail) : undefined}
                                 alt={text}
                                 className="w-10 h-10 rounded-lg object-cover border"
                             />
@@ -227,9 +227,9 @@ const ChapitresView: React.FC = () => {
             },
             {
                 title: t('chapitres.table.activities'),
-                dataIndex: 'activity_count',
-                key: 'activity_count',
-                render: (count: number) => (
+                dataIndex: 'lessons_count',
+                key: 'lessons_count',
+                render: (count: number = 0) => (
                     <div className="w-full">
                         <Progress
                             percent={Math.min(count * 20, 100)}
@@ -270,10 +270,10 @@ const ChapitresView: React.FC = () => {
         ] : [
             {
                 title: t('chapitres.table.order'),
-                dataIndex: 'order',
+                dataIndex: 'order_index',
                 sorter: (a: typeChapitre, b: typeChapitre) => (a.order ?? a.order_index ?? 0) - (b.order ?? b.order_index ?? 0),
-                render: (order: number) => (
-                    <Badge count={order} style={{ backgroundColor: '#1890ff' }} />
+                render: (order: number | undefined) => (
+                    <Badge count={order ?? 0} style={{ backgroundColor: '#1890ff' }} />
                 ),
             },
             {
@@ -284,7 +284,7 @@ const ChapitresView: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
                             <img
-                                src={String(record?.thumbnail)}
+                                src={record?.thumbnail ? String(record.thumbnail) : undefined}
                                 alt={text}
                                 className="w-10 h-10 rounded-lg object-cover border"
                             />
@@ -339,9 +339,9 @@ const ChapitresView: React.FC = () => {
             },
             {
                 title: t('chapitres.table.activities'),
-                dataIndex: 'activity_count',
-                key: 'activity_count',
-                render: (count: number) => (
+                dataIndex: 'lessons_count',
+                key: 'lessons_count',
+                render: (count: number = 0) => (
                     <div className="w-full">
                         <Progress
                             percent={Math.min(count * 20, 100)}

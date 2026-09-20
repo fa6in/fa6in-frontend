@@ -183,7 +183,7 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                             </Form.Item>
 
                             <Form.Item
-                                name="order"
+                                name="order_index"
                                 label={t('chapitres.form.order')}
                                 rules={[{ required: true, message: t('chapitres.validation.orderRequired') }]}
                             >
@@ -198,8 +198,8 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                             </Form.Item>
 
                             <Form.Item
-                                name="learning_objective"
-                                label={t('chapitres.form.learningObjective')}
+                                name="central_question"
+                                label={t('chapitres.form.centralQuestion')}
                                 rules={[{ required: true, message: t('chapitres.validation.learningObjectiveRequired') }]}
                             >
                                 <Input
@@ -398,6 +398,8 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
         },
     ];
 
+    const visibleSteps = [steps[0]];
+
 
     const nextStep = () => {
         form.validateFields()
@@ -435,7 +437,7 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                 <Steps
                     current={currentStep}
                     className="mb-6"
-                    items={steps.map(step => ({ title: step.title }))}
+                    items={visibleSteps.map(step => ({ title: step.title }))}
                 />
 
                 <Form
@@ -447,10 +449,10 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                         difficulty: 'medium'
                     }}
                 >
-                    {steps[currentStep].content}
+                    {visibleSteps[currentStep].content}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-6 border-t">
-                        {currentStep === 0 ? (
+                        {visibleSteps.length === 1 ? (
                             <>
                                 <Button
                                     onClick={handleClose}
@@ -461,12 +463,14 @@ const AddNewChapitre: React.FC<AddNewChapitreProps> = ({
                                     {t('chapitres.common.cancel')}
                                 </Button>
                                 <Button
-                                    onClick={nextStep}
+                                    type="primary"
+                                    onClick={handleSubmit}
                                     size="large"
-                                    icon={<ArrowLeftOutlined />}
-                                    className='!bg-main-color !text-white'
+                                    loading={isPending}
+                                    icon={<SaveOutlined />}
+                                    className="!bg-main-color border-none"
                                 >
-                                    {t('chapitres.common.next')}
+                                    {t('common.save')}
                                 </Button>
                             </>
                         ) : currentStep === 1 ? (

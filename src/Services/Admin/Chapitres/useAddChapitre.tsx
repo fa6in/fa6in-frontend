@@ -14,30 +14,14 @@ export const useAddChapitre = () => {
     const queryClient = useQueryClient();
 
     async function addchapitre(chapitre: typeChapitre) {
-        const formData = new FormData();
-
-
-        formData.append("subject", chapitre.subject ? String(chapitre.subject) : "");
-        formData.append("code", chapitre.code ? chapitre.code : "");
-        formData.append("title", chapitre.title ? chapitre.title : "");
-        formData.append("description", chapitre.description ? chapitre.description : "");
-        formData.append("learning_objective", chapitre.learning_objective ? chapitre.learning_objective : "");
-        formData.append("difficulty", chapitre.difficulty ? chapitre.difficulty : "");
-        formData.append("order", chapitre.order ? String(chapitre.order) : "0");
-        formData.append("duration_minutes", chapitre.duration_minutes ? String(chapitre.duration_minutes) : "0");
-
-        if (chapitre.thumbnail) {
-            formData.append("thumbnail", chapitre.thumbnail);
-
-        }
-        formData.append("video_url", chapitre?.video_url! ? chapitre?.video_url! : "");
-        formData.append("audio_url", chapitre?.audio_url! ? chapitre?.audio_url! : "");
-        formData.append("is_published", String(chapitre?.is_published!));
-
-
-
-
-        const res = await api.post(`api/curriculum/units/`, formData);
+        const res = await api.post(`api/curriculum/units/`, {
+            code: chapitre.code,
+            title: chapitre.title,
+            subject: chapitre.subject,
+            central_question: chapitre.central_question,
+            order_index: chapitre.order_index,
+            is_published: chapitre.is_published,
+        });
         return res.data;
     }
 

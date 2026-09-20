@@ -70,8 +70,8 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                 code: chapitre.code ?? '',
                 title: chapitre.title ?? '',
                 subject: normalizeRelationId(chapitre.subject),
-                order: chapitre.order ?? chapitre.order_index ?? 1,
-                learning_objective: chapitre.learning_objective ?? '',
+                order_index: chapitre.order_index ?? chapitre.order ?? 1,
+                central_question: chapitre.central_question ?? '',
                 description: chapitre.description ?? '',
                 duration_minutes: chapitre.duration_minutes ?? 1,
                 difficulty: chapitre.difficulty ?? 'medium',
@@ -219,7 +219,7 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                             </Form.Item>
 
                             <Form.Item
-                                name="order"
+                                name="order_index"
                                 label={t('chapitres.form.order')}
                                 rules={[{ required: true, message: t('chapitres.validation.orderRequired') }]}
                             >
@@ -234,8 +234,8 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                             </Form.Item>
 
                             <Form.Item
-                                name="learning_objective"
-                                label={t('chapitres.form.learningObjective')}
+                                name="central_question"
+                                label={t('chapitres.form.centralQuestion')}
                             >
                                 <Input
                                     placeholder={t('chapitres.form.learningObjectivePlaceholder')}
@@ -465,6 +465,8 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
         },
     ];
 
+    const visibleSteps = [steps[0]];
+
     const nextStep = () => {
         form.validateFields()
             .then(() => setCurrentStep(currentStep + 1))
@@ -506,7 +508,7 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                 <Steps
                     current={currentStep}
                     className="mb-6"
-                    items={steps.map(step => ({ title: step.title }))}
+                    items={visibleSteps.map(step => ({ title: step.title }))}
                 />
 
                 <Form
@@ -519,12 +521,12 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                         subject: normalizeRelationId(chapitre.subject),
                     }}
                 >
-                    {steps[currentStep].content}
+                        {visibleSteps[currentStep].content}
 
                     {/* <Divider /> */}
 
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3  pt-6 border-t">
-                        {currentStep === 0 ? (
+                        {visibleSteps.length === 1 ? (
                             <>
                                 <Button
                                     onClick={handleClose}
@@ -535,12 +537,14 @@ const UpdateChapitre: React.FC<UpdateChapitreProps> = ({
                                     {t('chapitres.common.cancel')}
                                 </Button>
                                 <Button
-                                    onClick={nextStep}
+                                    type="primary"
+                                    onClick={handleSubmit}
                                     size="large"
-                                    icon={<ArrowLeftOutlined />}
+                                    loading={isPending}
+                                    icon={<SaveOutlined />}
                                     className='!bg-main-color !text-white'
                                 >
-                                    {t('chapitres.common.next')}
+                                    {t('common.save')}
                                 </Button>
                             </>
                         ) : currentStep === 1 ? (

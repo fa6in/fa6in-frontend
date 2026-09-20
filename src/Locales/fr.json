@@ -915,6 +915,7 @@
       "descriptionPlaceholder": "Décrivez le contenu du chapitre...",
       "learningObjective": "Objectif d'apprentissage",
       "learningObjectivePlaceholder": "Ce que l'étudiant va apprendre...",
+      "centralQuestion": "Question centrale",
       "thumbnail": "Miniature",
       "videoUrl": "URL de la vidéo",
       "audioUrl": "URL de l'audio",

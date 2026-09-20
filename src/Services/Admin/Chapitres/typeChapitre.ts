@@ -2,7 +2,7 @@
 
 export type typeChapitre = {
     id?: number;
-    subject: number;
+    subject: number | { id: number; name?: string; level_name?: string };
     subject_name?: string;
     code?: string;
     title: string;
@@ -23,4 +23,5 @@ export type typeChapitre = {
     created_at?: string;
     updated_at?: string;
     activity_count?: number;
+    lessons_count?: number;
 }

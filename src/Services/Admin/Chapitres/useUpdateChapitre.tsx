@@ -10,25 +10,14 @@ export const useUpdateChapitre = () => {
     const queryClient = useQueryClient();
 
     async function updatechapitre(chapitre: typeChapitre) {
-        const formData = new FormData();
-
-        formData.append("subject", String(chapitre.subject));
-        formData.append("code", chapitre.code ?? "");
-        formData.append("title", chapitre.title);
-        formData.append("description", chapitre.description ?? "");
-        formData.append("learning_objective", chapitre.learning_objective ?? "");
-        formData.append("duration_minutes", String(chapitre.duration_minutes ?? 0));
-        formData.append("difficulty", chapitre.difficulty ?? "");
-        formData.append("order", String(chapitre.order ?? chapitre.order_index ?? 0));
-
-        if (chapitre.thumbnail && chapitre?.thumbnail! instanceof File) {
-            formData.append("thumbnail", chapitre.thumbnail);
-        }
-        formData.append("video_url", chapitre?.video_url!);
-        formData.append("audio_url", chapitre?.audio_url!);
-        formData.append("is_published", String(chapitre?.is_published!));
-
-        const res = await api.put(`api/curriculum/units/${chapitre?.id}/`, formData);
+        const res = await api.put(`api/curriculum/units/${chapitre?.id}/`, {
+            code: chapitre.code,
+            title: chapitre.title,
+            subject: chapitre.subject,
+            central_question: chapitre.central_question,
+            order_index: chapitre.order_index,
+            is_published: chapitre.is_published,
+        });
         return res.data;
     }
 
