@@ -499,6 +499,25 @@
     }
   },
   "skills": {
+     "correctAnswer": "الإجابة الصحيحة",
+    "options": "الخيارات (اختيار من متعدد)",
+    "optionsHint": "اتركه فارغاً للإجابة الحرة، أو أدخل عدة خيارات مفصولة بفاصلة للاختيار من متعدد",
+    "timeLimit": "الوقت المحدد",
+    "points": "النقاط",
+    "practiceMode": "نوع التمرين",
+    "practiceModes": {
+      "free": "إجابة حرة",
+      "mcq": "اختيار من متعدد"
+    },
+    "optionsMinError": "يجب إدخال خيارين على الأقل",
+    
+      "placeholders": {
+      "goal": "اختر الهدف",
+      "skill": "اختر المهارة",
+      "prerequisite": "اختر المتطلب",
+      "correctAnswer": "مثال: القلب",
+      "options": "اكتب خياراً ثم اضغط Enter"
+    },
      "chunkTypes": {
       "rule": "قاعدة",
       "example": "مثال",
@@ -518,12 +537,8 @@
     "skill": "مهارة",
     "strength": "القوة",
     "chunks": "المحتويات",
-    "chunk_title": "عنوان المحتوى",
-    "placeholders": {
-      "goal": "اختر الهدف",
-      "skill": "اختر المهارة",
-      "prerequisite": "اختر المتطلب"
-    }
+    "chunk_title": "عنوان المحتوى"
+  
   },
   "navbar": {
     "titles": {

@@ -46,15 +46,15 @@ const StudentView = () => {
 
     const post = AuthService.getRole()
 
-    // Ajoutez cette fonction pour gérer l'ouverture du modal
     const handleViewStudent = (record: any) => {
         setSelectedStudent(record);
         setIsDetailsModalVisible(true);
     };
-    // const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
     const { data: getStudent, isPending } = useGetStudents()
+
+    console.log("getStudent", getStudent);
 
     const isRTL = i18n.language === "ar";
 
@@ -73,6 +73,9 @@ const StudentView = () => {
         { value: "4th", label: t("students.filters.year.fourth") }
     ];
 
+    // Backend has no `grade` field. Falling back to student_profile.level,
+    // which is the closest equivalent — confirm with backend if `grade`
+    // is meant to exist as its own field.
     const columns: ColumnsType<Student> = [
         {
             title: t("students2.table.id"),
@@ -88,10 +91,10 @@ const StudentView = () => {
                 <div className="flex items-center space-x-3">
                     <div>
                         <div className="font-semibold text-gray-900">
-                            {record.user.first_name} {record.user.last_name}
+                            {record.first_name} {record.last_name}
                         </div>
                         <div className="text-sm text-gray-500">
-                            {record.user.email}
+                            {record.email}
                         </div>
                     </div>
                 </div>
@@ -101,7 +104,7 @@ const StudentView = () => {
         {
             title: t("students2.table.phone"),
             key: "phone",
-            render: (_, record) => record.user.phone_number,
+            render: (_, record) => record.phone_number || "-",
         },
 
         {
@@ -109,16 +112,17 @@ const StudentView = () => {
             key: "grade",
             render: (_, record) => (
                 <Tag color="blue" className="rounded-full px-3">
-                    {record.user.grade}
+                    {record.student_profile?.level ?? "-"}
                 </Tag>
             ),
-            sorter: (a, b) => a.user.grade - b.user.grade,
+            sorter: (a, b) =>
+                (a.student_profile?.level ?? 0) - (b.student_profile?.level ?? 0),
         },
 
         {
             title: t("students2.table.school"),
             key: "school",
-            render: (_, record) => record.user.school,
+            render: (_, record) => record.school || "-",
         },
 
         {
@@ -126,9 +130,9 @@ const StudentView = () => {
             key: "status",
             render: (_, record) => (
                 <Badge
-                    status={record.user.is_active ? "success" : "error"}
+                    status={record.is_active ? "success" : "error"}
                     text={
-                        record.user.is_active
+                        record.is_active
                             ? t("students.status.active")
                             : t("students.status.inactive")
                     }
@@ -138,16 +142,16 @@ const StudentView = () => {
                 { text: t("students.status.active"), value: true },
                 { text: t("students.status.inactive"), value: false },
             ],
-            onFilter: (value, record) => record.user.is_active === value,
+            onFilter: (value, record) => record.is_active === value,
         },
 
         {
             title: t("students2.table.enrollmentDate"),
-            dataIndex: "enrollment_date",
             key: "enrollment_date",
+            render: (_, record) => record.student_profile?.enrollment_date ?? "-",
             sorter: (a, b) =>
-                new Date(a.enrollment_date).getTime() -
-                new Date(b.enrollment_date).getTime(),
+                new Date(a.student_profile?.enrollment_date ?? 0).getTime() -
+                new Date(b.student_profile?.enrollment_date ?? 0).getTime(),
         },
 
         {
@@ -166,7 +170,6 @@ const StudentView = () => {
         },
     ];
 
-
     // Statistiques
     const stats = [
         {
@@ -180,9 +183,8 @@ const StudentView = () => {
         {
             key: "active",
             title: t("students.stats.active"),
-            // value: getStudent ? getStudent?.results.filter((student) => student.user.is_active === true).length! : 0,
             value: getStudent?.results
-                ?.filter(student => student?.user?.is_active)
+                ?.filter(student => student?.is_active)
                 .length ?? 0,
             icon: <CheckCircleOutlined />,
             color: "from-green-500 to-green-600",
@@ -192,13 +194,12 @@ const StudentView = () => {
             key: "new",
             title: t("students.stats.no_active"),
             value: getStudent?.results
-                ?.filter(student => student.user?.is_active === false)
+                ?.filter(student => student.is_active === false)
                 .length ?? 0,
             icon: <VscError />,
             color: "text-white bg-red-500 font-bold",
             change: "+15.3%",
         },
-
     ];
 
     // Gestion des événements
@@ -214,11 +215,12 @@ const StudentView = () => {
 
     // Filtrage des données
     const filteredData = getStudent?.results?.filter((student) => {
-        const matchesSearch = student?.user?.first_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-            student?.user?.last_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-            student?.user?.phone_number?.toLowerCase().includes(searchText.toLowerCase());
+        const matchesSearch =
+            student?.first_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+            student?.last_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+            student?.phone_number?.toLowerCase().includes(searchText.toLowerCase());
 
-        const matchesStatus = statusFilter === "all" || String(student?.user?.is_active) === statusFilter;
+        const matchesStatus = statusFilter === "all" || String(student?.is_active) === statusFilter;
         // const matchesYear = yearFilter === "all" || student.year.includes(yearFilter);
 
         return matchesSearch && matchesStatus;
@@ -344,9 +346,7 @@ const StudentView = () => {
                             : t("students.modal.addTitle")
                     }
                     open={isModalVisible}
-                    // onOk={handleModalOk}
                     onCancel={handleModalCancel}
-                    // confirmLoading={loading}
                     width={600}
                     cancelText={t("common.cancel")}
                     className="rounded-2xl"
@@ -354,10 +354,7 @@ const StudentView = () => {
                     closeIcon={false}
                 >
                     <AddNewStudent handleModalCancel={handleModalCancel} />
-
                 </Modal>
-
-
 
                 <DetailsStudent
                     student={selectedStudent}
@@ -370,4 +367,3 @@ const StudentView = () => {
 };
 
 export default StudentView;
-

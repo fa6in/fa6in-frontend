@@ -1,5 +1,3 @@
-
-
 export type AddPersonne = {
     username: string;
     email: string;
@@ -11,35 +9,39 @@ export type AddPersonne = {
     phone_number: string;
     grade?: number;
     school: string;
-    wilaya_id:number
+    wilaya_id: number;
 };
 
+export type StudentProfile = {
+  id: number;
+  user: number;
+  level: number | null;
+  address: string | null;
+  enrollment_date: string; // YYYY-MM-DD
+  parent_name: string;
+  parent_phone: string;
+};
 
-
-
-export type StudentUser = {
+// NOTE: the backend does NOT nest student fields under a `user` key.
+// Each item in `results` IS the user, with `student_profile` nested inside it.
+export type Student = {
   id: number;
   username: string;
   email: string;
   first_name: string;
   last_name: string;
   role: "student";
+  wilaya: number | null;
+  wilaya_name?: string;
   phone_number: string;
   profile_image: string | null;
-  grade: number;
+  date_of_birth: string | null;
   school: string;
+  is_active: boolean;
   date_joined: string; // ISO date
   last_login: string | null;
-  is_active: boolean;
-};
-
-export type Student = {
-  id: number;
-  user: StudentUser;
-  parent_name: string;
-  parent_phone: string;
-  address: string;
-  enrollment_date: string; // YYYY-MM-DD
+  student_profile: StudentProfile | null;
+  teacher_profile: unknown | null;
 };
 
 export type StudentsResponse = {

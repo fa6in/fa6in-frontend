@@ -204,7 +204,16 @@
       "practice": "Exercice",
       "error": "Erreur",
       "hint": "Indice",
-      "realLife": "Application pratique"
+      "realLife": "Application pratique",
+       "correctAnswer": "Bonne réponse",
+    "options": "Options (QCM)",
+    "optionsHint": "Laisser vide pour une réponse libre, ou saisir plusieurs options séparées par une virgule pour un QCM",
+    "timeLimit": "Temps limite",
+    "points": "Points",
+    "placeholders": {
+      "correctAnswer": "Ex: القلب",
+      "options": "Tapez une option puis Entrée"
+    }
     },
     "title_page": "Compétences & Chunks",
     "subtitle": "Skills, prérequis et micro-contenus",

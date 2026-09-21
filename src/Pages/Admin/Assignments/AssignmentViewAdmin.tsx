@@ -7,6 +7,7 @@ import {
   Input,
   InputNumber,
   Select,
+  Radio,
   Tag,
   Space,
   Row,
@@ -43,6 +44,12 @@ export default function SkillsView() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form] = Form.useForm();
 
+  // On observe le type de chunk sélectionné pour afficher les bons champs
+  const chunkType = Form.useWatch("chunk_type", form);
+  const practiceMode = Form.useWatch("practice_mode", form);
+  const isPractice = chunkType === "practice";
+  const isMcq = practiceMode === "mcq";
+
   const { data: skills = [], isPending: loadingSkills } = useGetSkills();
   const { data: chunks = [], isPending: loadingChunks } = useGetChunks();
 
@@ -61,10 +68,32 @@ export default function SkillsView() {
       setEditingId(null);
       form.resetFields();
     };
-    const chunkValues = {
-      ...values,
+
+    const base = {
+      code: values.code,
+      title: values.title,
       skill: normalizeRelationId(values.skill),
+      chunk_type: values.chunk_type,
+      difficulty: values.difficulty,
+      content: values.content,
+      order_index: values.order_index,
+      points: values.points ?? 0,
     };
+
+    let chunkValues: Record<string, unknown>;
+
+    if (values.chunk_type === "practice") {
+      chunkValues = {
+        ...base,
+        correct_answer: values.correct_answer,
+        options: values.practice_mode === "mcq" ? values.options ?? [] : [],
+        time_limit: values.time_limit,
+      };
+    } else {
+      // rule, example, error, hint, real_life => pas de champs practice
+      chunkValues = base;
+    }
+
     if (editingId) updateChunk({ ...chunkValues, id: editingId } as Chunk, { onSuccess: onDone });
     else addChunk(chunkValues as Chunk, { onSuccess: onDone });
   };
@@ -72,6 +101,7 @@ export default function SkillsView() {
   const openAdd = () => {
     setEditingId(null);
     form.resetFields();
+    form.setFieldsValue({ points: 0 });
     setModalOpen(true);
   };
 
@@ -79,6 +109,13 @@ export default function SkillsView() {
     setEditingId(record.id ?? null);
     const values: Record<string, unknown> = { ...record };
     values.skill = normalizeRelationId(values.skill);
+
+    // Déduire le mode practice (QCM / libre) à partir des options existantes
+    if (record.chunk_type === "practice") {
+      const opts = (record as { options?: string[] }).options;
+      values.practice_mode = opts && opts.length > 0 ? "mcq" : "free";
+    }
+
     form.setFieldsValue(values);
     setModalOpen(true);
   };
@@ -88,6 +125,7 @@ export default function SkillsView() {
     { title: t("skills.chunk_title"), dataIndex: "title", key: "title" },
     { title: t("skills.type"), dataIndex: "chunk_type", key: "chunk_type", render: (v) => <Tag color="purple">{v}</Tag> },
     { title: t("skills.difficulty"), dataIndex: "difficulty", key: "difficulty" },
+    { title: t("skills.points"), dataIndex: "points", key: "points" },
     {
       title: t("skills.skill"),
       dataIndex: "skill",
@@ -131,15 +169,37 @@ export default function SkillsView() {
         <Table rowKey="id" columns={chunkColumns} dataSource={chunks} pagination={{ pageSize: 8 }} />
       </motion.div>
 
-      <Modal title={editingId ? t("common.edit") : t("common.add")} open={modalOpen} onCancel={() => { setModalOpen(false); setEditingId(null); }} footer={null} destroyOnClose>
+      <Modal
+        title={editingId ? t("common.edit") : t("common.add")}
+        open={modalOpen}
+        onCancel={() => { setModalOpen(false); setEditingId(null); }}
+        footer={null}
+        destroyOnClose
+      >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item name="code" label="Code" rules={[{ required: true }]}><Input /></Form.Item>
-          <Form.Item name="title" label={t("skills.chunk_title")} rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item name="code" label="Code" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="title" label={t("skills.chunk_title")} rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
           <Form.Item name="skill" label={t("skills.skill")} rules={[{ required: true }]}>
             <RelationSelect items={skillOptions} loading={loadingSkills} placeholder={t("skills.placeholders.skill")} />
           </Form.Item>
+
           <Form.Item name="chunk_type" label={t("skills.type")} rules={[{ required: true }]}>
             <Select
+              onChange={() => {
+                // Reset des champs practice quand on change de type
+                form.setFieldsValue({
+                  practice_mode: undefined,
+                  correct_answer: undefined,
+                  options: [],
+                  time_limit: undefined,
+                });
+              }}
               options={[
                 { value: "rule", label: t("skills.chunkTypes.rule") },
                 { value: "example", label: t("skills.chunkTypes.example") },
@@ -150,9 +210,85 @@ export default function SkillsView() {
               ]}
             />
           </Form.Item>
-          <Form.Item name="difficulty" label={t("skills.difficulty")} rules={[{ required: true }]}><InputNumber className="w-full" min={1} max={5} /></Form.Item>
-          <Form.Item name="content" label={t("curriculum.content")} rules={[{ required: true }]}><Input.TextArea rows={4} /></Form.Item>
-          <Form.Item name="order_index" label={t("curriculum.order")}><InputNumber className="w-full" min={1} /></Form.Item>
+
+          <Form.Item name="difficulty" label={t("skills.difficulty")} rules={[{ required: true }]}>
+            <InputNumber className="w-full" min={1} max={5} />
+          </Form.Item>
+
+          <Form.Item name="content" label={t("curriculum.content")} rules={[{ required: true }]}>
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+          {/* --- Champs spécifiques au type "practice" --- */}
+          {isPractice && (
+            <>
+              <Form.Item
+                name="practice_mode"
+                label={t("skills.practiceMode")}
+                rules={[{ required: true }]}
+                initialValue="free"
+              >
+                <Radio.Group
+                  onChange={(e) => {
+                    if (e.target.value === "free") {
+                      form.setFieldsValue({ options: [] });
+                    }
+                  }}
+                >
+                  <Radio value="free">{t("skills.practiceModes.free")}</Radio>
+                  <Radio value="mcq">{t("skills.practiceModes.mcq")}</Radio>
+                </Radio.Group>
+              </Form.Item>
+
+              <Form.Item
+                name="correct_answer"
+                label={t("skills.correctAnswer")}
+                rules={[{ required: true }]}
+              >
+                <Input placeholder={t("skills.placeholders.correctAnswer")} />
+              </Form.Item>
+
+              {isMcq && (
+                <Form.Item
+                  name="options"
+                  label={t("skills.options")}
+                  tooltip={t("skills.optionsHint")}
+                  rules={[
+                    {
+                      validator: (_, value) =>
+                        Array.isArray(value) && value.length >= 2
+                          ? Promise.resolve()
+                          : Promise.reject(new Error(t("skills.optionsMinError"))),
+                    },
+                  ]}
+                >
+                  <Select
+                    mode="tags"
+                    placeholder={t("skills.placeholders.options")}
+                    tokenSeparators={[","]}
+                    open={false}
+                  />
+                </Form.Item>
+              )}
+
+              <Form.Item
+                name="time_limit"
+                label={t("skills.timeLimit")}
+                rules={[{ required: true }]}
+              >
+                <InputNumber className="w-full" min={5} step={5} addonAfter="sec" />
+              </Form.Item>
+            </>
+          )}
+
+          <Form.Item name="points" label={t("skills.points")} initialValue={0}>
+            <InputNumber className="w-full" min={0} />
+          </Form.Item>
+
+          <Form.Item name="order_index" label={t("curriculum.order")}>
+            <InputNumber className="w-full" min={1} />
+          </Form.Item>
+
           <Form.Item className="mb-0 text-right">
             <Space>
               <Button onClick={() => setModalOpen(false)}>{t("common.cancel")}</Button>
