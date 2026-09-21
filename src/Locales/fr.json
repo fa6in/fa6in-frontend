@@ -198,6 +198,14 @@
     }
   },
   "skills": {
+     "chunkTypes": {
+      "rule": "Règle",
+      "example": "Exemple",
+      "practice": "Exercice",
+      "error": "Erreur",
+      "hint": "Indice",
+      "realLife": "Application pratique"
+    },
     "title_page": "Compétences & Chunks",
     "subtitle": "Skills, prérequis et micro-contenus",
     "title": "Compétences",

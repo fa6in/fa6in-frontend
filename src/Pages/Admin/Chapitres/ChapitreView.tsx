@@ -170,13 +170,7 @@ const ChapitresView: React.FC = () => {
                 ellipsis: true,
                 render: (text: string, record: typeChapitre) => (
                     <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0">
-                            <img
-                                src={record?.thumbnail ? String(record.thumbnail) : undefined}
-                                alt={text}
-                                className="w-10 h-10 rounded-lg object-cover border"
-                            />
-                        </div>
+
                         <div className="min-w-0 flex-1">
                             <div
                                 className="font-semibold text-gray-900 truncate"
@@ -282,13 +276,7 @@ const ChapitresView: React.FC = () => {
                 ellipsis: true,
                 render: (text: string, record: typeChapitre) => (
                     <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0">
-                            <img
-                                src={record?.thumbnail ? String(record.thumbnail) : undefined}
-                                alt={text}
-                                className="w-10 h-10 rounded-lg object-cover border"
-                            />
-                        </div>
+
                         <div className="min-w-0 flex-1">
                             <div
                                 className="font-semibold text-gray-900 truncate"

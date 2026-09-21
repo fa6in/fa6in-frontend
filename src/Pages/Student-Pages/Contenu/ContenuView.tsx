@@ -423,6 +423,11 @@ const ContenuView = () => {
         return content.unit ? `#${content.unit}` : "—";
     };
 
+    const selectedUnit = typeof selectedContent?.unit === 'object' ? selectedContent.unit : undefined;
+    const selectedSubject = selectedUnit?.subject;
+    const selectedLevel = selectedSubject?.level;
+    const selectedStage = selectedLevel?.stage;
+
     const renderContentPreview = (content: TypeContent) => {
         const config = getContentTypeConfig(content.content_type);
 
@@ -1158,33 +1163,90 @@ const ContenuView = () => {
 
                                 {/* Contenu du modal */}
                                 <div className="p-6">
+                                    <div className="mb-6">
+                                        <Title level={5} className="!mb-3 flex items-center gap-2">
+                                            <BookOutlined className="text-emerald-500" />
+                                            {t('content.unit')}
+                                        </Title>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Code</Text>
+                                                <Text strong>{selectedUnit?.code || '—'}</Text>
+                                            </Card>
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Titre</Text>
+                                                <Text strong>{selectedUnit?.title || '—'}</Text>
+                                            </Card>
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Matière</Text>
+                                                <Text strong>{selectedUnit?.subject_name || selectedSubject?.name || '—'}</Text>
+                                            </Card>
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Niveau</Text>
+                                                <Text strong>{selectedUnit?.subject?.level_name || selectedLevel?.name || '—'}</Text>
+                                            </Card>
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Cycle</Text>
+                                                <Text strong>{selectedStage?.name || selectedLevel?.stage_name || '—'}</Text>
+                                            </Card>
+                                            <Card size="small" className="border-0 bg-gray-50">
+                                                <Text type="secondary" className="text-xs block">Leçons dans l'unité</Text>
+                                                <Text strong>{selectedUnit?.lessons_count ?? 0}</Text>
+                                            </Card>
+                                        </div>
+                                        {(selectedSubject?.description || selectedLevel?.description || selectedStage?.description) && (
+                                            <Card size="small" className="border-0 bg-emerald-50 mt-3">
+                                                <Text type="secondary" className="text-xs block">Description</Text>
+                                                <Text>
+                                                    {selectedSubject?.description || selectedLevel?.description || selectedStage?.description}
+                                                </Text>
+                                            </Card>
+                                        )}
+                                    </div>
+
                                     {/* Métadonnées */}
-                                    <div className="grid grid-cols-3 gap-4 mb-6">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                                         <Card className="text-center border-0 bg-gray-50">
                                             <Text type="secondary" className="text-xs block">
-                                                {t('content.type.label')}
+                                                {t('curriculum.code')}
                                             </Text>
-                                            <Tag color={getContentTypeConfig(selectedContent.content_type).primary} className="mt-1">
-                                                {getContentTypeLabel(selectedContent.content_type)}
+                                            <Text strong className="text-sm break-all">
+                                                {selectedContent.code || `#${selectedContent.id}`}
+                                            </Text>
+                                        </Card>
+
+                                        <Card className="text-center border-0 bg-gray-50">
+                                            <Text type="secondary" className="text-xs block">
+                                                {t('content.unit')}
+                                            </Text>
+                                            <Text strong className="text-sm">
+                                                {getContentUnitLabel(selectedContent)}
+                                            </Text>
+                                        </Card>
+
+                                        <Card className="text-center border-0 bg-gray-50">
+                                            <Text type="secondary" className="text-xs block">
+                                                {t('curriculum.order')}
+                                            </Text>
+                                            <Text strong className="text-lg">
+                                                {selectedContent.order_index ?? selectedContent.order ?? 0}
+                                            </Text>
+                                        </Card>
+
+                                        <Card className="text-center border-0 bg-gray-50">
+                                            <Text type="secondary" className="text-xs block">
+                                                {t('curriculum.published')}
+                                            </Text>
+                                            <Tag color={selectedContent.is_published ? 'success' : 'default'} className="mt-1">
+                                                {selectedContent.is_published ? t('common.yes') : t('common.no')}
                                             </Tag>
                                         </Card>
 
                                         <Card className="text-center border-0 bg-gray-50">
-                                            <Text type="secondary" className="text-xs block">
-                                                {t('content.duration')}
-                                            </Text>
-                                            <Text strong className="text-lg">
-                                                {selectedContent.metadata?.duration || 0} min
-                                            </Text>
-                                        </Card>
-
-                                        <Card className="text-center border-0 bg-gray-50">
-                                            <Text type="secondary" className="text-xs block">
-                                                {t('content.fontSize')}
-                                            </Text>
-                                            <Text strong className="text-lg capitalize">
-                                                {selectedContent.metadata?.font_size || 'normal'}
-                                            </Text>
+                                            <Text type="secondary" className="text-xs block">Goals complets</Text>
+                                            <Tag color={selectedContent.goals_complete ? 'success' : 'warning'} className="mt-1">
+                                                {selectedContent.goals_complete ? t('common.yes') : t('common.no')}
+                                            </Tag>
                                         </Card>
                                     </div>
 
@@ -1195,7 +1257,7 @@ const ContenuView = () => {
                                             {t('content.content')}
                                         </Title>
                                         <div className={`bg-gray-50 rounded-xl p-6 ${selectedContent.metadata?.font_size === 'large' ? 'text-lg' : ''}`}>
-                                            {selectedContent.content_type === 'image' ? (
+                                            {selectedContent.content ? (selectedContent.content_type === 'image' ? (
                                                 <div className="bg-gray-100 rounded-xl overflow-hidden">
                                                     <div className="relative bg-gradient-to-br from-gray-200 to-gray-300 p-4">
                                                         {isImageUrl(getDirectImageUrl(selectedContent.content)) ? (
@@ -1294,6 +1356,8 @@ const ContenuView = () => {
                                                 <Text className="whitespace-pre-wrap">
                                                     {selectedContent.content}
                                                 </Text>
+                                            )) : (
+                                                <Empty description="Aucun contenu détaillé disponible pour cette leçon." />
                                             )}
                                         </div>
                                     </div>

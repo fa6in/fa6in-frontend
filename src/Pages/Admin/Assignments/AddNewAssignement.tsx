@@ -332,6 +332,7 @@ const AddNewAssignment = ({ onCancel }: props) => {
                             </span>
                         )}
                     </Paragraph>
+                    
                 </div>
 
                 {/* Contenu dynamique selon le type */}
@@ -562,37 +563,34 @@ const AddNewAssignment = ({ onCancel }: props) => {
                                                 {t('addActivity.form.step1.title')}
                                             </Title>
 
-                                            <Form.Item
-                                                name="activity_type"
-                                                label={t('addActivity.form.step1.activityType.label')}
-                                                rules={[{ required: true, message: t('addActivity.form.step1.activityType.required') }]}
-                                            >
-                                                <Select
-                                                    size="large"
-                                                    placeholder={t('addActivity.form.step1.activityType.placeholder')}
-                                                    onChange={handleActivityTypeChange}
-                                                    className="w-full"
-                                                >
-                                                    <Option value="multiple_choice">
-                                                        <Space>
-                                                            <Tag color="green">{t('addActivity.form.step1.activityType.multipleChoice.tag')}</Tag>
-                                                            <Text>{t('addActivity.form.step1.activityType.multipleChoice.description')}</Text>
-                                                        </Space>
-                                                    </Option>
-                                                    <Option value="true_false">
-                                                        <Space>
-                                                            <Tag color="green">{t('addActivity.form.step1.activityType.trueFalse.tag')}</Tag>
-                                                            <Text>{t('addActivity.form.step1.activityType.trueFalse.description')}</Text>
-                                                        </Space>
-                                                    </Option>
-                                                    <Option value="fill_blank">
-                                                        <Space>
-                                                            <Tag color="purple">{t('addActivity.form.step1.activityType.fillBlank.tag')}</Tag>
-                                                            <Text>{t('addActivity.form.step1.activityType.fillBlank.description')}</Text>
-                                                        </Space>
-                                                    </Option>
-                                                </Select>
-                                            </Form.Item>
+                                           <Form.Item
+    name="activity_type"
+    label={t('addActivity.form.step1.activityType.label')}
+    rules={[{ required: true, message: t('addActivity.form.step1.activityType.required') }]}
+>
+    <Select
+        size="large"
+        placeholder={t('addActivity.form.step1.activityType.placeholder')}
+        onChange={handleActivityTypeChange}
+        className="w-full"
+    >
+        <Option value="multiple_choice">
+            <Space>
+                <Tag color="purple">خيارات متعددة</Tag>
+            </Space>
+        </Option>
+        <Option value="true_false">
+            <Space>
+                <Tag color="green">قاعدة</Tag>
+            </Space>
+        </Option>
+        <Option value="fill_blank">
+            <Space>
+                <Tag color="orange">مثال</Tag>
+            </Space>
+        </Option>
+    </Select>
+</Form.Item>
 
                                             <Form.Item
                                                 name="level"

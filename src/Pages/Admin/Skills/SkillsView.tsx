@@ -290,8 +290,20 @@ export default function SkillsView() {
         <Form.Item name="skill" label={t("skills.skill")} rules={[{ required: true }]}>
           <RelationSelect items={skillOptions} loading={loadingSkills} placeholder={t("skills.placeholders.skill")} />
         </Form.Item>
-        <Form.Item name="chunk_type" label={t("skills.type")} rules={[{ required: true }]}>
+        {/* <Form.Item name="chunk_type" label={t("skills.type")} rules={[{ required: true }]}>
           <Select options={[{ value: "rule", label: "Rule" }, { value: "example", label: "Example" }]} />
+        </Form.Item> */}
+        <Form.Item name="chunk_type" label={t("skills.type")} rules={[{ required: true }]}>
+          <Select
+            options={[
+              { value: "rule", label: t("skills.chunkTypes.rule") },
+              { value: "example", label: t("skills.chunkTypes.example") },
+              { value: "practice", label: t("skills.chunkTypes.practice") },
+              { value: "error", label: t("skills.chunkTypes.error") },
+              { value: "hint", label: t("skills.chunkTypes.hint") },
+              { value: "real_life", label: t("skills.chunkTypes.realLife") },
+            ]}
+          />
         </Form.Item>
         <Form.Item name="difficulty" label={t("skills.difficulty")} rules={[{ required: true }]}><InputNumber className="w-full" min={1} max={5} /></Form.Item>
         <Form.Item name="content" label={t("curriculum.content")} rules={[{ required: true }]}><Input.TextArea rows={4} /></Form.Item>
@@ -327,7 +339,7 @@ export default function SkillsView() {
           items={[
             { key: "skills", label: t("skills.title"), children: <Table rowKey="id" columns={skillColumns} dataSource={skills} pagination={{ pageSize: 8 }} /> },
             { key: "prerequisites", label: t("skills.prerequisites"), children: <Table rowKey="id" columns={prereqColumns} dataSource={prerequisites} pagination={{ pageSize: 8 }} /> },
-            { key: "chunks", label: t("skills.chunks"), children: <Table rowKey="id" columns={chunkColumns} dataSource={chunks} pagination={{ pageSize: 8 }} /> },
+            // { key: "chunks", label: t("skills.chunks"), children: <Table rowKey="id" columns={chunkColumns} dataSource={chunks} pagination={{ pageSize: 8 }} /> },
           ]}
         />
       </motion.div>
