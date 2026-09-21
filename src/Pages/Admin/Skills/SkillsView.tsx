@@ -45,7 +45,7 @@ import { useDeleteSkill } from "../../../Services/Skills/useDeleteSkill";
 import { useUpdatePrerequisite } from "../../../Services/Skills/useUpdatePrerequisite";
 import { useDeletePrerequisite } from "../../../Services/Skills/useDeletePrerequisite";
 import { useUpdateChunk } from "../../../Services/Skills/useUpdateChunk";
-import { useDeleteChunk } from "../../../Services/Skills/useDeleteChunk";
+// import { useDeleteChunk } from "../../../Services/Skills/useDeleteChunk";
 import { useGetGoals } from "../../../Services/Curriculum/Goals/useGetGoals";
 import type { GoalType } from "../../../Services/Curriculum/Goals/typeGoal";
 
@@ -79,7 +79,7 @@ export default function SkillsView() {
   const { mutate: updatePrerequisite, isPending: updatingPrereq } = useUpdatePrerequisite();
   const { mutate: deletePrerequisite, isPending: deletingPrereq } = useDeletePrerequisite();
   const { mutate: updateChunk, isPending: updatingChunk } = useUpdateChunk();
-  const { mutate: deleteChunk, isPending: deletingChunk } = useDeleteChunk();
+  // const { mutate: deleteChunk, isPending: deletingChunk } = useDeleteChunk();
 
   const getGoalType = (goalValue: unknown): GoalType | undefined => {
     const goalId = normalizeRelationId(goalValue);
@@ -207,19 +207,19 @@ export default function SkillsView() {
     actionColumn(openEdit, deletePrerequisite, deletingPrereq),
   ];
 
-  const chunkColumns: ColumnsType<Chunk> = [
-    { title: "Code", dataIndex: "code", key: "code" },
-    { title: t("skills.chunk_title"), dataIndex: "title", key: "title" },
-    { title: t("skills.type"), dataIndex: "chunk_type", key: "chunk_type", render: (v) => <Tag color="purple">{v}</Tag> },
-    { title: t("skills.difficulty"), dataIndex: "difficulty", key: "difficulty" },
-    {
-      title: t("skills.skill"),
-      dataIndex: "skill",
-      key: "skill",
-      render: (v) => getRelationLabel(skillOptions, normalizeRelationId(v)),
-    },
-    actionColumn(openEdit, deleteChunk, deletingChunk),
-  ];
+  // const chunkColumns: ColumnsType<Chunk> = [
+  //   { title: "Code", dataIndex: "code", key: "code" },
+  //   { title: t("skills.chunk_title"), dataIndex: "title", key: "title" },
+  //   { title: t("skills.type"), dataIndex: "chunk_type", key: "chunk_type", render: (v) => <Tag color="purple">{v}</Tag> },
+  //   { title: t("skills.difficulty"), dataIndex: "difficulty", key: "difficulty" },
+  //   {
+  //     title: t("skills.skill"),
+  //     dataIndex: "skill",
+  //     key: "skill",
+  //     render: (v) => getRelationLabel(skillOptions, normalizeRelationId(v)),
+  //   },
+  //   actionColumn(openEdit, deleteChunk, deletingChunk),
+  // ];
 
   const renderForm = () => {
     if (activeTab === "skills") {
