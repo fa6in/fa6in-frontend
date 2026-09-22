@@ -6,7 +6,7 @@ import { Avatar, Dropdown, Modal, Tag, type MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useGetProfile } from "../../Services/Profile/useGetProfile";
 import { UpdateProfileAdmin } from "../../Pages/Admin/UpdateProfile";
-import LanguageSite from "../LanguageSite";
+// import LanguageSite from "../LanguageSite";
 
 interface NavbarProps {
   collapsed: boolean;
@@ -69,7 +69,7 @@ const NavbarAdmin: React.FC<NavbarProps> = () => {
       </motion.h1>
 
       <div className="flex items-center gap-3">
-        <LanguageSite />
+        {/* <LanguageSite /> */}
         <Dropdown menu={{ items }} placement="bottomRight" trigger={["click"]}>
           <motion.button
             type="button"
