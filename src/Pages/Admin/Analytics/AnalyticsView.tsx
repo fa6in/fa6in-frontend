@@ -42,15 +42,15 @@ export default function AnalyticsView() {
     () => toRelationItems(levels, (l) => l.name, (l) => l.code),
     [levels]
   );
-  const studentOptions = useMemo(
+    const studentOptions = useMemo(
     () =>
       toRelationItems(
-        (studentsData?.results ?? []).filter((s) => s?.user),
+        studentsData?.results ?? [],
         (s) =>
-          `${s.user?.first_name ?? ""} ${s.user?.last_name ?? ""}`.trim() ||
-          s.user?.username ||
+          `${s?.first_name ?? ""} ${s?.last_name ?? ""}`.trim() ||
+          s?.username ||
           `#${s.id}`,
-        (s) => s.user?.email
+        (s) => s?.email
       ),
     [studentsData]
   );
