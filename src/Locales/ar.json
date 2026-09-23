@@ -1440,6 +1440,7 @@
     }
   },
   "assignment": {
+    "selectSkill" : "اختر المهارة",
     "viewResults": "عرض النتائج",
     "activityResults": "نتائج النشاط",
     "responses": "إجابات",

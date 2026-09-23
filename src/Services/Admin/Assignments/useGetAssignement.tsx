@@ -16,20 +16,26 @@ interface Activity {
   is_active: boolean;
   unit: number;
 }
+
 export const ASSIGNEMENT_KEY = ['assignmentActivities'];
 
-const fetchAssignmentActivities = async (unitId: number): Promise<Activity[]> => {
-  const { data } = await api.get(`/api/assessment/units/${unitId}/activities/`);
+const fetchAssignmentActivities = async (
+  studentId: number,
+  skillId: number
+): Promise<Activity[]> => {
+  const { data } = await api.get(`/api/students/${studentId}/next-action/`, {
+    params: { skill: skillId },
+  });
   return data;
 };
 
-const useGetAssignmentActivity = (unitId: number) => {
+const useGetAssignmentActivity = (studentId: number, skillId: number) => {
   return useQuery({
-    queryKey: ['assignmentActivities', unitId],
-    queryFn: () => fetchAssignmentActivities(unitId),
+    queryKey: ['assignmentActivities', studentId, skillId],
+    queryFn: () => fetchAssignmentActivities(studentId, skillId),
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
-    enabled: !!unitId, // Ne s'exécute que si unitId est défini
+    enabled: !!studentId && !!skillId, // ne s'exécute que si les deux sont définis
   });
 };
 
