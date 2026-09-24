@@ -158,6 +158,10 @@
       }
     }
   },
+  "common": {
+    "refresh": "تحديث"
+  },
+  
   "auth_ui": {
     "brand_kicker": "منصة تعليمية",
     "brand_title": "تعلّم، علّم، وتقدّم معاً",
@@ -1440,7 +1444,25 @@
     }
   },
   "assignment": {
-    "selectSkill" : "اختر المهارة",
+    "selectSkill": "اختر مهارة",
+    "mastery": "الإتقان",
+    "attempts": "المحاولات",
+    "points": "نقاط",
+    "noChunk": "لا يوجد محتوى متاح لهذه المهارة في الوقت الحالي.",
+    "noChapitres": "لا توجد مهارات متاحة",
+    "noChapitresMessage": "لم يتم تعيين أي مهارات لك بعد.",
+    "noActivities": "لا يوجد نشاط متاح في الوقت الحالي",
+    "next": "التالي",
+    "goToExample": "عرض مثال",
+    "goToPractice": "الانتقال إلى التمرين",
+    "continue": "متابعة",
+    "yourAnswer": "إجابتك",
+    "validate": "تحقق",
+    "correctAnswer": "إجابة صحيحة!",
+    "wrongAnswer": "إجابة خاطئة",
+    "correctCount": "الإجابات الصحيحة",
+    "consecutiveCorrect": "متتالية",
+  
     "viewResults": "عرض النتائج",
     "activityResults": "نتائج النشاط",
     "responses": "إجابات",

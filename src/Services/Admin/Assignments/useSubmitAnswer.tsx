@@ -1,52 +1,38 @@
+// Services/Students/useSubmitAnswer.ts
+import { useMutation } from '@tanstack/react-query';
+import api from '../../../Auth-service/axios';
 
-
-
-
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { message } from "antd";
-import api from "../../../Auth-service/axios";
-import { handleError } from "../../../Auth-service/handleError";
-import { ASSIGNEMENT_KEY } from "./useGetAssignement";
-import { CONSULT_RESPONSE_KEY } from "./useConsultReponseEtudiant";
-
-export type SubmitAnswerParams = {
-    answer : string;
+export interface SubmitAnswerPayload {
+    studentId: number;
+    chunk_id: number;
+    answer: string;
     time_taken: number;
-    id: number;
 }
-export const useSubmitAnswer = () => {
-    const queryClient = useQueryClient();
 
-    async function submitAnswer(submit: SubmitAnswerParams) {
-        const res = await api.post(`/api/assessment/submit/activity/${submit?.id}/`, submit);
-        return res.data;
-    }
+export interface SubmitAnswerResponse {
+    is_correct: boolean;
+    error_type: string | null;
+    error_detail: string | null;
+    progress: {
+        attempts: number;
+        correct_count: number;
+        mastery: number;
+        consecutive_correct: number;
+        status: string;
+    };
+}
 
-    return useMutation({
-        mutationFn: submitAnswer,
-        mutationKey: ASSIGNEMENT_KEY,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ASSIGNEMENT_KEY
+const useSubmitAnswer = () => {
+    return useMutation<SubmitAnswerResponse, unknown, SubmitAnswerPayload>({
+        mutationFn: async ({ studentId, chunk_id, answer, time_taken }) => {
+            const { data } = await api.post(`/api/students/${studentId}/answer/`, {
+                chunk_id,
+                answer,
+                time_taken,
             });
-              queryClient.invalidateQueries({
-                queryKey: CONSULT_RESPONSE_KEY
-            });
-            // message.success("matiere ajouté avec succès");
+            return data;
         },
-        onError: (err: any) => {
-            const student = err?.response?.data?.error;
-            if (student) {
-                message.error(student);
-                return;
-            }
-
-            return message.error(handleError(err));
-        },
-        // Ajout du onSettled pour reset l'état loading
-        onSettled: () => {
-        
-        }
     });
-}
+};
+
+export default useSubmitAnswer;

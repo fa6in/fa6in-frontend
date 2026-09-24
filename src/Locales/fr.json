@@ -8,6 +8,29 @@
     "feature_progress": "Progression claire",
     "feature_secure": "Accès sécurisé"
   },
+  "common": {
+    "refresh": "Actualiser"
+  },
+  "assignment": {
+    "selectSkill": "Choisir une compétence",
+    "mastery": "Maîtrise",
+    "attempts": "Tentatives",
+    "points": "points",
+    "noChunk": "Aucun contenu disponible pour cette compétence pour le moment.",
+    "noChapitres": "Aucune compétence disponible",
+    "noChapitresMessage": "Vous n'avez pas encore de compétences assignées.",
+    "noActivities": "Aucune activité disponible pour le moment",
+    "next": "Suivant",
+    "goToExample": "Voir un exemple",
+    "goToPractice": "Passer à l'exercice",
+    "continue": "Continuer",
+    "yourAnswer": "Votre réponse",
+    "validate": "Valider",
+    "correctAnswer": "Bonne réponse !",
+    "wrongAnswer": "Réponse incorrecte",
+    "correctCount": "Bonnes réponses",
+    "consecutiveCorrect": "Consécutives"
+  },
   "login": {
     "welcome": "Bon retour",
     "subtitle": "Connectez-vous pour continuer votre parcours.",
