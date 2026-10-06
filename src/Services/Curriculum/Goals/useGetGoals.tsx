@@ -8,7 +8,10 @@ export const GOALS_KEY = ["goals"];
 
 async function getGoals(): Promise<Goal[]> {
   const res = await api.get(API_ENDPOINTS.curriculum.goals);
-  return unwrapList<Goal>(res.data);
+  return unwrapList<Goal>(res.data).map((goal) => ({
+    ...goal,
+    code: typeof goal.lesson === "object" ? goal.lesson?.code : goal.code,
+  }));
 }
 
 export function useGetGoals() {

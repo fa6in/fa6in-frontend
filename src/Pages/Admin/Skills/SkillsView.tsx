@@ -63,7 +63,7 @@ export default function SkillsView() {
   const { data: goals = [], isPending: loadingGoals } = useGetGoals();
 
   const goalOptions = useMemo(
-    () => toRelationItems(goals, (g) => g.title, (g) => g.code),
+    () => toRelationItems(goals, (g) => g.title),
     [goals]
   );
   const skillOptions = useMemo(

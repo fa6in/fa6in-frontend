@@ -188,7 +188,12 @@ export default function CurriculumView({ initialTab = "stages" }: CurriculumView
   ];
 
   const goalColumns: ColumnsType<Goal> = [
-    { title: t("curriculum.code"), dataIndex: "code", key: "code" },
+    {
+      title: t("curriculum.code"),
+      dataIndex: "code",
+      key: "code",
+      render: (code?: string) => code || "—",
+    },
     { title: t("curriculum.title"), dataIndex: "title", key: "title" },
     {
       title: t("curriculum.type"),
@@ -200,7 +205,15 @@ export default function CurriculumView({ initialTab = "stages" }: CurriculumView
         </Tag>
       ),
     },
-    { title: t("curriculum.lesson"), dataIndex: "lesson", key: "lesson", render: (v) => getRelationLabel(lessonOptions, normalizeRelationId(v)) },
+    {
+      title: t("curriculum.lesson"),
+      dataIndex: "lesson",
+      key: "lesson",
+      render: (v: Goal["lesson"]) =>
+        typeof v === "object" && v?.title
+          ? v.title
+          : getRelationLabel(lessonOptions, normalizeRelationId(v)),
+    },
   ];
 
   const lessonColumns: ColumnsType<Lesson> = [
@@ -279,7 +292,6 @@ export default function CurriculumView({ initialTab = "stages" }: CurriculumView
               ]}
             />
           </Form.Item>
-          <Form.Item name="code" label={t("curriculum.code")} rules={requiredRule}><Input placeholder={t("curriculum.placeholders.code")} /></Form.Item>
           <Form.Item name="title" label={t("curriculum.title")} rules={requiredRule}><Input placeholder={t("curriculum.placeholders.title")} /></Form.Item>
           <Form.Item name="description" label={t("curriculum.description")} rules={requiredRule}><Input.TextArea rows={3} placeholder={t("curriculum.placeholders.description")} /></Form.Item>
           <Form.Item name="order_index" label={t("curriculum.order")} rules={requiredRule}><InputNumber className="w-full" min={1} /></Form.Item>
