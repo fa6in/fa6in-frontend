@@ -37,6 +37,20 @@ export function useGetOnceContent(unitId: string | undefined, sectionId: string 
     });
 }
 
+async function getContentById(id: number | string): Promise<TypeContent> {
+    const res = await api.get(API_ENDPOINTS.curriculum.lessonDetail(id));
+    return res.data;
+}
+
+export function useGetContentById(id: number | string | undefined, enabled = true) {
+    return useQuery({
+        queryKey: ["Content", "detail", id],
+        queryFn: () => getContentById(id as number | string),
+        enabled: enabled && id != null,
+        retry: 1,
+    });
+}
+
 // Option 2: Si vous pouvez récupérer directement par l'ID de la section
 // async function getOnceContent(sectionId: string): Promise<TypeContent> {
 //     try {

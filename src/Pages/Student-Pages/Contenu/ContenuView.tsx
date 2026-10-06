@@ -16,6 +16,7 @@ import {
     type MenuProps,
     Typography,
     Avatar,
+    Spin,
     // theme
 } from 'antd';
 import {
@@ -54,6 +55,7 @@ import UpdateContenu from './UpdateContent';
 import AuthService from '../../../Auth-service/AuthService';
 import { useDeleteContent } from '../../../Services/Admin/Content/useDeleteContent';
 import { getContentUnitId } from '../../../Services/Admin/Content/typeContent';
+import { useGetContentById } from '../../../Services/Admin/Content/useGetOnceContent';
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -192,8 +194,15 @@ const ContenuView = () => {
     const [searchText, setSearchText] = useState('');
     const [sortBy, setSortBy] = useState('order');
     const [viewMode, setViewMode] = useState<'grid' | 'list' | 'table'>('grid');
-    const [selectedContent, setSelectedContent] = useState<TypeContent | null>(null);
+    const [selectedListContent, setSelectedContent] = useState<TypeContent | null>(null);
     const [isDetailVisible, setIsDetailVisible] = useState(false);
+    const { data: contentDetail, isFetching: isFetchingDetail } = useGetContentById(
+        selectedListContent?.id,
+        isDetailVisible
+    );
+    const selectedContent = isDetailVisible && contentDetail?.id === selectedListContent?.id
+        ? contentDetail ?? selectedListContent
+        : selectedListContent;
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isModalshow, setIsModalShow] = useState<{ visible: boolean, content: TypeContent | null, type: string | null }>({
         visible: false, content: null!, type: null
@@ -1157,6 +1166,7 @@ const ContenuView = () => {
                                             <Tag color={selectedContent.is_published ? 'success' : 'default'}>
                                                 {selectedContent.is_published ? t('common.yes') : t('common.no')}
                                             </Tag>
+                                            {isFetchingDetail && <Spin size="small" className="ms-2" />}
                                         </div>
                                     </div>
                                 </div>
@@ -1194,11 +1204,11 @@ const ContenuView = () => {
                                                 <Text strong>{selectedUnit?.lessons_count ?? 0}</Text>
                                             </Card>
                                         </div>
-                                        {(selectedSubject?.description || selectedLevel?.description || selectedStage?.description) && (
+                                        {selectedContent.description && (
                                             <Card size="small" className="border-0 bg-emerald-50 mt-3">
                                                 <Text type="secondary" className="text-xs block">Description</Text>
-                                                <Text>
-                                                    {selectedSubject?.description || selectedLevel?.description || selectedStage?.description}
+                                                <Text className="whitespace-pre-line">
+                                                    {selectedContent.description}
                                                 </Text>
                                             </Card>
                                         )}

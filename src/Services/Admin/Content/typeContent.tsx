@@ -42,6 +42,7 @@ export type TypeContent = {
     id?: number|string;
     code: string;
     title: string;
+    description?: string;
     content: string;
     is_published: boolean;
     goals_complete?: boolean;
