@@ -17,7 +17,7 @@ export default function StatCard({
   value,
   icon,
   suffix,
-  color = "#17ab5b",
+  color = "#0F5C47",
   loading,
   trend,
 }: StatCardProps) {
@@ -26,7 +26,7 @@ export default function StatCard({
       <Card
         loading={loading}
         bordered={false}
-        className="group h-full rounded-2xl border border-[#e5eee8] shadow-sm transition-all hover:border-main-color/20 hover:shadow-card"
+        className="group h-full rounded-2xl border-0 shadow-[0_1px_6px_rgba(0,0,0,0.06)]"
         styles={{ body: { padding: "20px 22px" } }}
       >
         <div className="flex items-start justify-between gap-3">
@@ -40,7 +40,7 @@ export default function StatCard({
               value={value}
               suffix={suffix}
               valueStyle={{
-                color: "#12261b",
+                color: "#0F5C47",
                 fontWeight: 800,
                 fontSize: 28,
                 lineHeight: 1.2,

@@ -7,13 +7,16 @@ import { useLocation } from 'react-router-dom';
 
 import SidebarAdmin from '../Components/Admin/SidebarAdmin';
 import NavbarAdmin from '../Components/Admin/NavbarAdmin';
+import StudentShell from './StudentShell';
+import AuthService from '../Auth-service/AuthService';
+import { FatinChromeProvider } from '../ui/FatinChrome';
 
 const { Content } = Layout;
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 1024;
 const SIDEBAR_WIDTH = {
   collapsed: 80,
-  expanded: 248,
+  expanded: 220,
 };
 
 interface AdminLayoutProps {
@@ -26,7 +29,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
 
   const language = i18n.language || localStorage.getItem('language') || 'ar';
   const isRTL = language === 'ar';
@@ -49,6 +52,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   // ===== Langue et direction RTL/LTR =====
   useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
     localStorage.setItem('language', language);
@@ -65,7 +72,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     else setCollapsed(prev => !prev);
   };
 
+  if (AuthService.getRole() === "student" && isMobile) {
+    return <StudentShell>{children}</StudentShell>;
+  }
+
   return (
+    <FatinChromeProvider>
     <div className="admin-shell min-h-screen bg-surface" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* ===== Sidebar Desktop ===== */}
       {!isMobile && (
@@ -81,7 +93,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <Drawer
           placement={isRTL ? 'right' : 'left'}
           open={mobileOpen}
-          width={248}
+          width={220}
           closable={false}
           styles={{body : {
             padding : 0
@@ -107,16 +119,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         animate={{ opacity: 1 }}
       >
         {/* ===== Header ===== */}
-        <header className="sticky top-0 z-30 border-b border-[#e5eee8] bg-white/90 backdrop-blur-md">
-          <div className="flex items-center justify-between px-4 py-3 md:px-6">
+        <header className="sticky top-0 z-30 bg-surface/95 backdrop-blur-md">
+          <div className="flex items-start gap-3 px-3 py-3 sm:px-4 sm:py-4 md:px-7">
             {isMobile && (
               <Button
                 type="text"
                 icon={<MenuOutlined />}
                 onClick={toggleSidebar}
+                className="mt-1 !h-11 !w-11 shrink-0 rounded-xl bg-white shadow-[0_1px_6px_rgba(0,0,0,0.06)]"
+                aria-label="القائمة"
               />
             )}
-            <NavbarAdmin collapsed={collapsed} onToggle={toggleSidebar} />
+            <div className="min-w-0 flex-1">
+              <NavbarAdmin collapsed={collapsed} onToggle={toggleSidebar} />
+            </div>
           </div>
         </header>
 
@@ -147,6 +163,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         )}
       </AnimatePresence>
     </div>
+    </FatinChromeProvider>
   );
 };
 

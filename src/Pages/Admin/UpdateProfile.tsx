@@ -8,6 +8,7 @@ import ImageUploader from "../../ui/ImageUploader";
 import { useGetProfile, type UserInfo } from "../../Services/Profile/useGetProfile";
 import SpinnerLoader from "../../ui/SpinnerLoader";
 import { useUpdateUser } from "../../Services/Profile/useUpdateProfile";
+import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, LOCAL_PHONE_HINT, normalizeLocalPhone } from "../../utils/phone";
 
 type Props = {
   handleCancel: () => void;
@@ -27,6 +28,7 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
         phone: clients.phone_number || "",
         firstName: clients.first_name || "",
         lastName: clients.last_name || "",
+        email: clients.email || "",
       });
 
       if (clients.profile_image) {
@@ -45,7 +47,9 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
         phone_number: values.phone,
         first_name: values.firstName,
         last_name: values.lastName,
+        email: values.email || clients?.email,
         username: clients?.username,
+        school: clients?.school,
         profile_image: file!,
       };
 
@@ -112,11 +116,27 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
 
             <Form.Item
               className="md:col-span-2"
+              label={t("navbar.profile.email", { defaultValue: "البريد الإلكتروني" })}
+              name="email"
+              rules={[
+                { required: true, message: t("navbar.profile.requiredFields") },
+                { type: "email", message: t("navbar.profile.requiredFields") },
+              ]}
+            >
+              <Input size="large" type="email" placeholder="ahmed@example.com" />
+            </Form.Item>
+
+            <Form.Item
+              className="md:col-span-2"
               label={t("navbar.profile.phone")}
               name="phone"
-              rules={[{ required: true, message: t("navbar.profile.requiredFields") }]}
+              normalize={normalizeLocalPhone}
+              rules={[
+                { required: true, message: t("navbar.profile.requiredFields") },
+                { pattern: LOCAL_PHONE, message: LOCAL_PHONE_HINT },
+              ]}
             >
-              <Input size="large" type="tel" placeholder="+213..." />
+              <Input size="large" type="tel" inputMode="numeric" maxLength={8} placeholder={LOCAL_PHONE_EXAMPLE} />
             </Form.Item>
           </div>
         </Form>

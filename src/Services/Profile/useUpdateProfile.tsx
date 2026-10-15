@@ -11,9 +11,11 @@ export const useUpdateUser  = () => {
     async function updateuser (user : UserInfo){
     const formData = new FormData();
     if (user.username) formData.append("username", user.username);
+    if (user.email) formData.append("email", user.email);
     if (user.first_name) formData.append("first_name", user.first_name);
     if (user.last_name) formData.append("last_name", user.last_name);
     if (user.phone_number) formData.append("phone_number", user.phone_number);
+    if (user.school) formData.append("school", user.school);
 
     if (user.profile_image instanceof File) {
         formData.append("profile_image", user.profile_image);
@@ -35,15 +37,11 @@ export const useUpdateUser  = () => {
         message.success(" updated with successfuly");
         },
         onError:(err:any)=>{
-            const messageError = err?.response?.data?.phone_number?.[0]
-            const errorMessage2 = handleError(err);
-
-            if(messageError){
-            return message.error(messageError)
-        } else {
-            return message.error(errorMessage2)
-            
-        }
+            const data = err?.response?.data;
+            const fieldError = data && typeof data === "object"
+                ? Object.values(data).flat().find((item) => typeof item === "string")
+                : undefined;
+            return message.error(typeof fieldError === "string" ? fieldError : handleError(err));
         } 
     })
 }

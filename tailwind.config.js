@@ -15,14 +15,16 @@ export default {
     },
     extend: {
       colors: {
-        'main-color' : "#17ab5b",
-        'secondary-color' : "#f89b22",
-        ink: "#12261b",
-        muted: "#5b6b62",
-        surface: "#f6faf7",
+        'main-color' : "#1B7F5C",
+        'main-deep' : "#0F5C47",
+        'secondary-color' : "#E0A526",
+        ink: "#12302B",
+        muted: "#4C6A63",
+        surface: "#F3F7F5",
+        line: "#DCE8E3",
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Cairo', 'system-ui', 'sans-serif'],
+        sans: ['Cairo', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         arabic: ['Cairo', '"Plus Jakarta Sans"', 'sans-serif'],
       },
       boxShadow: {

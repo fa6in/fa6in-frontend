@@ -26,7 +26,7 @@ const AuthLayout = ({ children, compact = false }: AuthLayoutProps) => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#17ab5b",
+          colorPrimary: "#1B7F5C",
           borderRadius: 12,
           fontFamily: "inherit",
         },

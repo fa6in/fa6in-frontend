@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAddTeacher } from "../../../Services/Admin/Teacher/useAddTeacher";
 import type { AddTeacher } from "../../../Services/Admin/Teacher/typeTeacher";
+import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, normalizeLocalPhone } from "../../../utils/phone";
 
 const { Option } = Select;
 
@@ -157,14 +158,17 @@ export default function AddNewTeacher({ handleModalCancel }: Props) {
                         <Form.Item
                             name="phone_number"
                             label={t("users.form.phoneNumber")}
+                            normalize={normalizeLocalPhone}
                             rules={[
                                 { required: true, message: t("users.form.required") },
-                                { pattern: /^[0-9]+$/, message: t("users.form.phoneInvalid") }
+                                { pattern: LOCAL_PHONE, message: t("users.form.phoneInvalid") }
                             ]}
                         >
                             <Input
                                 size="large"
-                                placeholder={t("users.form.phonePlaceholder")}
+                                placeholder={LOCAL_PHONE_EXAMPLE}
+                                inputMode="numeric"
+                                maxLength={8}
                                 prefix={<PhoneOutlined className="text-gray-400" />}
                             />
                         </Form.Item>

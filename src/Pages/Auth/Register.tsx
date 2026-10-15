@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, normalizeLocalPhone } from "../../utils/phone";
 import { Form, Input, Button, Select } from "antd";
 import {
   HiOutlineAcademicCap,
@@ -14,11 +15,10 @@ import {
   HiOutlineLockClosed,
   HiOutlineKey,
 } from "react-icons/hi2";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRegister, type RegisterParams, type RegisterRole } from "../../Services/Auth/useRegister";
-import AuthLayout from "./AuthLayout";
+import FatinAuthFrame from "./FatinAuthFrame";
 
 const fieldIcon = (icon: ReactNode) => (
   <span className="auth-field-icon">{icon}</span>
@@ -49,33 +49,21 @@ const RegisterPage = () => {
   };
 
   return (
-    <AuthLayout compact>
-      <motion.div
-        key={shake}
-        animate={shake ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h2 className="auth-title">{t("register.title")}</h2>
-        <p className="auth-subtitle">{t("register.subtitle")}</p>
-
-        <p className="text-sm font-semibold text-gray-700 mb-2">{t("register.choose_role")}</p>
-        <div className="auth-role-grid">
+    <FatinAuthFrame kicker="الخطوة الأولى" title="إنشاء حساب">
+      <div className={shake ? "fatin-shake" : undefined}>
+        <div className="mb-3 flex justify-center gap-2">
           {roles.map((item) => (
-            <motion.button
+            <button
               type="button"
               key={item.value}
-              whileTap={{ scale: 0.97 }}
-              className={`auth-role-card ${role === item.value ? "active" : ""}`}
+              className={`rounded-full px-5 py-1.5 text-sm font-bold ${role === item.value ? "bg-[#0F5C47] text-white" : "bg-white text-[#4C6A63]"}`}
               onClick={() => {
                 setRole(item.value);
                 form.setFieldValue("role", item.value);
               }}
             >
-              <span className="auth-role-icon">{item.icon}</span>
-              <div className="text-sm font-semibold text-gray-800">
-                {t(`register.role_${item.value}`)}
-              </div>
-            </motion.button>
+              {t(`register.role_${item.value}`)}
+            </button>
           ))}
         </div>
 
@@ -85,9 +73,9 @@ const RegisterPage = () => {
           onFinish={onFinish}
           onFinishFailed={() => setShake((n) => n + 1)}
           layout="vertical"
-          size="large"
           requiredMark={false}
           initialValues={{ role: "student" }}
+          className="fatin-auth-card"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
             <Form.Item
@@ -151,15 +139,18 @@ const RegisterPage = () => {
             <Form.Item
               name="phone_number"
               label={t("register.phone_number")}
+              normalize={normalizeLocalPhone}
               rules={[
                 { required: true, message: t("register.phone_number_required") },
-                { pattern: /^[0-9+\s-]{8,15}$/, message: t("register.phone_number_invalid") },
+                { pattern: LOCAL_PHONE, message: t("register.phone_number_invalid") },
               ]}
             >
               <Input
                 className="auth-input"
                 prefix={fieldIcon(<HiOutlinePhone />)}
-                placeholder={t("register.phone_number_placeholder")}
+                placeholder={LOCAL_PHONE_EXAMPLE}
+                inputMode="numeric"
+                maxLength={8}
               />
             </Form.Item>
             <Form.Item
@@ -234,23 +225,21 @@ const RegisterPage = () => {
             </Form.Item>
           </div>
 
-          <Form.Item className="mb-3 mt-1">
-            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-              <Button htmlType="submit" loading={isPending} block className="auth-submit">
-                {t("register.submit")}
-              </Button>
-            </motion.div>
+          <Form.Item className="mb-0 mt-1">
+            <Button htmlType="submit" loading={isPending} block className="fatin-btn">
+              إنشاء الحساب
+            </Button>
           </Form.Item>
         </Form>
 
-        <p className="text-center text-sm text-gray-500 mt-2">
+        <p className="mt-4 text-center text-sm text-[#4C6A63]">
           {t("register.already_account")}{" "}
-          <Link to="/login" className="auth-link">
+          <Link to="/login" className="font-extrabold text-[#0F5C47]">
             {t("register.login_link")}
           </Link>
         </p>
-      </motion.div>
-    </AuthLayout>
+      </div>
+    </FatinAuthFrame>
   );
 };
 

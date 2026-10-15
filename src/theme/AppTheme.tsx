@@ -6,12 +6,13 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 export const BRAND = {
-  primary: "#17ab5b",
-  primaryDark: "#0d8a48",
-  secondary: "#f89b22",
-  ink: "#12261b",
-  muted: "#5b6b62",
-  surface: "#f6faf7",
+  primary: "#1B7F5C",
+  primaryDark: "#0F5C47",
+  secondary: "#E0A526",
+  ink: "#12302B",
+  muted: "#4C6A63",
+  surface: "#F3F7F5",
+  line: "#DCE8E3",
 };
 
 const locales = {
@@ -56,11 +57,11 @@ export default function AppTheme({ children }: AppThemeProps) {
             borderRadiusLG: 18,
           },
           Table: {
-            headerBg: "#eef8f2",
-            headerColor: "#0f5132",
+            headerBg: "#E7F2ED",
+            headerColor: "#0F5C47",
             headerSplitColor: "transparent",
-            rowHoverBg: "#f4fbf7",
-            borderColor: "#e5eee8",
+            rowHoverBg: "#F3F7F5",
+            borderColor: "#DCE8E3",
           },
           Input: {
             borderRadius: 12,

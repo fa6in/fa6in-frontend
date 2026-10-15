@@ -22,18 +22,14 @@ import {
 import AuthService from "../Auth-service/AuthService";
 // Admin Components
 // const HomeAdmin = lazy(() => import("../Pages/Admin/Dashboard/HomeAdmin"));
-const HomeTeacher = lazy(() => import("../Pages/Teacher/HomeTeacher"));
-const StudentAdmin = lazy(() => import("../Pages/Admin/Student/StudentView"));
 const TeacherAdmin = lazy(() => import("../Pages/Admin/Teacher/TeacherView"));
 // const Prapared = lazy(() => import("../Pages/Admin/PraperedLater"));
 const MartieresView = lazy(() => import("../Pages/Admin/Matieres/MatiereView"));
-const MartieresViewStudent = lazy(() => import("../Pages/Student-Pages/Matieres/MatiereViewStudent"));
 const ChapitreView = lazy(() => import("../Pages/Admin/Chapitres/ChapitreView"));
 const ChapitreViewStudent = lazy(() => import("../Pages/Student-Pages/Chapitres/ChapitreViewStudent"));
 const Content = lazy(() => import("../Pages/Student-Pages/Contenu/ContenuView"));
 const AssignemnetViewStudent = lazy(() => import("../Pages/Student-Pages/Assignements/AssignementViewStudent"));
 const AssignemnetViewAdmin = lazy(() => import("../Pages/Admin/Assignments/AssignmentViewAdmin"));
-const CurriculumView = lazy(() => import("../Pages/Admin/Curriculum/CurriculumView"));
 const SkillsView = lazy(() => import("../Pages/Admin/Skills/SkillsView"));
 const AssessmentView = lazy(() => import("../Pages/Admin/Assessment/AssessmentView"));
 const AnalyticsView = lazy(() => import("../Pages/Admin/Analytics/AnalyticsView"));
@@ -41,7 +37,16 @@ const AdminsView = lazy(() => import("../Pages/Admin/Admin/AdminsView"));
 const AddNewAdmin = lazy(() => import("../Pages/Admin/Admin/AddNewAdmin"));
 const WilayaView = lazy(() => import("../Pages/Admin/Wilaya/WilayaView"));
 
-const NewDashboardAdmin = lazy(() => import("../Pages/Admin/Dashboard/DashboardHomeAdmin"));
+const NewDashboardAdmin = lazy(() => import("../Pages/Admin/Dashboard/FatinAdminHome"));
+const FatinTeacherHome = lazy(() => import("../Pages/Teacher/FatinTeacherHome"));
+const AccountPage = lazy(() => import("../Pages/Account/AccountPage"));
+const FatinStudentProgress = lazy(() => import("../Pages/Student/FatinStudentProgress"));
+const FatinUsersPage = lazy(() => import("../Pages/Admin/Users/FatinUsersPage"));
+const FatinCurriculumPage = lazy(() => import("../Pages/Admin/Curriculum/FatinCurriculumPage"));
+const FatinContentPage = lazy(() => import("../Pages/Teacher/FatinContentPage"));
+const FatinTeacherStudents = lazy(() => import("../Pages/Teacher/FatinTeacherStudents"));
+const FatinReportsPage = lazy(() => import("../Pages/Admin/Analytics/FatinReportsPage"));
+const FatinStudentPath = lazy(() => import("../Pages/Student/FatinStudentPath"));
 const role = AuthService.getRole()
 
 const MainRouter: RouteType[] = [
@@ -53,7 +58,7 @@ const MainRouter: RouteType[] = [
     path: "/",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "teacher" ? <HomeTeacher /> : <NewDashboardAdmin />}
+        {role === "teacher" ? <FatinTeacherHome /> : <NewDashboardAdmin />}
 
       </Suspense>
     ),
@@ -69,7 +74,7 @@ const MainRouter: RouteType[] = [
     path: "/students",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <StudentAdmin />
+        {role === "teacher" ? <FatinTeacherStudents /> : <FatinUsersPage />}
       </Suspense>
     ),
     layout: "private",
@@ -101,7 +106,7 @@ const MainRouter: RouteType[] = [
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         {/* <MartieresView /> */}
-        {role === "student" ? <MartieresViewStudent /> : <MartieresView />}
+        {role === "student" ? <FatinStudentPath /> : role === "teacher" ? <FatinContentPage /> : <MartieresView />}
       </Suspense>
     ),
 
@@ -169,7 +174,7 @@ const MainRouter: RouteType[] = [
     path: "/curriculum",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <CurriculumView />
+        <FatinCurriculumPage />
       </Suspense>
     ),
     layout: "private",
@@ -214,7 +219,7 @@ const MainRouter: RouteType[] = [
     path: "/analytics",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        <AnalyticsView />
+        {role === "teacher" ? <AnalyticsView /> : <FatinReportsPage />}
       </Suspense>
     ),
     layout: "private",
@@ -297,6 +302,27 @@ const MainRouter: RouteType[] = [
   //   }
   // },
 
+
+  {
+    path: "/account",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <AccountPage />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin", "teacher", "student"],
+  },
+  {
+    path: "/progress",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <FatinStudentProgress />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["student"],
+  },
 
   // ==================== FALLBACK ROUTE ====================
   {

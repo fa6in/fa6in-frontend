@@ -40,8 +40,8 @@ export const useLogin = () => {
                 // Redirection basée sur le rôle
                 const userRole = data.user.role;
                 if (userRole === "student") {
-                    window.location.href = "/matieres";
-                    return navigate("/matieres", { replace: true });
+                    window.location.href = "/";
+                    return navigate("/", { replace: true });
                 } else {
                     window.location.href = "/";
                     return navigate("/", { replace: true });

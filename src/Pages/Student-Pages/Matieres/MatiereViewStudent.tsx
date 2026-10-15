@@ -173,19 +173,18 @@ const MatieresViewStudent = () => {
       initial="hidden"
       animate="visible"
       dir={isRTL ? "rtl" : "ltr"}
-      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 md:p-6"
+      className="min-h-screen bg-surface p-4 md:px-7 md:pb-8"
     >
-      {/* Header avec animations */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-8 text-center"
+        className="mb-6"
       >
-        <h1 className="text-4xl md:text-5xl font-bold !bg-main-color bg-clip-text text-transparent mb-3">
+        <h1 className="text-2xl font-extrabold text-ink mb-1">
           {t("matieres.student.title")}
         </h1>
-        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+        <p className="text-sm text-muted">
           {t("matieres.student.subtitle")}
           <span className="font-semibold !text-main-color"> {stats.total} </span>
           {t("matieres.student.subjectsAvailable")}

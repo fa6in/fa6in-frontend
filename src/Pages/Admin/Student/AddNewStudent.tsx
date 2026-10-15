@@ -11,6 +11,7 @@ import { useAddStudent } from "../../../Services/Admin/Student/useAddStudent";
 import type { AddPersonne } from "../../../Services/Admin/Student/typeStudent";
 import { useGetWilaya } from "../../../Services/Admin/Student/useGetWilaya";
 import SpinnerLoader from "../../../ui/SpinnerLoader";
+import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, normalizeLocalPhone } from "../../../utils/phone";
 
 const { Option } = Select;
 
@@ -170,14 +171,17 @@ export default function AddNewStudent({ handleModalCancel }: Props) {
                         <Form.Item
                             name="phone_number"
                             label={t("users.form.phoneNumber")}
+                            normalize={normalizeLocalPhone}
                             rules={[
                                 { required: true, message: t("users.form.required") },
-                                { pattern: /^[0-9]+$/, message: t("users.form.phoneInvalid") }
+                                { pattern: LOCAL_PHONE, message: t("users.form.phoneInvalid") }
                             ]}
                         >
                             <Input
                                 size="large"
-                                placeholder={t("users.form.phonePlaceholder")}
+                                placeholder={LOCAL_PHONE_EXAMPLE}
+                                inputMode="numeric"
+                                maxLength={8}
                                 prefix={<PhoneOutlined className="text-gray-400" />}
                             />
                         </Form.Item>

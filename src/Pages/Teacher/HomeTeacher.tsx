@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { Card, Statistic, Progress, Table, Tag, Spin, Tooltip, Row, Col, Alert } from 'antd';
 import {
-  UserOutlined,
   BookOutlined,
   ExperimentOutlined,
   RiseOutlined,
@@ -13,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { useGetDashboardTeacher } from '../../Services/Teacher/useGetDashboardTeacher';
 import { useGetOverviewDashboardTeacher } from '../../Services/Teacher/useGetOverviewTeacher';
-import { useGetStudentProgressTeacher } from '../../Services/Teacher/useGetStudentProgressTeacher';
+import { studentDisplayName, useGetStudentProgressTeacher, type TeacherStudentProgress } from '../../Services/Teacher/useGetStudentProgressTeacher';
 import { useGetUnitsPerformanceTeacher } from '../../Services/Teacher/useGetUnitPerformenceTeacher';
 import { useTranslation } from 'react-i18next';
 
@@ -26,25 +25,7 @@ interface PriorityLevel {
   [key: string]: { color: string; label: string };
 }
 
-interface StudentProgress {
-  student_info: {
-    id: number;
-    name: string;
-    username: string;
-    grade: number;
-  };
-  units_progress: Array<{
-    unit_id: number;
-    unit_title: string;
-    progress_percentage: number;
-    mastery_level: string;
-    score: number;
-    last_accessed: string;
-  }>;
-  average_progress: number;
-  total_score: number;
-  units_count: number;
-}
+type StudentProgress = TeacherStudentProgress;
 
 interface UnitPerformance {
   unit_id: number;
@@ -157,7 +138,7 @@ const TeacherDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6" dir="rtl">
+    <div className="min-h-screen bg-surface p-4 md:px-7 md:pb-8">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -168,21 +149,13 @@ const TeacherDashboard: React.FC = () => {
         <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+              <h1 className="text-2xl font-extrabold text-ink mb-1">
                 {t('dashboard_teacher.dashboard.welcome_back')}, {dataDashboardTeacher?.teacher_name}
               </h1>
-              <p className="text-gray-600 flex items-center text-sm md:text-base">
-                <ClockCircleOutlined className="ml-2" />
+              <p className="text-sm text-muted">
                 {t('dashboard_teacher.dashboard.last_updated')}: {new Date(dataDashboardTeacher?.last_updated || '').toLocaleString('fr')}
               </p>
             </div>
-            <motion.div
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.5 }}
-              className="bg-white p-3 rounded-full shadow-lg cursor-pointer"
-            >
-              <UserOutlined className="text-2xl md:text-3xl text-blue-500" />
-            </motion.div>
           </div>
         </motion.div>
 
@@ -195,12 +168,12 @@ const TeacherDashboard: React.FC = () => {
                 whileHover="hover"
                 className="h-full"
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-blue-500">
+                <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_students')}</span>}
                     value={dataOverview?.quick_stats?.total_students ?? 0}
                     prefix={<TeamOutlined className="text-blue-500" />}
-                    valueStyle={{ color: '#1890ff', fontSize: '24px', fontWeight: 'bold' }}
+                    valueStyle={{ color: '#0F5C47', fontSize: 32, fontWeight: 800 }}
                   />
                   <div className="mt-2 text-xs md:text-sm text-gray-500">
                     {t('dashboard_teacher.dashboard.stats.active_students')}: {dataDashboardTeacher?.active_students}
@@ -215,12 +188,12 @@ const TeacherDashboard: React.FC = () => {
                 whileHover="hover"
                 className="h-full"
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-green-500">
+                <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_units')}</span>}
                     value={dataOverview?.quick_stats?.total_units ?? 0}
                     prefix={<BookOutlined className="text-green-500" />}
-                    valueStyle={{ color: '#52c41a', fontSize: '24px', fontWeight: 'bold' }}
+                    valueStyle={{ color: '#0F5C47', fontSize: 32, fontWeight: 800 }}
                   />
                   <div className="mt-2 text-xs md:text-sm text-gray-500">
                     {t('dashboard_teacher.dashboard.stats.published_units')}: {dataOverview?.quick_stats?.published_units ?? 0}
@@ -235,12 +208,12 @@ const TeacherDashboard: React.FC = () => {
                 whileHover="hover"
                 className="h-full"
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-orange-500">
+                <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.total_activities')}</span>}
                     value={dataOverview?.quick_stats?.total_activities ?? 0}
                     prefix={<ExperimentOutlined className="text-orange-500" />}
-                    valueStyle={{ color: '#fa8c16', fontSize: '24px', fontWeight: 'bold' }}
+                    valueStyle={{ color: '#E0A526', fontSize: 32, fontWeight: 800 }}
                   />
                   <Progress
                     percent={Number(dataDashboardTeacher?.student_engagement_rate?.toFixed(1)) || 0}
@@ -261,19 +234,19 @@ const TeacherDashboard: React.FC = () => {
                 whileHover="hover"
                 className="h-full"
               >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-purple-500">
+                <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                   <Statistic
                     title={<span className="text-gray-600 text-sm">{t('dashboard_teacher.dashboard.stats.avg_progress')}</span>}
                     value={dataOverview?.quick_stats?.avg_student_progress ?? 0}
                     prefix={<RiseOutlined className="text-purple-500" />}
-                    valueStyle={{ color: '#722ed1', fontSize: '24px', fontWeight: 'bold' }}
+                    valueStyle={{ color: '#1B7F5C', fontSize: 32, fontWeight: 800 }}
                     suffix="%"
                   />
                   <Progress
                     percent={dataOverview?.quick_stats?.avg_student_progress ?? 0}
                     size="small"
                     status="active"
-                    strokeColor="#722ed1"
+                    strokeColor="#1B7F5C"
                     className="mt-2"
                   />
                 </Card>
@@ -391,8 +364,8 @@ const TeacherDashboard: React.FC = () => {
               className="hover:shadow-lg transition-shadow duration-300"
             >
               <Table
-                dataSource={dataProgress?.students_progress}
-                rowKey={(record: StudentProgress) => record.student_info.id}
+                dataSource={dataProgress ?? []}
+                rowKey={(record: StudentProgress) => record.student_id}
                 pagination={{ pageSize: 5, showSizeChanger: true }}
                 className="overflow-x-auto"
                 scroll={{ x: true }}
@@ -400,20 +373,16 @@ const TeacherDashboard: React.FC = () => {
               >
                 <Table.Column
                   title={t('dashboard_teacher.dashboard.students_progress.name')}
-                  dataIndex={['student_info', 'name']}
                   key="name"
-                  render={(text: string) => (
-                    <span className="font-semibold text-gray-800 text-sm md:text-base">{text}</span>
+                  render={(_: unknown, record: StudentProgress) => (
+                    <span className="font-semibold text-gray-800 text-sm md:text-base">{studentDisplayName(record)}</span>
                   )}
                 />
                 <Table.Column
                   title={t('dashboard_teacher.dashboard.students_progress.grade')}
-                  dataIndex={['student_info', 'grade']}
-                  key="grade"
-                  render={(grade: number) => (
-                    <Tag color="blue" className="text-xs md:text-sm">
-                      {t('dashboard_teacher.dashboard.students_progress.grade')} {grade}
-                    </Tag>
+                  key="started"
+                  render={(_: unknown, record: StudentProgress) => (
+                    <span className="text-xs md:text-sm">{record.skills_started}</span>
                   )}
                 />
                 <Table.Column
@@ -421,10 +390,10 @@ const TeacherDashboard: React.FC = () => {
                   key="progress"
                   render={(_: any, record: StudentProgress) => (
                     <Progress
-                      percent={Number(record.average_progress.toFixed(1))}
+                      percent={Number(record.average_mastery.toFixed(1))}
                       size="small"
                       status="active"
-                      strokeColor={record.average_progress > 70 ? '#52c41a' : '#faad14'}
+                      strokeColor={record.average_mastery > 70 ? '#52c41a' : '#faad14'}
                       format={(percent) => <span className="text-xs">{percent}%</span>}
                     />
                   )}
@@ -433,7 +402,7 @@ const TeacherDashboard: React.FC = () => {
                   title={t('dashboard_teacher.dashboard.students_progress.mastery_level')}
                   key="mastery"
                   render={(_: any, record: StudentProgress) => {
-                    const level = record.units_progress[0]?.mastery_level || 'beginner';
+                    const level = record.skills_mastered > 0 ? 'advanced' : 'beginner';
                     return (
                       <Tag color={masteryLevels[level]?.color} className="text-xs md:text-sm">
                         {masteryLevels[level]?.label}
@@ -446,7 +415,7 @@ const TeacherDashboard: React.FC = () => {
                   key="last_accessed"
                   render={(_: any, record: StudentProgress) => (
                     <span className="text-gray-600 text-xs md:text-sm">
-                      {new Date(record?.units_progress[0]?.last_accessed).toLocaleDateString('fr')}
+                      {record.last_active ? new Date(record.last_active).toLocaleDateString('fr') : '—'}
                     </span>
                   )}
                 />

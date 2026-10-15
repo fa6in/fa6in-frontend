@@ -12,10 +12,6 @@ import {
     Alert,
 } from 'antd';
 import {
-    LoginOutlined,
-    TeamOutlined,
-    ExperimentOutlined,
-    ClockCircleOutlined,
     BarChartOutlined,
     BookOutlined,
     TrophyOutlined,
@@ -84,11 +80,11 @@ interface UnitByDifficulty {
 
 
 // Couleurs pour les graphiques
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#FF6B6B'];
+const COLORS = ['#1B7F5C', '#0F5C47', '#E0A526', '#8A5A00', '#4C6A63', '#8CA39C'];
 const DIFFICULTY_COLORS = {
-    easy: '#52c41a',
-    medium: '#faad14',
-    hard: '#ff4d4f'
+    easy: '#1B7F5C',
+    medium: '#E0A526',
+    hard: '#C4564A'
 };
 
 const DashboardHomeAdmin: React.FC = () => {
@@ -127,27 +123,6 @@ const DashboardHomeAdmin: React.FC = () => {
                 type: 'spring',
                 stiffness: 100,
                 damping: 12,
-            },
-        },
-    };
-
-    const statCardVariants = {
-        hidden: { scale: 0.8, opacity: 0 },
-        visible: {
-            scale: 1,
-            opacity: 1,
-            transition: {
-                type: 'spring',
-                stiffness: 200,
-                damping: 15,
-            },
-        },
-        hover: {
-            scale: 1.02,
-            transition: {
-                type: 'spring',
-                stiffness: 400,
-                damping: 10,
             },
         },
     };
@@ -196,7 +171,7 @@ const DashboardHomeAdmin: React.FC = () => {
                 <Spin size="large" tip={t('dashboard_admin.common.loading')}>
                     <div className="p-8 rounded-lg bg-white shadow-xl">
                         <div className="text-center">
-                            <DashboardOutlined className="text-4xl text-blue-500 animate-spin" />
+                            <DashboardOutlined className="text-4xl text-main-deep animate-spin" />
                             <p className="mt-4 text-gray-600">{t('dashboard_admin.common.loading')}</p>
                         </div>
                     </div>
@@ -214,30 +189,11 @@ const DashboardHomeAdmin: React.FC = () => {
                 className="max-w-7xl mx-auto"
             >
                 {/* Header */}
-                <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                                {t('dashboard_admin.dashboard.title')}
-                            </h1>
-                            <p className="text-gray-600 flex items-center text-sm md:text-base">
-                                <ClockCircleOutlined className="ml-2" />
-                                {/* {t('dashboard_admin.dashboard.generated_at')}: {new Date(DataDashboardAdmin?.generated_at || '').toLocaleString('fr')} */}
-                                {/* {t('dashboard_admin.dashboard.generated_at')}: */}
-                                {new Date(DataDashboardAdmin?.generated_at || '').toLocaleString('fr-FR', {
-                                    timeZone: 'UTC'
-                                })}
-                            </p>
-                        </div>
-                        <motion.div
-                            whileHover={{ rotate: 360, scale: 1.1 }}
-                            transition={{ duration: 0.5 }}
-                            className="bg-white p-3 rounded-full shadow-lg cursor-pointer"
-                        >
-                            <DashboardOutlined className="text-2xl md:text-3xl text-blue-500" />
-                        </motion.div>
-                    </div>
-                </motion.div>
+                <p className="mb-5 text-sm text-muted">
+                    {new Date(DataDashboardAdmin?.generated_at || '').toLocaleString('fr-FR', {
+                        timeZone: 'UTC'
+                    })}
+                </p>
 
                 {classDashboard && (
                     <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
@@ -264,74 +220,52 @@ const DashboardHomeAdmin: React.FC = () => {
                 <motion.div variants={{ itemVariants }} className="mb-6 md:mb-8">
                     <Row gutter={[16, 16]}>
                         <Col xs={24} sm={12} lg={6}>
-                            <motion.div variants={{ statCardVariants }} whileHover="hover" className="h-full">
-                                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-blue-500">
-                                    <Statistic
-                                        title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_users')}</span>}
-                                        value={DataDashboardAdmin?.user_analytics?.total_users ?? 0}
-                                        prefix={<TeamOutlined className="text-blue-500" />}
-                                        valueStyle={{ color: '#1890ff', fontSize: '24px', fontWeight: 'bold' }}
-                                    />
-                                    <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.users.new_users')}: {DataDashboardAdmin?.user_analytics?.new_users_last_30_days ?? 0}
-                                    </div>
-                                </Card>
-                            </motion.div>
+                            <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+                                <div className="text-sm text-muted">{t('dashboard_admin.stats.total_users')}</div>
+                                <div className="my-1 text-[32px] font-extrabold leading-none text-main-deep">
+                                    {DataDashboardAdmin?.user_analytics?.total_users ?? 0}
+                                </div>
+                                <div className="text-[13px] text-muted">
+                                    {t('dashboard_admin.users.new_users')}: {DataDashboardAdmin?.user_analytics?.new_users_last_30_days ?? 0}
+                                </div>
+                            </Card>
                         </Col>
 
                         <Col xs={24} sm={12} lg={6}>
-                            <motion.div variants={{ statCardVariants }} whileHover="hover" className="h-full">
-                                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-green-500">
-                                    <Statistic
-                                        title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_logins')}</span>}
-                                        value={DataDashboardAdmin?.usage_analytics?.total_logins ?? 0}
-                                        prefix={<LoginOutlined className="text-green-500" />}
-                                        valueStyle={{ color: '#52c41a', fontSize: '24px', fontWeight: 'bold' }}
-                                    />
-                                    <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.stats.daily_active_users')}: {DataDashboardAdmin?.usage_analytics?.daily_active_users ?? 0}
-                                    </div>
-                                </Card>
-                            </motion.div>
+                            <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+                                <div className="text-sm text-muted">{t('dashboard_admin.stats.total_logins')}</div>
+                                <div className="my-1 text-[32px] font-extrabold leading-none text-main-deep">
+                                    {DataDashboardAdmin?.usage_analytics?.total_logins ?? 0}
+                                </div>
+                                <div className="text-[13px] text-muted">
+                                    {t('dashboard_admin.stats.daily_active_users')}: {DataDashboardAdmin?.usage_analytics?.daily_active_users ?? 0}
+                                </div>
+                            </Card>
                         </Col>
 
                         <Col xs={24} sm={12} lg={6}>
-                            <motion.div variants={{ statCardVariants }} whileHover="hover" className="h-full">
-                                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-orange-500">
-                                    <Statistic
-                                        title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.total_activities')}</span>}
-                                        value={DataDashboardAdmin?.usage_analytics?.total_activities_completed ?? 0}
-                                        prefix={<ExperimentOutlined className="text-orange-500" />}
-                                        valueStyle={{ color: '#fa8c16', fontSize: '24px', fontWeight: 'bold' }}
-                                    />
-                                    <Progress
-                                        percent={Number((DataDashboardAdmin?.performance_analytics?.overall_success_rate ?? 0).toFixed(1))}
-                                        size="small"
-                                        status="active"
-                                        className="mt-2"
-                                        format={(percent) => (
-                                            <span className="text-xs">{percent}% {t('dashboard_admin.stats.success_rate')}</span>
-                                        )}
-                                    />
-                                </Card>
-                            </motion.div>
+                            <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+                                <div className="text-sm text-muted">{t('dashboard_admin.stats.total_activities')}</div>
+                                <div className="my-1 text-[32px] font-extrabold leading-none text-[#E0A526]">
+                                    {DataDashboardAdmin?.usage_analytics?.total_activities_completed ?? 0}
+                                </div>
+                                <div className="text-[13px] text-muted">
+                                    {Number((DataDashboardAdmin?.performance_analytics?.overall_success_rate ?? 0).toFixed(1))}% {t('dashboard_admin.stats.success_rate')}
+                                </div>
+                            </Card>
                         </Col>
 
                         <Col xs={24} sm={12} lg={6}>
-                            <motion.div variants={{ statCardVariants }} whileHover="hover" className="h-full">
-                                <Card className="h-full hover:shadow-xl transition-all duration-300 border-r-4 border-purple-500">
-                                    <Statistic
-                                        title={<span className="text-gray-600 text-sm">{t('dashboard_admin.stats.avg_session_duration')}</span>}
-                                        value={(DataDashboardAdmin?.usage_analytics?.avg_session_duration ?? 0).toFixed(1)}
-                                        prefix={<ClockCircleOutlined className="text-purple-500" />}
-                                        valueStyle={{ color: '#722ed1', fontSize: '24px', fontWeight: 'bold' }}
-                                        suffix={t('dashboard_admin.stats.minutes')}
-                                    />
-                                    <div className="mt-2 text-xs md:text-sm text-gray-500">
-                                        {t('dashboard_admin.users.active_rate')}: {DataDashboardAdmin?.user_analytics?.active_users_rate ?? 0}%
-                                    </div>
-                                </Card>
-                            </motion.div>
+                            <Card bordered={false} className="h-full rounded-2xl shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+                                <div className="text-sm text-muted">{t('dashboard_admin.stats.avg_session_duration')}</div>
+                                <div className="my-1 text-[32px] font-extrabold leading-none text-main-color">
+                                    {(DataDashboardAdmin?.usage_analytics?.avg_session_duration ?? 0).toFixed(1)}
+                                    <span className="ms-1 text-base font-bold">{t('dashboard_admin.stats.minutes')}</span>
+                                </div>
+                                <div className="text-[13px] text-muted">
+                                    {t('dashboard_admin.users.active_rate')}: {DataDashboardAdmin?.user_analytics?.active_users_rate ?? 0}%
+                                </div>
+                            </Card>
                         </Col>
                     </Row>
                 </motion.div>

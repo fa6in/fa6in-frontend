@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogin, type LoginParams } from "../../Services/Auth/useLogin";
-import AuthLayout from "./AuthLayout";
+import FatinAuthFrame from "./FatinAuthFrame";
 
 const LoginPage = () => {
   const [form] = Form.useForm<LoginParams>();
@@ -13,87 +11,56 @@ const LoginPage = () => {
   const { mutate: datalogin, isPending } = useLogin();
   const [shake, setShake] = useState(0);
 
-  const onFinish = (values: LoginParams) => {
-    datalogin(values);
-  };
-
   return (
-    <AuthLayout>
-      <motion.div
-        key={shake}
-        animate={shake ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h2 className="auth-title">{t("login.welcome")}</h2>
-        <p className="auth-subtitle">{t("login.subtitle")}</p>
-
+    <FatinAuthFrame kicker="مرحبا بعودتك" title="تسجيل الدخول">
+      <div className={shake ? "fatin-shake" : undefined}>
         <Form
           form={form}
           name="login"
-          onFinish={onFinish}
+          onFinish={(values) => datalogin(values)}
           onFinishFailed={() => setShake((n) => n + 1)}
           layout="vertical"
-          size="large"
           requiredMark={false}
+          className="fatin-auth-card"
         >
           <Form.Item
             name="username"
-            label={t("login.username")}
+            label="اسم المستخدم أو البريد"
             rules={[{ required: true, message: t("login.enter_username") }]}
           >
-            <Input
-              className="auth-input"
-              prefix={<UserOutlined className="text-main-color" />}
-              placeholder={t("login.username")}
-              autoComplete="username"
-            />
+            <Input placeholder="ahmed@example.com" autoComplete="username" />
           </Form.Item>
 
           <Form.Item
             name="password"
-            label={t("login.password")}
+            label="كلمة المرور"
             rules={[{ required: true, message: t("login.enter_password") }]}
           >
-            <Input.Password
-              className="auth-input"
-              prefix={<LockOutlined className="text-main-color" />}
-              placeholder={t("login.password")}
-              autoComplete="current-password"
-            />
+            <Input.Password placeholder="••••••••" autoComplete="current-password" />
           </Form.Item>
 
-          <div className="flex justify-end -mt-2 mb-4">
-            <Link to="/forgot-password" className="auth-link text-sm">
-              {t("login.forget_password")}
+          <div className="mb-4 text-start">
+            <Link to="/forgot-password" className="text-sm font-semibold text-[#1B7F5C]">
+              نسيت كلمة المرور؟
             </Link>
           </div>
 
-          <Form.Item className="mb-3">
-            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-              <Button htmlType="submit" loading={isPending} block className="auth-submit">
-                {t("login.login")}
-              </Button>
-            </motion.div>
-          </Form.Item>
+          <Button htmlType="submit" loading={isPending} block className="fatin-btn">
+            دخول
+          </Button>
         </Form>
+      </div>
 
-        <div className="relative my-5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-100" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-xs text-gray-400">{t("login.or")}</span>
-          </div>
-        </div>
-
-        <p className="text-center text-sm text-gray-500">
-          {t("login.no_account")}{" "}
-          <Link to="/register" className="auth-link">
-            {t("login.create_account")}
-          </Link>
-        </p>
-      </motion.div>
-    </AuthLayout>
+      <p className="mt-5 text-center text-sm text-[#12302B]">
+        ليس لديك حساب؟{" "}
+        <Link to="/register" className="font-extrabold text-[#0F5C47]">
+          إنشاء حساب
+        </Link>
+      </p>
+      <p className="mx-auto mt-2 max-w-[280px] text-center text-xs leading-relaxed text-[#8CA39C]">
+        بعد الدخول: توجيه تلقائي حسب الدور (طالب · معلم · مدير)
+      </p>
+    </FatinAuthFrame>
   );
 };
 

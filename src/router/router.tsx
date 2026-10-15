@@ -3,6 +3,7 @@ import ErrorPage from "../Pages/ErrorPage";
 import PublicLayout from "../Layout/PublicLayout";
 import MainRouter from "./MainRouter";
 import AdminLayout from "../Layout/AdminLayout";
+import FatinStudentHome from "../Pages/Student/FatinStudentHome";
 import { useAuth } from "../Services/Auth/AuthProvider";
 import { useEffect, useState } from "react";
 import { useAutoLogout } from "../Services/Auth/useAutoLogout";
@@ -81,7 +82,11 @@ const Router = () => {
         if (route.path === "/" && userRole === "student") {
             return {
                 ...route,
-                element: <Navigate replace to="/matieres" />
+                element: (
+                    <AdminLayout>
+                        <FatinStudentHome />
+                    </AdminLayout>
+                ),
             };
         }
 

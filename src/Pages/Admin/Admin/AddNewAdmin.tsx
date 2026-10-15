@@ -1,4 +1,5 @@
 import  { useState } from 'react';
+import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, normalizeLocalPhone } from '../../../utils/phone';
 import { 
   Form, 
   Input, 
@@ -182,13 +183,17 @@ export default function AddNewAdmin() {
                     <Form.Item
                       name="phone_number"
                       label="Numéro de téléphone"
+                      normalize={normalizeLocalPhone}
                       rules={[
-                        { required: true, message: 'Veuillez saisir le numéro de téléphone' }
+                        { required: true, message: 'Veuillez saisir le numéro de téléphone' },
+                        { pattern: LOCAL_PHONE, message: '8 chiffres commençant par 2, 3 ou 4, par exemple 32421036' }
                       ]}
                     >
                       <Input
                         prefix={<PhoneOutlined />}
-                        placeholder="+212612345678"
+                        placeholder={LOCAL_PHONE_EXAMPLE}
+                        inputMode="numeric"
+                        maxLength={8}
                         allowClear
                       />
                     </Form.Item>

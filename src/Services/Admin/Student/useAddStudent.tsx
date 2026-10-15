@@ -3,7 +3,6 @@ import { message } from "antd";
 import api from "../../../Auth-service/axios";
 import { handleError } from "../../../Auth-service/handleError";
 import type { AddPersonne } from "./typeStudent";
-import { enqueueSnackbar } from "notistack";
 import { STUDENT_KEY } from "./useGetStudents";
 
 export const useAddStudent = () => {
@@ -26,14 +25,12 @@ export const useAddStudent = () => {
             message.success("student ajouté avec succès");
         },
         onError: (err: any) => {
-            const messageError = err?.response?.data?.username?.[0]!
-
-            if (messageError) {
-                enqueueSnackbar(messageError, { variant: "error" });
-            } else {
-                handleError(err);
-
-            }
+            const data = err?.response?.data;
+            const details = data && typeof data === "object"
+                ? Object.values(data).flat().filter((item) => typeof item === "string")
+                : [];
+            const text = details.length ? details.join(" ") : handleError(err);
+            message.error(text);
         }
     });
 }
