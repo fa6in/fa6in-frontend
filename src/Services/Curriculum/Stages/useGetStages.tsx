@@ -7,7 +7,7 @@ import type { Stage } from "./typeStage";
 export const STAGES_KEY = ["stages"];
 
 async function getStages(): Promise<Stage[]> {
-  const res = await api.get(API_ENDPOINTS.curriculum.stages);
+  const res = await api.get(API_ENDPOINTS.curriculum.stages, { params: { page_size: 500 } });
   return unwrapList<Stage>(res.data);
 }
 

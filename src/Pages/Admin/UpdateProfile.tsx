@@ -12,9 +12,11 @@ import { LOCAL_PHONE, LOCAL_PHONE_EXAMPLE, LOCAL_PHONE_HINT, normalizeLocalPhone
 
 type Props = {
   handleCancel: () => void;
+  /** Affiché dans la page « حسابي » : pas de bouton annuler. */
+  embedded?: boolean;
 };
 
-export function UpdateProfileAdmin({ handleCancel }: Props) {
+export function UpdateProfileAdmin({ handleCancel, embedded }: Props) {
   const { data: clients, isPending: isPendingClient } = useGetProfile();
   const [images, setImages] = useState<ImageListType>([]);
   const { t, i18n } = useTranslation();
@@ -142,7 +144,8 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
         </Form>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className={`grid grid-cols-1 gap-3 ${embedded ? "" : "sm:grid-cols-2"}`}>
+        {!embedded && (
         <Button
           size="large"
           className="!h-12 !border-main-color !text-main-color"
@@ -150,6 +153,7 @@ export function UpdateProfileAdmin({ handleCancel }: Props) {
         >
           {t("navbar.profile.btn_annuler")}
         </Button>
+        )}
         <Button
           size="large"
           loading={isPendingProfile}

@@ -26,6 +26,7 @@ type SidebarItem = {
     label: string;
     icon: React.ReactNode;
     path?: string;
+    match?: string[];
     submenu?: SidebarItem[];
 };
 
@@ -41,7 +42,7 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         if (role === "teacher") {
             return [
                 { key: "board", label: "لوحتي", icon: <AppstoreOutlined />, path: "/" },
-                { key: "content", label: "محتواي", icon: <BookOutlined />, path: "/matieres" },
+                { key: "content", label: "محتواي", icon: <BookOutlined />, path: "/content" },
                 { key: "students", label: "طلابي", icon: <TeamOutlined />, path: "/students" },
                 { key: "account", label: "حسابي", icon: <UserOutlined />, path: "/account" },
             ];
@@ -49,15 +50,25 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         if (role === "student") {
             return [
                 { key: "home", label: "الرئيسية", icon: <AppstoreOutlined />, path: "/" },
-                { key: "path", label: "مساري", icon: <BookOutlined />, path: "/matieres" },
+                { key: "path", label: "مساري", icon: <BookOutlined />, path: "/matieres", match: ["/units", "/learn"] },
                 { key: "progress", label: "تقدمي", icon: <BarChartOutlined />, path: "/progress" },
+                { key: "account", label: "حسابي", icon: <UserOutlined />, path: "/account" },
+            ];
+        }
+        if (role === "regional_admin") {
+            return [
+                { key: "overview", label: "نظرة عامة", icon: <AppstoreOutlined />, path: "/" },
+                { key: "users", label: "المستخدمون", icon: <TeamOutlined />, path: "/students" },
+                { key: "reports", label: "التقارير", icon: <BarChartOutlined />, path: "/analytics" },
+                { key: "account", label: "حسابي", icon: <UserOutlined />, path: "/account" },
             ];
         }
         return [
             { key: "overview", label: "نظرة عامة", icon: <AppstoreOutlined />, path: "/" },
-            { key: "users", label: "المستخدمون", icon: <TeamOutlined />, path: "/students" },
-            { key: "curriculum", label: "المنهج", icon: <BookOutlined />, path: "/curriculum" },
+            { key: "users", label: "المستخدمون", icon: <TeamOutlined />, path: "/students", match: ["/wilayas"] },
+            { key: "curriculum", label: "المنهج", icon: <BookOutlined />, path: "/curriculum", match: ["/content"] },
             { key: "reports", label: "التقارير", icon: <BarChartOutlined />, path: "/analytics" },
+            { key: "account", label: "حسابي", icon: <UserOutlined />, path: "/account" },
         ];
     }, [role]);
 
@@ -79,6 +90,9 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
     const isActiveParent = (item: SidebarItem) => {
         if (item.path && (location.pathname === item.path || location.pathname.startsWith(`${item.path}/`))) {
+            return true;
+        }
+        if (item.match?.some((prefix) => location.pathname === prefix || location.pathname.startsWith(`${prefix}/`))) {
             return true;
         }
         if (item.submenu) {
@@ -228,6 +242,8 @@ const SidebarAdmin: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                                     ? t("navbar.roles.teacher")
                                     : role === "student"
                                         ? t("navbar.roles.student")
+                                        : role === "regional_admin"
+                                        ? "مدير ولاية"
                                         : t("navbar.profile.administrator")}
                             </div>
                         )}

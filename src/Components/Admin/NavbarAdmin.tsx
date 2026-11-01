@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Avatar, Dropdown, Modal, type MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useGetProfile } from "../../Services/Profile/useGetProfile";
 import { UpdateProfileAdmin } from "../../Pages/Admin/UpdateProfile";
 import { useFatinChromeState } from "../../ui/FatinChrome";
+import { useLogout } from "../../Services/Auth/useLogout";
+import NotificationsBell from "./NotificationsBell";
 // import LanguageSite from "../LanguageSite";
 
 interface NavbarProps {
@@ -16,6 +18,8 @@ interface NavbarProps {
 
 const NavbarAdmin: React.FC<NavbarProps> = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { mutate: logout } = useLogout();
   const { t, i18n } = useTranslation();
   const [isModalOpenProfile, setIsModalOpenProfile] = useState(false);
   const { data: dataProfile } = useGetProfile();
@@ -31,6 +35,7 @@ const NavbarAdmin: React.FC<NavbarProps> = () => {
     if (path.includes("assessment")) return t("navbar.titles.assessment");
     if (path.includes("analytics")) return "التقارير";
     if (path.includes("admins")) return t("navbar.titles.admins");
+    if (path.startsWith("/content")) return dataProfile?.role === "teacher" ? "محتواي" : "المحتوى";
     if (path.includes("matieres")) {
       if (dataProfile?.role === "teacher") return "محتواي";
       if (dataProfile?.role === "student") return "مساري";
@@ -41,8 +46,11 @@ const NavbarAdmin: React.FC<NavbarProps> = () => {
     if (path.includes("assignments")) return t("navbar.titles.assignments");
     if (path.includes("account")) return "حسابي";
     if (path.includes("progress")) return "تقدمي";
+    if (path.startsWith("/units/")) return "خريطة المهارات";
+    if (path.startsWith("/learn/")) return "جلسة تعلّم";
     if (path === "/") {
       if (dataProfile?.role === "teacher") return "لوحتي";
+      if (dataProfile?.role === "regional_admin") return "نظرة عامة";
       if (dataProfile?.role === "student") return `أهلاً ${dataProfile.first_name || ""}`.trim();
       return "نظرة عامة";
     }
@@ -51,9 +59,24 @@ const NavbarAdmin: React.FC<NavbarProps> = () => {
 
   const items: MenuProps["items"] = [
     {
-      key: "1",
+      key: "account",
+      label: "حسابي",
+      onClick: () => navigate("/account"),
+    },
+    {
+      key: "edit",
       label: t("navbar.profile.editProfile"),
       onClick: () => setIsModalOpenProfile(true),
+    },
+    { type: "divider" },
+    {
+      key: "logout",
+      danger: true,
+      label: t("sidebar.logout"),
+      onClick: () => {
+        logout();
+        window.location.href = "/login";
+      },
     },
   ];
 
@@ -96,16 +119,11 @@ const NavbarAdmin: React.FC<NavbarProps> = () => {
             {chrome.action.label}
           </button>
         )}
-        <button type="button" className="grid h-11 w-11 place-items-center rounded-full border-0 bg-white text-[#0F5C47] shadow-[0_1px_6px_rgba(0,0,0,0.06)]" aria-label="تنبيهات">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
-            <path d="M9 17a3 3 0 0 0 6 0" />
-          </svg>
-        </button>
+        <NotificationsBell role={dataProfile?.role} />
         {dataProfile?.role === "student" ? (
           <button
             type="button"
-            onClick={() => setIsModalOpenProfile(true)}
+            onClick={() => navigate("/account")}
             className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-0 bg-[#1B7F5C] text-base font-extrabold text-white"
             aria-label={displayName}
           >

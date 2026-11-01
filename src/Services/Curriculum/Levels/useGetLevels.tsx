@@ -7,7 +7,7 @@ import type { Level } from "./typeLevel";
 export const LEVELS_KEY = ["levels"];
 
 async function getLevels(): Promise<Level[]> {
-  const res = await api.get(API_ENDPOINTS.curriculum.levels);
+  const res = await api.get(API_ENDPOINTS.curriculum.levels, { params: { page_size: 500 } });
   return unwrapList<Level>(res.data);
 }
 

@@ -25,8 +25,8 @@ export type RegisterParams = {
 const extractApiError = (error: any): string => {
     const data = error?.response?.data;
     if (!data) {
-        if (error?.code === "ERR_NETWORK") return "Erreur réseau : serveur injoignable";
-        return "Une erreur est survenue";
+        if (error?.code === "ERR_NETWORK") return "تعذر الاتصال بالخادم.";
+        return "حدث خطأ، حاول مجددًا.";
     }
     if (typeof data === "string") return data;
     if (data.detail) return data.detail;
@@ -61,11 +61,7 @@ export const useRegister = () => {
                 window.dispatchEvent(new Event("storage"));
                 window.dispatchEvent(new Event("auth-change"));
 
-                const userRole = data.user.role;
-                if (userRole === "student") {
-                    window.location.href = "/matieres";
-                    return navigate("/matieres", { replace: true });
-                }
+                // Comme après la connexion : chaque rôle arrive sur son accueil.
                 window.location.href = "/";
                 return navigate("/", { replace: true });
             }

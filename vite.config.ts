@@ -19,12 +19,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://159.223.114.190/",
+        target: "http://127.0.0.1:8000/",
         changeOrigin: true,
         secure: false,
       },
       "/media": {
-        target: "http://159.223.114.190/",
+        target: "http://127.0.0.1:8000/",
         changeOrigin: true,
         secure: false,
       },

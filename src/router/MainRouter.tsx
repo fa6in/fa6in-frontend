@@ -1,5 +1,6 @@
 // MainRouter.tsx
 import { lazy, Suspense } from "react";
+import { Navigate } from "react-router-dom";
 import SpinnerLoader from "../ui/SpinnerLoader";
 import AuthRouter from "./AuthRouter";
 import ErrorPage from "../Pages/ErrorPage";
@@ -47,7 +48,15 @@ const FatinContentPage = lazy(() => import("../Pages/Teacher/FatinContentPage"))
 const FatinTeacherStudents = lazy(() => import("../Pages/Teacher/FatinTeacherStudents"));
 const FatinReportsPage = lazy(() => import("../Pages/Admin/Analytics/FatinReportsPage"));
 const FatinStudentPath = lazy(() => import("../Pages/Student/FatinStudentPath"));
-const role = AuthService.getRole()
+const FatinSkillMap = lazy(() => import("../Pages/Student/FatinSkillMap"));
+const FatinLearnSession = lazy(() => import("../Pages/Student/FatinLearnSession"));
+// Le rôle est lu au rendu (et non au chargement du module) pour qu'un
+// changement de compte sans rechargement affiche les bons écrans.
+type RoleViews = Partial<Record<"admin" | "regional_admin" | "teacher" | "student", React.ReactNode>> & { fallback: React.ReactNode };
+function ByRole(views: RoleViews) {
+  const role = AuthService.getRole() as keyof Omit<RoleViews, "fallback"> | null;
+  return <>{(role && views[role]) ?? views.fallback}</>;
+}
 
 const MainRouter: RouteType[] = [
   // ==================== Auth ROUTES ====================
@@ -58,12 +67,12 @@ const MainRouter: RouteType[] = [
     path: "/",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "teacher" ? <FatinTeacherHome /> : <NewDashboardAdmin />}
+        <ByRole teacher={<FatinTeacherHome />} fallback={<NewDashboardAdmin />} />
 
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin", "teacher"],
+    allowedRoles: ["admin", "teacher", "regional_admin"],
     sidebar: {
       key: "dashboard",
       label: "sidebar.dashboard",
@@ -74,11 +83,11 @@ const MainRouter: RouteType[] = [
     path: "/students",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "teacher" ? <FatinTeacherStudents /> : <FatinUsersPage />}
+        <ByRole teacher={<FatinTeacherStudents />} fallback={<FatinUsersPage />} />
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin", "teacher"],
+    allowedRoles: ["admin", "teacher", "regional_admin"],
     sidebar: {
       key: "students",
       label: "sidebar.students",
@@ -106,7 +115,7 @@ const MainRouter: RouteType[] = [
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         {/* <MartieresView /> */}
-        {role === "student" ? <FatinStudentPath /> : role === "teacher" ? <FatinContentPage /> : <MartieresView />}
+        <ByRole student={<FatinStudentPath />} teacher={<Navigate to="/content" replace />} fallback={<MartieresView />} />
       </Suspense>
     ),
 
@@ -123,7 +132,7 @@ const MainRouter: RouteType[] = [
     element: (
       <Suspense fallback={<SpinnerLoader />}>
         {/* <ChapitreView /> */}
-        {role === "student" ? <ChapitreViewStudent /> : <ChapitreView />}
+        <ByRole student={<ChapitreViewStudent />} fallback={<ChapitreView />} />
 
       </Suspense>
     ),
@@ -141,7 +150,7 @@ const MainRouter: RouteType[] = [
     path: "/contenu",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "student" ? <Content /> : <Content />}
+        <Content />
       </Suspense>
     ),
     layout: "private",
@@ -157,7 +166,7 @@ const MainRouter: RouteType[] = [
     path: "/assignments",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "student" ? <AssignemnetViewStudent /> : <AssignemnetViewAdmin />}
+        <ByRole student={<AssignemnetViewStudent />} fallback={<AssignemnetViewAdmin />} />
       </Suspense>
     ),
 
@@ -170,6 +179,16 @@ const MainRouter: RouteType[] = [
     }
   },
 
+  {
+    path: "/content",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <FatinContentPage />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["admin", "teacher"],
+  },
   {
     path: "/curriculum",
     element: (
@@ -219,11 +238,11 @@ const MainRouter: RouteType[] = [
     path: "/analytics",
     element: (
       <Suspense fallback={<SpinnerLoader />}>
-        {role === "teacher" ? <AnalyticsView /> : <FatinReportsPage />}
+        <ByRole teacher={<AnalyticsView />} fallback={<FatinReportsPage />} />
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin", "teacher"],
+    allowedRoles: ["admin", "teacher", "regional_admin"],
     sidebar: {
       key: "analytics",
       label: "sidebar.analytics",
@@ -311,7 +330,27 @@ const MainRouter: RouteType[] = [
       </Suspense>
     ),
     layout: "private",
-    allowedRoles: ["admin", "teacher", "student"],
+    allowedRoles: ["admin", "teacher", "student", "regional_admin"],
+  },
+  {
+    path: "/units/:unitId",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <FatinSkillMap />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["student"],
+  },
+  {
+    path: "/learn/:skillId",
+    element: (
+      <Suspense fallback={<SpinnerLoader />}>
+        <FatinLearnSession />
+      </Suspense>
+    ),
+    layout: "private",
+    allowedRoles: ["student"],
   },
   {
     path: "/progress",

@@ -25,14 +25,14 @@ export const useResetPassword = () => {
     return useMutation({
         mutationFn: resetPassword,
         onSuccess: () => {
-            enqueueSnackbar("Mot de passe réinitialisé avec succès", { variant: "success" });
+            enqueueSnackbar("تم تغيير كلمة المرور. سجّل الدخول الآن.", { variant: "success" });
             navigate("/login", { replace: true });
         },
         onError: (error: any) => {
             const data = error?.response?.data;
-            let message = "Une erreur est survenue";
+            let message = "حدث خطأ، حاول مجددًا.";
             if (error?.code === "ERR_NETWORK") {
-                message = "Erreur réseau : serveur injoignable";
+                message = "تعذر الاتصال بالخادم.";
             } else if (data?.detail) {
                 message = data.detail;
             } else if (data?.message) {

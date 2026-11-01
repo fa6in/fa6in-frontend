@@ -13,7 +13,7 @@ export type MatiereFilters = {
 };
 
 async function getmatiere(filters: MatiereFilters = {}): Promise<typeMatiere[]> {
-    const res = await api.get(API_ENDPOINTS.curriculum.subjects, { params: filters })
+    const res = await api.get(API_ENDPOINTS.curriculum.subjects, { params: { page_size: 500, ...filters } })
     return unwrapList<typeMatiere>(res.data)
 }
 

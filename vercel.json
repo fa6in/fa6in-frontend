@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "http://159.223.114.190/api/$1" },
-    { "source": "/media/(.*)", "destination": "http://159.223.114.190/media/$1" },
+    { "source": "/api/(.*)", "destination": "http://127.0.0.1:8000/api/$1" },
+    { "source": "/media/(.*)", "destination": "http://127.0.0.1:8000/media/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

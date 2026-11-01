@@ -92,12 +92,6 @@ const Router = () => {
 
         if (isAuthRoute) {
 
-            if (userRole === "student") {
-                return {
-                    ...route,
-                    element: <Navigate replace to="/matieres" />
-                };
-            }
             return {
                 ...route,
                 element: <Navigate replace to="/" />

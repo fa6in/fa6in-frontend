@@ -49,7 +49,7 @@ export const useLogin = () => {
 
             } catch (e: any) {
                 const err = e?.response?.data?.detail;
-                return enqueueSnackbar(err || "Erreur lors de la connexion", { variant: "error" });
+                return enqueueSnackbar(err || "تعذر تسجيل الدخول.", { variant: "error" });
             }
 
             const userInfo = AuthService.getUserInfo();
@@ -59,12 +59,12 @@ export const useLogin = () => {
             enqueueSnackbar(message, { variant: "success" });
         },
         onError: (error: any) => {
-            let message = "Une erreur est survenue";
+            let message = "حدث خطأ، حاول مجددًا.";
 
             if (error?.code === "ERR_NETWORK") {
-                message = "Erreur réseau : serveur injoignable";
+                message = "تعذر الاتصال بالخادم.";
             } else if (error?.response?.status === 401) {
-                message = "Identifiants incorrects";
+                message = "اسم المستخدم أو كلمة المرور غير صحيحة.";
             } else if (error?.response?.status === 400) {
                 // Gérer les erreurs de validation spécifiques
                 const errorData = error.response.data;

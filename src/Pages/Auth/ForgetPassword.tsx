@@ -11,7 +11,7 @@ const ForgetPassword = () => {
   const { mutate: sendReset, isPending } = useForgotPassword();
 
   return (
-    <FatinAuthFrame kicker="الخطوة 2 من 3" title="نسيت كلمة المرور">
+    <FatinAuthFrame kicker="الخطوة 1 من 3" title="نسيت كلمة المرور">
       <Form
         form={form}
         name="forgotPassword"

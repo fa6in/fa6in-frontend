@@ -20,9 +20,9 @@ export const useForgotPassword = () => {
         mutationFn: forgotPassword,
         onError: (error: any) => {
             const data = error?.response?.data;
-            let message = "Une erreur est survenue";
+            let message = "حدث خطأ، حاول مجددًا.";
             if (error?.code === "ERR_NETWORK") {
-                message = "Erreur réseau : serveur injoignable";
+                message = "تعذر الاتصال بالخادم.";
             } else if (data?.email?.[0]) {
                 message = data.email[0];
             } else if (data?.detail) {

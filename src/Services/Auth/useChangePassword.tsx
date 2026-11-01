@@ -19,7 +19,7 @@ export function useChangePassword() {
   return useMutation({
     mutationFn: changePassword,
     onSuccess: () => {
-      message.success("Mot de passe modifié avec succès");
+      message.success("تم تحديث كلمة المرور");
     },
     onError: (err: unknown) => {
       message.error(handleError(err));
