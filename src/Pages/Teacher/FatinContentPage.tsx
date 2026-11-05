@@ -234,12 +234,13 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
 
   const toList = () => go(null);
   const toStep = (index: number) => go({ unit: unitId, lesson: lessonId, step: index });
+  const toNewLesson = () => go({ unit: unitId, lesson: null, step: 1 });
 
   let body;
   if (current === 0) {
     body = <StepUnit unitId={unitId} units={units} onCancel={toList} onSaved={(id) => go({ unit: id, lesson: lessonId, step: 1 })} />;
   } else if (current === 1) {
-    body = <StepLesson unitId={unitId!} lessonId={lessonId} onBack={() => toStep(0)} onSelect={(id) => go({ unit: unitId, lesson: id, step: 2 })} />;
+    body = <StepLesson unitId={unitId!} lessonId={lessonId} onBack={() => toStep(0)} onSelect={(id) => go({ unit: unitId, lesson: id, step: 2 })} onNew={toNewLesson} />;
   } else if (!lesson) {
     body = loadingLessons ? <Loading /> : <EmptyNote>الدرس غير موجود. اختر درسًا من الخطوة 2.</EmptyNote>;
   } else if (current === 2) {
@@ -251,7 +252,7 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
   } else if (current === 5) {
     body = <StepChunks lessonId={lesson.id} onBack={() => toStep(4)} onNext={() => toStep(6)} />;
   } else {
-    body = <StepPublish unitId={unitId!} lesson={lesson} onBack={() => toStep(5)} onGoTo={toStep} onDone={toList} />;
+    body = <StepPublish unitId={unitId!} lesson={lesson} onBack={() => toStep(5)} onGoTo={toStep} onNewLesson={toNewLesson} onDone={toList} />;
   }
 
   return (

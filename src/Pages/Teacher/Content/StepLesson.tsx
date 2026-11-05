@@ -7,11 +7,12 @@ type Props = {
   unitId: number;
   lessonId: number | null;
   onSelect: (lessonId: number) => void;
+  onNew: () => void;
   onBack: () => void;
 };
 
-// Étape 2 : choisir une leçon existante de l'unité ou en créer une.
-export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props) {
+// Étape 2 : choisir une leçon existante de l'unité ou en créer une (une unité peut en contenir plusieurs).
+export default function StepLesson({ unitId, lessonId, onSelect, onNew, onBack }: Props) {
   const { data: unit } = useContentUnit(unitId);
   const { data: lessonsData } = useContentLessons(unitId);
   const lessons = useMemo(() => lessonsData ?? [], [lessonsData]);
@@ -56,8 +57,15 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
                 </span>
               </button>
             ))}
+            <button
+              type="button"
+              onClick={onNew}
+              className={`rounded-xl border border-dashed border-[#0F5C47] px-3 py-2 text-sm font-bold text-[#0F5C47] ${current ? "bg-white" : "bg-[#E7F2ED]"}`}
+            >
+              + درس جديد
+            </button>
           </div>
-          <p className="mt-3 text-sm font-bold text-[#4C6A63]">{current ? "تعديل الدرس المختار" : "أو أنشئ درسًا جديدًا"}</p>
+          <p className="mt-3 text-sm font-bold text-[#4C6A63]">{current ? "تعديل الدرس المختار" : "أنشئ درسًا جديدًا في هذه الوحدة"}</p>
         </div>
       )}
       <div className="grid gap-3 sm:grid-cols-2">
@@ -77,7 +85,7 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         loading={save.isPending}
         disabled={!form.code.trim() || !form.title.trim()}
         blockedReason="أدخل رمز الدرس وعنوانه."
-        nextLabel="حفظ ← الأهداف"
+        nextLabel={current ? "حفظ ← الأهداف" : "إنشاء الدرس ← الأهداف"}
       />
     </div>
   );

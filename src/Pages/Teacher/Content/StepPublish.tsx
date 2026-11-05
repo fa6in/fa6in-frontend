@@ -15,6 +15,7 @@ type Props = {
   lesson: CLesson;
   onBack: () => void;
   onGoTo: (step: number) => void;
+  onNewLesson: () => void;
   onDone: () => void;
 };
 
@@ -48,7 +49,7 @@ function detailLines(check: PublicationCheck["checks"][number]): string[] {
 
 // Étape 7 (écran T9) : liste de contrôle du serveur puis publication de la
 // leçon ; l'unité peut être publiée dès qu'une de ses leçons l'est.
-export default function StepPublish({ unitId, lesson, onBack, onGoTo, onDone }: Props) {
+export default function StepPublish({ unitId, lesson, onBack, onGoTo, onNewLesson, onDone }: Props) {
   const { data: check, isLoading, isError, refetch, isFetching } = usePublicationCheck(lesson.id);
   const { data: unit } = useContentUnit(unitId);
   const { data: lessons = [] } = useContentLessons(unitId);
@@ -142,6 +143,13 @@ export default function StepPublish({ unitId, lesson, onBack, onGoTo, onDone }: 
       </section>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          onClick={onNewLesson}
+          className="rounded-full border border-dashed border-[#0F5C47] px-5 py-2.5 text-sm font-extrabold text-[#0F5C47]"
+        >
+          + إضافة درس آخر للوحدة
+        </button>
         {!unit?.is_published && (
           <button
             type="button"
