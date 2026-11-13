@@ -17,15 +17,52 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
   const lessons = useMemo(() => lessonsData ?? [], [lessonsData]);
   const save = useContentSave();
   const current = lessons.find((lesson) => lesson.id === lessonId);
-  const [form, setForm] = useState({ code: "", title: "", description: "" });
+  const [form, setForm] = useState({
+    code: "",
+    title: "",
+    description: "",
+    programme_ref: "",
+    week: "",
+    programme_weeks: "",
+    book_exercises: "",
+  });
 
   useEffect(() => {
-    if (current) setForm({ code: current.code, title: current.title, description: current.description ?? "" });
-    else if (unit) setForm({ code: nextCode(`${unit.code}-L`, lessons.map((lesson) => lesson.code)), title: "", description: "" });
+    if (current) {
+      setForm({
+        code: current.code,
+        title: current.title,
+        description: current.description ?? "",
+        programme_ref: current.programme_ref ?? "",
+        week: current.week != null ? String(current.week) : "",
+        programme_weeks: (current.programme_weeks ?? []).join("، "),
+        book_exercises: (current.book_exercises ?? []).join("، "),
+      });
+    } else if (unit) {
+      setForm({
+        code: nextCode(`${unit.code}-L`, lessons.map((lesson) => lesson.code)),
+        title: "",
+        description: "",
+        programme_ref: "",
+        week: "",
+        programme_weeks: "",
+        book_exercises: "",
+      });
+    }
   }, [current, unit, lessons]);
 
   const submit = () => {
-    const data = { ...form, unit: unitId, ...(current ? {} : { order_index: lessons.length + 1 }) };
+    const data = {
+      code: form.code,
+      title: form.title,
+      description: form.description,
+      programme_ref: form.programme_ref,
+      week: form.week.trim() ? Number(form.week) : null,
+      programme_weeks: form.programme_weeks.split(/[،,]/).map((item) => item.trim()).filter(Boolean).map(Number),
+      book_exercises: form.book_exercises.split(/[،,]/).map((item) => item.trim()).filter(Boolean),
+      unit: unitId,
+      ...(current ? {} : { order_index: lessons.length + 1 }),
+    };
     save.mutate(
       current
         ? { method: "patch", url: API_ENDPOINTS.content.lessonDetail(current.id), data, success: "تم حفظ الدرس" }
@@ -69,6 +106,18 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         </Field>
         <Field label="الوصف" className="sm:col-span-2">
           <textarea className="fatin-field h-20" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} />
+        </Field>
+        <Field label="مرجع البرنامج">
+          <input className="fatin-field" dir="ltr" value={form.programme_ref} placeholder="مثال: P2-U1-L1" onChange={(event) => setForm({ ...form, programme_ref: event.target.value })} />
+        </Field>
+        <Field label="الأسبوع">
+          <input className="fatin-field" type="number" min={1} value={form.week} onChange={(event) => setForm({ ...form, week: event.target.value })} />
+        </Field>
+        <Field label="أسابيع البرنامج (مفصولة بفواصل)" className="sm:col-span-2">
+          <input className="fatin-field" dir="ltr" value={form.programme_weeks} placeholder="1، 2، 3" onChange={(event) => setForm({ ...form, programme_weeks: event.target.value })} />
+        </Field>
+        <Field label="تمارين الكتاب (مفصولة بفواصل)" className="sm:col-span-2">
+          <input className="fatin-field" value={form.book_exercises} placeholder="ص12-ت1، ص13-ت2" onChange={(event) => setForm({ ...form, book_exercises: event.target.value })} />
         </Field>
       </div>
       <StepFooter
