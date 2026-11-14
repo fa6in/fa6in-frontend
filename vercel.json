@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.yourdomain.com/api/:path*"
+      "destination": "http://159.223.114.190/api/:path*"
     },
     {
       "source": "/media/:path*",
-      "destination": "https://api.yourdomain.com/media/:path*"
+      "destination": "http://159.223.114.190/media/:path*"
     },
     {
       "source": "/((?!api|media).*)",
