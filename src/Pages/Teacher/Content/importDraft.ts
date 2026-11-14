@@ -5,9 +5,17 @@
 // ce chemin est résolu contre les fichiers du même dossier choisi par
 // l'enseignant (voir `resolveImage` dans ImportUnitPage.tsx).
 
+import type { ChunkType } from "../../../Services/Fatin/types";
+
+const CHUNK_TYPE_VALUES: ChunkType[] = ["rule", "example", "practice", "error", "hint", "real_life"];
+
+function asChunkType(value: unknown): ChunkType {
+  return CHUNK_TYPE_VALUES.includes(value as ChunkType) ? (value as ChunkType) : "rule";
+}
+
 export type DraftChunk = {
   key: string;
-  chunk_type: string;
+  chunk_type: ChunkType;
   title: string;
   content: string;
   correct_answer: string;
@@ -104,7 +112,7 @@ function parseChunk(raw: unknown): DraftChunk | null {
   const chunk = raw as Record<string, unknown>;
   return {
     key: nextKey(),
-    chunk_type: asText(chunk.chunk_type) || "rule",
+    chunk_type: asChunkType(chunk.chunk_type),
     title: asText(chunk.title),
     content: asText(chunk.content),
     correct_answer: correctAnswerOf(chunk),
