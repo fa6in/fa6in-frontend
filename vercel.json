@@ -1,16 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "http://159.223.114.190/api/:path*"
-    },
-    {
-      "source": "/media/:path*",
-      "destination": "http://159.223.114.190/media/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
