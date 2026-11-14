@@ -1,9 +1,36 @@
 import { useEffect, useState } from "react";
 import { API_ENDPOINTS } from "../../../api/endpoints";
 import { useContentChunks, useContentSave, useContentSkills } from "../../../Services/Fatin/useTeacherContent";
-import type { CChunk, CSkill, ChunkType } from "../../../Services/Fatin/types";
+import type { CChunk, CChunkOption, CSkill, ChunkType } from "../../../Services/Fatin/types";
 import FatinModal from "../../../ui/FatinModal";
 import { CHUNK_TYPES, Field, Pill, StepFooter, chunkTypeLabel, nextCode } from "./contentUi";
+
+// Les lectures élève aplatissent les options en string[] ; on les
+// re-normalise en { text, is_correct } pour l'éditeur enseignant.
+function normalizeOptions(options: CChunk["options"]): CChunkOption[] {
+  if (!options) return [];
+  return options.map((item) => (typeof item === "string" ? { text: item, is_correct: false } : item));
+}
+
+function optionsLabel(options: CChunk["options"]) {
+  return normalizeOptions(options).map((item) => item.text).join(" ، ");
+}
+
+// Object URL locale pour prévisualiser un fichier image fraîchement
+// sélectionné, révoquée proprement au changement/démontage.
+function useObjectUrl(file: File | null) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!file) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+  return url;
+}
 
 type Props = { lessonId: number; onNext: () => void; onBack: () => void };
 
@@ -64,8 +91,16 @@ export default function StepChunks({ lessonId, onNext, onBack }: Props) {
                     <span className="text-sm" dir="auto">{chunk.title || chunk.content}</span>
                     {chunk.chunk_type === "practice" && (
                       <div className="mt-1 text-xs text-[#4C6A63]" dir="auto">
-                        الإجابة: {chunk.correct_answer} {chunk.options?.length ? `· ${chunk.options.join(" ، ")}` : ""}
+                        الإجابة: {chunk.correct_answer} {chunk.options?.length ? `· ${optionsLabel(chunk.options)}` : ""}
                       </div>
+                    )}
+                    {chunk.image && (
+                      <img src={chunk.image} alt={chunk.title || "صورة القطعة"} className="mt-2 max-h-32 rounded-lg border border-[#E7F2ED] object-contain" />
+                    )}
+                    {chunk.needs_image && !chunk.image && (
+                      <span className="mt-1 inline-block rounded-full bg-[#FFF4D6] px-2 py-0.5 text-[11px] font-bold text-[#8A5A00]">
+                        🖼 تحتاج صورة
+                      </span>
                     )}
                   </div>
                   <div className="flex shrink-0 gap-2">
@@ -151,35 +186,55 @@ type EditorProps = {
 
 function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: EditorProps) {
   const save = useContentSave();
+  const [image, setImage] = useState<File | null>(null);
+  const imagePreviewUrl = useObjectUrl(image);
   const [form, setForm] = useState({
     chunk_type: chunk?.chunk_type ?? defaultType,
     title: chunk?.title ?? "",
     content: chunk?.content ?? "",
     correct_answer: chunk?.correct_answer ?? "",
-    options: (chunk?.options ?? []).join(" ، "),
+    options: normalizeOptions(chunk?.options ?? null),
     difficulty: chunk?.difficulty ?? 2,
     points: chunk?.points ?? 1,
     time_limit: chunk?.time_limit ?? 60,
+    needs_image: chunk?.needs_image ?? false,
+    image_note: chunk?.image_note ?? "",
   });
   const isPractice = form.chunk_type === "practice";
 
+  const addOption = () => setForm({ ...form, options: [...form.options, { text: "", is_correct: form.options.length === 0 }] });
+  const updateOption = (index: number, text: string) =>
+    setForm({ ...form, options: form.options.map((item, i) => (i === index ? { ...item, text } : item)) });
+  const setCorrectOption = (index: number) =>
+    setForm({ ...form, options: form.options.map((item, i) => ({ ...item, is_correct: i === index })) });
+  const removeOption = (index: number) => setForm({ ...form, options: form.options.filter((_, i) => i !== index) });
+
   const submit = () => {
-    const options = form.options.split(/[،,]/).map((item) => item.trim()).filter(Boolean);
-    const data = {
+    const correctOption = form.options.find((item) => item.is_correct);
+    const fields: Record<string, unknown> = {
       skill: skill.id,
       chunk_type: form.chunk_type,
       title: form.title,
       content: form.content,
       difficulty: form.difficulty,
       points: form.points,
-      correct_answer: isPractice ? form.correct_answer : null,
-      // La bonne réponse fait toujours partie des choix proposés (QCM).
-      options: isPractice && options.length && !options.includes(form.correct_answer.trim())
-        ? [...options, form.correct_answer.trim()]
-        : isPractice ? options : [],
+      correct_answer: isPractice ? form.correct_answer || correctOption?.text || "" : null,
+      options: isPractice ? form.options.filter((item) => item.text.trim()) : [],
       time_limit: isPractice ? form.time_limit : null,
+      needs_image: form.needs_image,
+      image_note: form.image_note || null,
       ...(chunk ? {} : { code: nextCode(`${skill.code.replace(/^SK-/, "CH-")}-`, usedCodes), order_index: order }),
     };
+    let data: FormData | Record<string, unknown> = fields;
+    if (image) {
+      const body = new FormData();
+      Object.entries(fields).forEach(([key, value]) => {
+        if (key === "options") body.append(key, JSON.stringify(value));
+        else body.append(key, value === null || value === undefined ? "" : String(value));
+      });
+      body.append("image", image);
+      data = body;
+    }
     save.mutate(
       chunk
         ? { method: "patch", url: API_ENDPOINTS.content.chunkDetail(chunk.id), data, success: "تم حفظ القطعة" }
@@ -206,11 +261,34 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
         </Field>
         {isPractice && (
           <>
-            <Field label="الإجابة الصحيحة">
+            <Field label="الإجابة الصحيحة (نصية، اختياري إن حُدِّد خيار صحيح أدناه)" className="sm:col-span-2">
               <input className="fatin-field" dir="auto" value={form.correct_answer} placeholder="7/9" onChange={(event) => setForm({ ...form, correct_answer: event.target.value })} />
             </Field>
-            <Field label="الخيارات (اختياري)">
-              <input className="fatin-field" dir="auto" value={form.options} placeholder="7/18 ، 7/9 ، 1/9 ، 12/9" onChange={(event) => setForm({ ...form, options: event.target.value })} />
+            <Field label="الخيارات — حدّد الدائرة بجانب الخيار الصحيح" className="sm:col-span-2">
+              <div className="space-y-2">
+                {form.options.map((option, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="correct-option"
+                      checked={!!option.is_correct}
+                      onChange={() => setCorrectOption(index)}
+                      aria-label="الخيار الصحيح"
+                    />
+                    <input
+                      className="fatin-field flex-1"
+                      dir="auto"
+                      value={option.text}
+                      placeholder={`خيار ${index + 1}`}
+                      onChange={(event) => updateOption(index, event.target.value)}
+                    />
+                    <button type="button" onClick={() => removeOption(index)} className="text-[#C4564A]" aria-label="حذف الخيار">⌫</button>
+                  </div>
+                ))}
+                <button type="button" onClick={addOption} className="rounded-full border border-[#0F5C47] px-3 py-1 text-xs font-extrabold text-[#0F5C47]">
+                  + خيار
+                </button>
+              </div>
             </Field>
           </>
         )}
@@ -230,6 +308,30 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
           </>
         )}
       </div>
+
+      <div className="mt-4 space-y-3 rounded-xl bg-[#F3F7F5] p-3">
+        {(imagePreviewUrl || chunk?.image) && (
+          <img
+            src={imagePreviewUrl ?? chunk!.image!}
+            alt="معاينة صورة القطعة"
+            className="mx-auto max-h-40 rounded-lg border border-[#E7F2ED] object-contain"
+          />
+        )}
+        <label className="grid min-h-20 cursor-pointer place-items-center rounded-xl border-2 border-dashed border-[#CFE0DA] bg-white p-3 text-center text-sm text-[#4C6A63]">
+          <input type="file" accept="image/*" className="hidden" onChange={(event) => setImage(event.target.files?.[0] ?? null)} />
+          {image ? image.name : chunk?.image ? "تم رفع صورة لهذه القطعة — اضغط لتغييرها" : "اضغط لرفع صورة توضيحية للقطعة (اختياري)"}
+        </label>
+        <label className="flex items-center gap-2 text-sm text-[#4C6A63]">
+          <input type="checkbox" checked={form.needs_image} onChange={(event) => setForm({ ...form, needs_image: event.target.checked })} />
+          هذه القطعة تحتاج صورة ولم تُرفع بعد
+        </label>
+        {form.needs_image && (
+          <Field label="ملاحظة حول الصورة المطلوبة">
+            <textarea className="fatin-field h-16" value={form.image_note} placeholder="وصف الرسم المطلوب رفعه لاحقًا" onChange={(event) => setForm({ ...form, image_note: event.target.value })} />
+          </Field>
+        )}
+      </div>
+
       {isPractice && form.difficulty > 2 && (
         <p className="mt-3 text-xs text-[#8A5A00]">
           تنبيه: يبدأ الطالب بتمارين صعوبتها 1–2، والتمارين الأصعب تظهر بعد ارتفاع الإتقان.

@@ -47,6 +47,34 @@ export function Instruction({ children }: { children: ReactNode }) {
   );
 }
 
+export function StepBar({ current, reachable, onStep }: { current: number; reachable: (index: number) => boolean; onStep: (index: number) => void }) {
+  return (
+    <ol className="mb-5 flex items-start gap-1 overflow-x-auto pb-1">
+      {STEPS.map((label, index) => {
+        const done = index < current;
+        const active = index === current;
+        const enabled = reachable(index);
+        return (
+          <li key={label} className="flex min-w-[64px] flex-1 flex-col items-center gap-1">
+            <button
+              type="button"
+              disabled={!enabled}
+              onClick={() => onStep(index)}
+              aria-current={active ? "step" : undefined}
+              className={`grid h-9 w-9 place-items-center rounded-full text-sm font-extrabold transition ${
+                active ? "bg-[#E0A526] text-white" : done ? "bg-[#1B7F5C] text-white" : "bg-[#E7F2ED] text-[#4C6A63]"
+              } disabled:cursor-not-allowed disabled:opacity-50`}
+            >
+              {done ? "✓" : index + 1}
+            </button>
+            <span className={`whitespace-nowrap text-[11px] ${active ? "font-extrabold text-[#12302B]" : "text-[#4C6A63]"}`}>{label}</span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 export function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
     <button
