@@ -1,17 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "http://159.223.114.190/api/:path*"
+      "src": "^/api/(.*)$",
+      "dest": "http://159.223.114.190/api/$1"
     },
     {
-      "source": "/media/:path*",
-      "destination": "http://159.223.114.190/media/:path*"
+      "src": "^/media/(.*)$",
+      "dest": "http://159.223.114.190/media/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "^/(.*)$",
+      "dest": "/index.html"
     }
   ]
 }
