@@ -1,21 +1,7 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "source": "/api/auth/login/",
-      "destination": "http://159.223.114.190/api/auth/login/"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "http://159.223.114.190/api/:path*"
-    },
-    {
-      "source": "/media/:path*",
-      "destination": "http://159.223.114.190/media/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "http://159.223.114.190/api//$1" },
+    { "source": "/media/(.*)", "destination": "http://159.223.114.190/media/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
