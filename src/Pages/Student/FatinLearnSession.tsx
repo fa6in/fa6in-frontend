@@ -235,6 +235,9 @@ export default function FatinLearnSession() {
                 <div className="my-4 whitespace-pre-line text-center text-[26px] font-extrabold" dir="auto">
                   {chunk.content}
                 </div>
+                {chunk.image && (
+                  <img src={chunk.image} alt={chunk.title || "صورة التمرين"} className="mx-auto mb-4 max-h-56 rounded-xl border border-[#E7F2ED] object-contain" />
+                )}
                 {options.length ? (
                   <div className="grid grid-cols-2 gap-2.5" dir="ltr">
                     {options.map((option) => (
@@ -263,6 +266,9 @@ export default function FatinLearnSession() {
               <section className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
                 <div className="text-[13px] text-[#4C6A63]">{chunk.title || CHUNK_TITLE[chunk.chunk_type]}</div>
                 <p className="mt-2 whitespace-pre-line text-lg leading-relaxed" dir="auto">{chunk.content}</p>
+                {chunk.image && (
+                  <img src={chunk.image} alt={chunk.title || "صورة توضيحية"} className="mx-auto mt-3 max-h-56 rounded-xl border border-[#E7F2ED] object-contain" />
+                )}
               </section>
             )}
 

@@ -22,8 +22,12 @@ export default function StepUnit({ unitId, units, onSaved, onCancel }: Props) {
     subject: "",
     code: nextCode("U", units.map((item) => item.code)),
     title: "",
+    description: "",
     main_goal_description: "",
     central_question: "",
+    main_skill_domain: "",
+    term: "",
+    competency_ref: "",
   });
 
   useEffect(() => {
@@ -32,8 +36,12 @@ export default function StepUnit({ unitId, units, onSaved, onCancel }: Props) {
       subject: String(typeof unit.subject === "number" ? unit.subject : unit.subject.id),
       code: unit.code,
       title: unit.title,
+      description: unit.description ?? "",
       main_goal_description: unit.main_goal_description ?? "",
       central_question: unit.central_question ?? "",
+      main_skill_domain: unit.main_skill_domain ?? "",
+      term: unit.term ?? "",
+      competency_ref: unit.competency_ref ?? "",
     });
   }, [unit]);
 
@@ -79,11 +87,23 @@ export default function StepUnit({ unitId, units, onSaved, onCancel }: Props) {
         <Field label="عنوان الوحدة" className="sm:col-span-2">
           <input className="fatin-field" value={form.title} placeholder="الأعداد العشرية" onChange={(event) => setForm({ ...form, title: event.target.value })} />
         </Field>
+        <Field label="وصف الوحدة" className="sm:col-span-2">
+          <textarea className="fatin-field h-20" value={form.description} placeholder="وصف موجز لمحتوى الوحدة" onChange={(event) => setForm({ ...form, description: event.target.value })} />
+        </Field>
         <Field label="الهدف الرئيسي" className="sm:col-span-2">
           <textarea className="fatin-field h-20" value={form.main_goal_description} placeholder="ما الذي سيتقنه الطالب في نهاية الوحدة؟" onChange={(event) => setForm({ ...form, main_goal_description: event.target.value })} />
         </Field>
         <Field label="السؤال المركزي" className="sm:col-span-2">
           <textarea className="fatin-field h-20" value={form.central_question} placeholder="السؤال الذي يوجّه التعلّم" onChange={(event) => setForm({ ...form, central_question: event.target.value })} />
+        </Field>
+        <Field label="مجال المهارة الرئيسي">
+          <input className="fatin-field" value={form.main_skill_domain} placeholder="مثال: الهندسة" onChange={(event) => setForm({ ...form, main_skill_domain: event.target.value })} />
+        </Field>
+        <Field label="الفصل الدراسي">
+          <input className="fatin-field" value={form.term} placeholder="مثال: الفصل الأول" onChange={(event) => setForm({ ...form, term: event.target.value })} />
+        </Field>
+        <Field label="مرجع الكفاءة" className="sm:col-span-2">
+          <input className="fatin-field" dir="ltr" value={form.competency_ref} placeholder="مثال: d2-k1" onChange={(event) => setForm({ ...form, competency_ref: event.target.value })} />
         </Field>
         <label className="grid min-h-24 cursor-pointer place-items-center rounded-2xl border-2 border-dashed border-[#CFE0DA] bg-[#F3F7F5] p-4 text-center text-sm text-[#4C6A63] sm:col-span-2">
           <input type="file" accept="image/*" className="hidden" onChange={(event) => setThumbnail(event.target.files?.[0] ?? null)} />

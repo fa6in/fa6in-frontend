@@ -11,7 +11,8 @@ import type { CUnit } from "../../Services/Fatin/types";
 import FatinModal from "../../ui/FatinModal";
 import { useFatinChrome, useFatinQuery } from "../../ui/FatinChrome";
 import { EmptyNote, Loading } from "../Student/fatinStudentUi";
-import { Pill, STEPS } from "./Content/contentUi";
+import { Pill, StepBar } from "./Content/contentUi";
+import ImportUnitPage from "./Content/ImportUnitPage";
 import StepUnit from "./Content/StepUnit";
 import StepLesson from "./Content/StepLesson";
 import StepGoals from "./Content/StepGoals";
@@ -38,6 +39,7 @@ const subjectIdOf = (unit: CUnit) => (typeof unit.subject === "number" ? unit.su
  */
 export default function FatinContentPage() {
   const [params, setParams] = useSearchParams();
+  const importing = params.get("import") === "1";
   const editing = params.has("unit") || params.get("new") === "1";
   const unitId = Number(params.get("unit")) || null;
   const lessonId = Number(params.get("lesson")) || null;
@@ -59,16 +61,18 @@ export default function FatinContentPage() {
     [setParams],
   );
 
+  if (importing) return <ImportUnitPage onClose={() => setParams({})} onDone={() => setParams({})} />;
+
   return editing ? (
     <Editor unitId={unitId} lessonId={lessonId} step={step} go={go} />
   ) : (
-    <UnitList onOpen={(unit, nextStep) => go({ unit: unit?.id ?? null, step: nextStep })} />
+    <UnitList onOpen={(unit, nextStep) => go({ unit: unit?.id ?? null, step: nextStep })} onImport={() => setParams({ import: "1" })} />
   );
 }
 
 // ==================== T2 : mes unités ====================
 
-function UnitList({ onOpen }: { onOpen: (unit: CUnit | null, step: number) => void }) {
+function UnitList({ onOpen, onImport }: { onOpen: (unit: CUnit | null, step: number) => void; onImport: () => void }) {
   const { data: units = [], isLoading, isError } = useContentUnits();
   const save = useContentSave();
   const query = useFatinQuery();
@@ -119,12 +123,19 @@ function UnitList({ onOpen }: { onOpen: (unit: CUnit | null, step: number) => vo
             </select>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {FILTERS.map((item) => (
             <Pill key={item.id} active={filter === item.id} onClick={() => setFilter(item.id)}>
               {item.label}
             </Pill>
           ))}
+          <button
+            type="button"
+            onClick={onImport}
+            className="rounded-full border border-[#0F5C47] px-3 py-1.5 text-sm font-bold text-[#0F5C47]"
+          >
+            استيراد
+          </button>
         </div>
       </div>
 
@@ -269,29 +280,7 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)] sm:p-5">
-        <ol className="mb-5 flex items-start gap-1 overflow-x-auto pb-1">
-          {STEPS.map((label, index) => {
-            const done = index < current;
-            const active = index === current;
-            const enabled = reachable(index);
-            return (
-              <li key={label} className="flex min-w-[64px] flex-1 flex-col items-center gap-1">
-                <button
-                  type="button"
-                  disabled={!enabled}
-                  onClick={() => toStep(index)}
-                  aria-current={active ? "step" : undefined}
-                  className={`grid h-9 w-9 place-items-center rounded-full text-sm font-extrabold transition ${
-                    active ? "bg-[#E0A526] text-white" : done ? "bg-[#1B7F5C] text-white" : "bg-[#E7F2ED] text-[#4C6A63]"
-                  } disabled:cursor-not-allowed disabled:opacity-50`}
-                >
-                  {done ? "✓" : index + 1}
-                </button>
-                <span className={`whitespace-nowrap text-[11px] ${active ? "font-extrabold text-[#12302B]" : "text-[#4C6A63]"}`}>{label}</span>
-              </li>
-            );
-          })}
-        </ol>
+        <StepBar current={current} reachable={reachable} onStep={toStep} />
         {body}
       </div>
     </div>

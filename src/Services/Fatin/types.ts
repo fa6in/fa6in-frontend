@@ -99,6 +99,7 @@ export type SessionChunk = {
   difficulty: number;
   points: number;
   time_limit: number | null;
+  image: string | null;
 };
 
 export type SessionContext = {
@@ -232,6 +233,10 @@ export type CUnit = {
   lessons_count: number;
   central_question?: string | null;
   main_goal_description?: string | null;
+  description?: string | null;
+  main_skill_domain?: string;
+  term?: string;
+  competency_ref?: string;
 };
 
 export type CLesson = {
@@ -242,6 +247,10 @@ export type CLesson = {
   order_index: number;
   is_published: boolean;
   goals_complete: boolean;
+  programme_ref?: string;
+  week?: number | null;
+  programme_weeks?: number[];
+  book_exercises?: string[];
 };
 
 export type CGoal = {
@@ -266,6 +275,8 @@ export type CSkill = {
   required_consecutive_correct?: number;
 };
 
+export type CChunkOption = { text: string; is_correct?: boolean };
+
 export type CChunk = {
   id: number;
   code: string;
@@ -273,12 +284,17 @@ export type CChunk = {
   title: string | null;
   content: string;
   correct_answer?: string | null;
-  options: string[] | null;
+  // Création/édition (teacher) : options enrichies { text, is_correct }.
+  // Lecture élève (GET) : le backend aplatit en string[] simples.
+  options: CChunkOption[] | string[] | null;
   difficulty: number;
   order_index: number;
   points: number;
   time_limit: number | null;
   skill: { id: number; code: string } | number;
+  image?: string | null;
+  needs_image?: boolean;
+  image_note?: string | null;
 };
 
 export type CPrerequisite = {
