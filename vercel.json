@@ -7,17 +7,8 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "http:/142.93.114.200/api/$1"
-    },
-    {
-      "source": "/media/(.*)",
-      "destination": "http://142.93.114.200/media/$1"
-    },
-    {
-      "source": "/((?!api|media).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/api/(.*)",          "destination": "http://142.93.114.200/api/$1" },
+    { "source": "/media/(.*)",        "destination": "http://142.93.114.200/media/$1" },
+    { "source": "/((?!api|media).*)", "destination": "/index.html" }
   ]
 }
