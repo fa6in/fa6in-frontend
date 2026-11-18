@@ -9,11 +9,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http:/159.223.114.190/api/$1"
+      "destination": "http:/142.93.114.200/api/$1"
     },
     {
       "source": "/media/(.*)",
-      "destination": "http://159.223.114.190/media/$1"
+      "destination": "http://142.93.114.200/media/$1"
     },
     {
       "source": "/((?!api|media).*)",
