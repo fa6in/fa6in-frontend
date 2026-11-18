@@ -62,7 +62,7 @@ export default function StepPublish({ unitId, lesson, onBack, onGoTo, onDone }: 
     if (confirm === "lesson") {
       save.mutate(
         { method: "post", url: API_ENDPOINTS.content.lessonPublish(lesson.id), success: "تم نشر الدرس — أصبح متاحًا للطلاب" },
-        { onSuccess: () => setConfirm(null) },
+        { onSuccess: () => { setConfirm(null); onDone(); } },
       );
     } else if (confirm === "unit") {
       save.mutate(
@@ -160,7 +160,7 @@ export default function StepPublish({ unitId, lesson, onBack, onGoTo, onDone }: 
         onNext={() => (lesson.is_published ? onDone() : setConfirm("lesson"))}
         disabled={!lesson.is_published && !ready}
         blockedReason="أكمل البنود الناقصة لتفعيل النشر."
-        nextLabel={lesson.is_published ? "إنهاء ← العودة إلى وحداتي" : "نشر الدرس"}
+        nextLabel={lesson.is_published ? "إنهاء ← العودة إلى دروس الوحدة" : "نشر الدرس"}
       />
 
       <FatinModal

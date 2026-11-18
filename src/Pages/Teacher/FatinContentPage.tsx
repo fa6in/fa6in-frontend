@@ -258,11 +258,19 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
   } else if (current === 3) {
     body = <StepSkills lesson={lesson} onBack={() => toStep(2)} onNext={() => toStep(4)} />;
   } else if (current === 4) {
-    body = <StepPrerequisites lessonId={lesson.id} onBack={() => toStep(3)} onNext={() => toStep(5)} />;
+    body = <StepPrerequisites unitId={unitId!} lessonId={lesson.id} onBack={() => toStep(3)} onNext={() => toStep(5)} />;
   } else if (current === 5) {
     body = <StepChunks lessonId={lesson.id} onBack={() => toStep(4)} onNext={() => toStep(6)} />;
   } else {
-    body = <StepPublish unitId={unitId!} lesson={lesson} onBack={() => toStep(5)} onGoTo={toStep} onDone={toList} />;
+    body = (
+      <StepPublish
+        unitId={unitId!}
+        lesson={lesson}
+        onBack={() => toStep(5)}
+        onGoTo={toStep}
+        onDone={() => toStep(1)}
+      />
+    );
   }
 
   return (
