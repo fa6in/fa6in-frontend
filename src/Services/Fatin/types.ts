@@ -275,7 +275,11 @@ export type CSkill = {
   required_consecutive_correct?: number;
 };
 
-export type CChunkOption = { text: string; is_correct?: boolean };
+export type CChunkOption = {
+  text: string;
+  is_correct?: boolean;
+  error_category?: ErrorCategory | null;
+};
 
 export type CChunk = {
   id: number;

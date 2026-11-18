@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { API_ENDPOINTS } from "../../../api/endpoints";
 import { useContentChunks, useContentSave, useContentSkills } from "../../../Services/Fatin/useTeacherContent";
-import type { CChunk, CChunkOption, CSkill, ChunkType } from "../../../Services/Fatin/types";
+import type { CChunk, CChunkOption, CSkill, ChunkType, ErrorCategory } from "../../../Services/Fatin/types";
 import FatinModal from "../../../ui/FatinModal";
+import { ERROR_LABEL } from "../../Student/fatinStudentUi";
 import { CHUNK_TYPES, Field, Pill, StepFooter, chunkTypeLabel, nextCode } from "./contentUi";
+
+const ERROR_CATEGORIES: ErrorCategory[] = ["concept", "procedure", "careless"];
 
 // Les lectures élève aplatissent les options en string[] ; on les
 // re-normalise en { text, is_correct } pour l'éditeur enseignant.
@@ -201,15 +204,21 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
     image_note: chunk?.image_note ?? "",
   });
   const isPractice = form.chunk_type === "practice";
+  const [answerMode, setAnswerMode] = useState<"free" | "mcq">(
+    normalizeOptions(chunk?.options ?? null).length > 0 ? "mcq" : "free",
+  );
 
   const addOption = () => setForm({ ...form, options: [...form.options, { text: "", is_correct: form.options.length === 0 }] });
   const updateOption = (index: number, text: string) =>
     setForm({ ...form, options: form.options.map((item, i) => (i === index ? { ...item, text } : item)) });
   const setCorrectOption = (index: number) =>
     setForm({ ...form, options: form.options.map((item, i) => ({ ...item, is_correct: i === index })) });
+  const setOptionErrorCategory = (index: number, error_category: ErrorCategory | null) =>
+    setForm({ ...form, options: form.options.map((item, i) => (i === index ? { ...item, error_category } : item)) });
   const removeOption = (index: number) => setForm({ ...form, options: form.options.filter((_, i) => i !== index) });
 
   const submit = () => {
+    const useOptions = isPractice && answerMode === "mcq";
     const correctOption = form.options.find((item) => item.is_correct);
     const fields: Record<string, unknown> = {
       skill: skill.id,
@@ -218,8 +227,8 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
       content: form.content,
       difficulty: form.difficulty,
       points: form.points,
-      correct_answer: isPractice ? form.correct_answer || correctOption?.text || "" : null,
-      options: isPractice ? form.options.filter((item) => item.text.trim()) : [],
+      correct_answer: isPractice ? (useOptions ? correctOption?.text ?? "" : form.correct_answer) : null,
+      options: useOptions ? form.options.filter((item) => item.text.trim()) : [],
       time_limit: isPractice ? form.time_limit : null,
       needs_image: form.needs_image,
       image_note: form.image_note || null,
@@ -261,35 +270,68 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
         </Field>
         {isPractice && (
           <>
-            <Field label="الإجابة الصحيحة (نصية، اختياري إن حُدِّد خيار صحيح أدناه)" className="sm:col-span-2">
-              <input className="fatin-field" dir="auto" value={form.correct_answer} placeholder="7/9" onChange={(event) => setForm({ ...form, correct_answer: event.target.value })} />
-            </Field>
-            <Field label="الخيارات — حدّد الدائرة بجانب الخيار الصحيح" className="sm:col-span-2">
-              <div className="space-y-2">
-                {form.options.map((option, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="correct-option"
-                      checked={!!option.is_correct}
-                      onChange={() => setCorrectOption(index)}
-                      aria-label="الخيار الصحيح"
-                    />
-                    <input
-                      className="fatin-field flex-1"
-                      dir="auto"
-                      value={option.text}
-                      placeholder={`خيار ${index + 1}`}
-                      onChange={(event) => updateOption(index, event.target.value)}
-                    />
-                    <button type="button" onClick={() => removeOption(index)} className="text-[#C4564A]" aria-label="حذف الخيار">⌫</button>
-                  </div>
-                ))}
-                <button type="button" onClick={addOption} className="rounded-full border border-[#0F5C47] px-3 py-1 text-xs font-extrabold text-[#0F5C47]">
-                  + خيار
-                </button>
+            <Field label="نوع الإجابة" className="sm:col-span-2">
+              <div className="flex gap-2">
+                <Pill active={answerMode === "free"} onClick={() => setAnswerMode("free")}>إجابة نصية حرة</Pill>
+                <Pill active={answerMode === "mcq"} onClick={() => setAnswerMode("mcq")}>اختيار من متعدد</Pill>
               </div>
             </Field>
+            {answerMode === "free" ? (
+              <Field label="الإجابة الصحيحة (نصية)" className="sm:col-span-2">
+                <input className="fatin-field" dir="auto" value={form.correct_answer} placeholder="7/9" onChange={(event) => setForm({ ...form, correct_answer: event.target.value })} />
+                <p className="mt-1 text-xs text-[#8CA39C]">الطالب سيكتب إجابته بنفسه.</p>
+              </Field>
+            ) : (
+              <Field label="الخيارات — حدّد الدائرة بجانب الخيار الصحيح" className="sm:col-span-2">
+                <div className="space-y-2">
+                  {form.options.map((option, index) => (
+                    <div key={index} className="rounded-xl bg-[#F3F7F5] p-2">
+                      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2">
+                        <input
+                          type="radio"
+                          name="correct-option"
+                          checked={!!option.is_correct}
+                          onChange={() => setCorrectOption(index)}
+                          aria-label="الخيار الصحيح"
+                        />
+                        <input
+                          className="fatin-field"
+                          dir="auto"
+                          value={option.text}
+                          placeholder={`خيار ${index + 1}`}
+                          onChange={(event) => updateOption(index, event.target.value)}
+                        />
+                        <button type="button" onClick={() => removeOption(index)} className="text-[#C4564A]" aria-label="حذف الخيار">⌫</button>
+                      </div>
+                      {!option.is_correct && (
+                        <div className="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-2">
+                          <span />
+                          <select
+                            className="fatin-field text-xs"
+                            dir="auto"
+                            value={option.error_category ?? ""}
+                            onChange={(event) => setOptionErrorCategory(index, (event.target.value || null) as ErrorCategory | null)}
+                            aria-label="نوعية الخطأ"
+                          >
+                            <option value="">نوعية الخطأ — غير محدد</option>
+                            {ERROR_CATEGORIES.map((category) => (
+                              <option key={category} value={category}>نوعية الخطأ: {ERROR_LABEL[category]}</option>
+                            ))}
+                          </select>
+                          <span />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={addOption} className="rounded-full border border-[#0F5C47] px-3 py-1 text-xs font-extrabold text-[#0F5C47]">
+                    + خيار
+                  </button>
+                  {form.options.length === 1 && (
+                    <p className="text-xs text-[#8A5A00]">أضف خيارًا آخر على الأقل — خيار واحد غير كافٍ لاختيار من متعدد.</p>
+                  )}
+                </div>
+              </Field>
+            )}
           </>
         )}
         <Field label="الصعوبة">
