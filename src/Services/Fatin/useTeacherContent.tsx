@@ -95,6 +95,16 @@ export function useContentLessons(unitId?: number | null) {
   });
 }
 
+// La liste des leçons (ci-dessus) n'expose pas tous les champs (semaine,
+// programme...) ; le détail est nécessaire pour les pré-remplir à l'édition.
+export function useContentLesson(lessonId?: number | null) {
+  return useQuery({
+    queryKey: [...CONTENT_KEY, "lesson", lessonId],
+    queryFn: async (): Promise<CLesson> => (await api.get(API_ENDPOINTS.content.lessonDetail(lessonId!))).data,
+    enabled: !!lessonId,
+  });
+}
+
 export function useContentGoals(lessonId?: number | null) {
   return useQuery({
     queryKey: [...CONTENT_KEY, "goals", lessonId],

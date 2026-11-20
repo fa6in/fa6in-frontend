@@ -3,10 +3,16 @@ import { API_ENDPOINTS } from "../../../api/endpoints";
 import { useContentChunks, useContentSave, useContentSkills } from "../../../Services/Fatin/useTeacherContent";
 import type { CChunk, CChunkOption, CSkill, ChunkType, ErrorCategory } from "../../../Services/Fatin/types";
 import FatinModal from "../../../ui/FatinModal";
-import { ERROR_LABEL } from "../../Student/fatinStudentUi";
+import { ERROR_COLOR, ERROR_LABEL } from "../../Student/fatinStudentUi";
 import { CHUNK_TYPES, Field, Pill, StepFooter, chunkTypeLabel, nextCode } from "./contentUi";
 
 const ERROR_CATEGORIES: ErrorCategory[] = ["concept", "procedure", "careless"];
+const TIME_PRESETS = [30, 60, 90, 120, 180];
+const formatTime = (seconds: number) => {
+  if (seconds % 60 === 0) return `${seconds / 60}د`;
+  if (seconds < 60) return `${seconds}ث`;
+  return `${Math.floor(seconds / 60)}د ${seconds % 60}ث`;
+};
 
 // Les lectures élève aplatissent les options en string[] ; on les
 // re-normalise en { text, is_correct } pour l'éditeur enseignant.
@@ -285,15 +291,19 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
               <Field label="الخيارات — حدّد الدائرة بجانب الخيار الصحيح" className="sm:col-span-2">
                 <div className="space-y-2">
                   {form.options.map((option, index) => (
-                    <div key={index} className="rounded-xl bg-[#F3F7F5] p-2">
+                    <div key={index} className={`rounded-xl border p-2 ${option.is_correct ? "border-[#1B7F5C] bg-[#E3F4EC]" : "border-[#E7F2ED] bg-white"}`}>
                       <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2">
-                        <input
-                          type="radio"
-                          name="correct-option"
-                          checked={!!option.is_correct}
-                          onChange={() => setCorrectOption(index)}
-                          aria-label="الخيار الصحيح"
-                        />
+                        <button
+                          type="button"
+                          onClick={() => setCorrectOption(index)}
+                          aria-pressed={!!option.is_correct}
+                          aria-label="تحديد كالخيار الصحيح"
+                          className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-sm font-extrabold ${
+                            option.is_correct ? "border-[#1B7F5C] bg-[#1B7F5C] text-white" : "border-[#CFE0DA] bg-white text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </button>
                         <input
                           className="fatin-field"
                           dir="auto"
@@ -306,18 +316,24 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
                       {!option.is_correct && (
                         <div className="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-2">
                           <span />
-                          <select
-                            className="fatin-field text-xs"
-                            dir="auto"
-                            value={option.error_category ?? ""}
-                            onChange={(event) => setOptionErrorCategory(index, (event.target.value || null) as ErrorCategory | null)}
-                            aria-label="نوعية الخطأ"
-                          >
-                            <option value="">نوعية الخطأ — غير محدد</option>
-                            {ERROR_CATEGORIES.map((category) => (
-                              <option key={category} value={category}>نوعية الخطأ: {ERROR_LABEL[category]}</option>
-                            ))}
-                          </select>
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs text-[#8CA39C]">نوعية الخطأ:</span>
+                            {ERROR_CATEGORIES.map((category) => {
+                              const active = option.error_category === category;
+                              const color = ERROR_COLOR[category];
+                              return (
+                                <button
+                                  key={category}
+                                  type="button"
+                                  onClick={() => setOptionErrorCategory(index, active ? null : category)}
+                                  className="rounded-full px-2.5 py-1 text-[11px] font-bold"
+                                  style={active ? { background: color, color: "#fff" } : { background: "#fff", color, border: `1px solid ${color}` }}
+                                >
+                                  {ERROR_LABEL[category]}
+                                </button>
+                              );
+                            })}
+                          </div>
                           <span />
                         </div>
                       )}
@@ -335,17 +351,43 @@ function ChunkEditor({ skill, chunk, usedCodes, order, defaultType, onClose }: E
           </>
         )}
         <Field label="الصعوبة">
-          <select className="fatin-field" value={form.difficulty} onChange={(event) => setForm({ ...form, difficulty: Number(event.target.value) })}>
-            {[1, 2, 3, 4, 5].map((value) => <option key={value} value={value}>{value}</option>)}
-          </select>
+          <div className="fatin-field flex items-center gap-1.5" dir="ltr">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setForm({ ...form, difficulty: value })}
+                aria-label={`الصعوبة ${value}`}
+                aria-pressed={form.difficulty === value}
+                className="text-3xl leading-none transition-transform hover:scale-110"
+                style={{ color: value <= form.difficulty ? "#E0A526" : "#DCE8E3" }}
+              >
+                ★
+              </button>
+            ))}
+          </div>
         </Field>
         {isPractice && (
           <>
             <Field label="النقاط">
-              <input className="fatin-field" type="number" min={1} value={form.points} onChange={(event) => setForm({ ...form, points: Number(event.target.value) })} />
+              <input className="fatin-field" type="number" min={1} max={10} value={form.points} onChange={(event) => setForm({ ...form, points: Number(event.target.value) })} />
             </Field>
-            <Field label="الحد الزمني (ث)">
-              <input className="fatin-field" type="number" min={10} value={form.time_limit} onChange={(event) => setForm({ ...form, time_limit: Number(event.target.value) })} />
+            <Field label="الحد الزمني" className="sm:col-span-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {TIME_PRESETS.map((seconds) => (
+                  <Pill key={seconds} active={form.time_limit === seconds} onClick={() => setForm({ ...form, time_limit: seconds })}>
+                    {formatTime(seconds)}
+                  </Pill>
+                ))}
+                <input
+                  className="fatin-field w-28"
+                  type="number"
+                  min={10}
+                  value={form.time_limit}
+                  placeholder="مخصص (ث)"
+                  onChange={(event) => setForm({ ...form, time_limit: Number(event.target.value) })}
+                />
+              </div>
             </Field>
           </>
         )}

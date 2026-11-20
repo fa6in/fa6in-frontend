@@ -1,31 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
 import { API_ENDPOINTS } from "../../../api/endpoints";
-import { useContentLessons, useContentSave, useContentUnit } from "../../../Services/Fatin/useTeacherContent";
+import { useContentLesson, useContentLessons, useContentSave, useContentUnit } from "../../../Services/Fatin/useTeacherContent";
 import { Field, StepFooter, nextCode } from "./contentUi";
 
 type Props = {
   unitId: number;
   lessonId: number | null;
+  onPick: (lessonId: number) => void;
   onSelect: (lessonId: number) => void;
   onBack: () => void;
 };
 
 // Étape 2 : choisir une leçon existante de l'unité ou en créer une.
-export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props) {
+export default function StepLesson({ unitId, lessonId, onPick, onSelect, onBack }: Props) {
   const { data: unit } = useContentUnit(unitId);
   const { data: lessonsData } = useContentLessons(unitId);
   const lessons = useMemo(() => lessonsData ?? [], [lessonsData]);
   const save = useContentSave();
-  const current = lessons.find((lesson) => lesson.id === lessonId);
+  const { data: currentDetail } = useContentLesson(lessonId);
+  const current = currentDetail ?? lessons.find((lesson) => lesson.id === lessonId);
   const [form, setForm] = useState({
     code: "",
     title: "",
     description: "",
     programme_ref: "",
     week: "",
-    programme_weeks: "",
+    programme_weeks: [] as number[],
     book_exercises: "",
   });
+  const [weekInput, setWeekInput] = useState("");
+
+  const addWeek = () => {
+    const value = Number(weekInput);
+    if (weekInput.trim() && Number.isFinite(value) && value > 0 && !form.programme_weeks.includes(value)) {
+      setForm({ ...form, programme_weeks: [...form.programme_weeks, value].sort((a, b) => a - b) });
+    }
+    setWeekInput("");
+  };
+  const removeWeek = (value: number) => setForm({ ...form, programme_weeks: form.programme_weeks.filter((item) => item !== value) });
 
   useEffect(() => {
     if (current) {
@@ -35,7 +47,7 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         description: current.description ?? "",
         programme_ref: current.programme_ref ?? "",
         week: current.week != null ? String(current.week) : "",
-        programme_weeks: (current.programme_weeks ?? []).join("، "),
+        programme_weeks: current.programme_weeks ?? [],
         book_exercises: (current.book_exercises ?? []).join("، "),
       });
     } else if (unit) {
@@ -45,7 +57,7 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         description: "",
         programme_ref: "",
         week: "",
-        programme_weeks: "",
+        programme_weeks: [],
         book_exercises: "",
       });
     }
@@ -58,7 +70,7 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
       description: form.description,
       programme_ref: form.programme_ref,
       week: form.week.trim() ? Number(form.week) : null,
-      programme_weeks: form.programme_weeks.split(/[،,]/).map((item) => item.trim()).filter(Boolean).map(Number),
+      programme_weeks: form.programme_weeks,
       book_exercises: form.book_exercises.split(/[،,]/).map((item) => item.trim()).filter(Boolean),
       unit: unitId,
       ...(current ? {} : { order_index: lessons.length + 1 }),
@@ -81,7 +93,7 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
               <button
                 key={lesson.id}
                 type="button"
-                onClick={() => onSelect(lesson.id)}
+                onClick={() => onPick(lesson.id)}
                 className={`flex items-center justify-between rounded-xl border px-3 py-2 text-start text-sm ${lesson.id === lessonId ? "border-[#0F5C47] bg-[#E7F2ED]" : "border-[#E7F2ED] bg-white"}`}
               >
                 <span>
@@ -110,11 +122,34 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         <Field label="مرجع البرنامج">
           <input className="fatin-field" dir="ltr" value={form.programme_ref} placeholder="مثال: P2-U1-L1" onChange={(event) => setForm({ ...form, programme_ref: event.target.value })} />
         </Field>
-        <Field label="الأسبوع">
+        <Field label="الأسبوع *">
           <input className="fatin-field" type="number" min={1} value={form.week} onChange={(event) => setForm({ ...form, week: event.target.value })} />
         </Field>
-        <Field label="أسابيع البرنامج (مفصولة بفواصل)" className="sm:col-span-2">
-          <input className="fatin-field" dir="ltr" value={form.programme_weeks} placeholder="1، 2، 3" onChange={(event) => setForm({ ...form, programme_weeks: event.target.value })} />
+        <Field label="أسابيع البرنامج" className="sm:col-span-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {form.programme_weeks.map((value) => (
+              <span key={value} className="flex items-center gap-1 rounded-full bg-[#E7F2ED] px-3 py-1 text-sm font-bold text-[#0F5C47]">
+                أسبوع {value}
+                <button type="button" onClick={() => removeWeek(value)} className="text-[#C4564A]" aria-label={`حذف أسبوع ${value}`}>⌫</button>
+              </span>
+            ))}
+            <input
+              className="fatin-field w-28"
+              type="number"
+              min={1}
+              dir="ltr"
+              value={weekInput}
+              placeholder="+ أسبوع"
+              onChange={(event) => setWeekInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  addWeek();
+                }
+              }}
+              onBlur={addWeek}
+            />
+          </div>
         </Field>
         <Field label="تمارين الكتاب (مفصولة بفواصل)" className="sm:col-span-2">
           <input className="fatin-field" value={form.book_exercises} placeholder="ص12-ت1، ص13-ت2" onChange={(event) => setForm({ ...form, book_exercises: event.target.value })} />
@@ -124,8 +159,8 @@ export default function StepLesson({ unitId, lessonId, onSelect, onBack }: Props
         onBack={onBack}
         onNext={submit}
         loading={save.isPending}
-        disabled={!form.code.trim() || !form.title.trim()}
-        blockedReason="أدخل رمز الدرس وعنوانه."
+        disabled={!form.code.trim() || !form.title.trim() || !form.week.trim()}
+        blockedReason="أدخل رمز الدرس وعنوانه والأسبوع."
         nextLabel="حفظ ← الأهداف"
       />
     </div>

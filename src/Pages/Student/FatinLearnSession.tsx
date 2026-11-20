@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
+import api from "../../Auth-service/axios";
+import { API_ENDPOINTS } from "../../api/endpoints";
+import { unwrapList } from "../../api/unwrapList";
 import { useNextAction, useSubmitAnswer } from "../../Services/Fatin/useStudentLearning";
 import { apiErrorText } from "../../Services/Fatin/apiErrorText";
 import type { NextAction, SessionChunk, SessionContext, SubmitResult } from "../../Services/Fatin/types";
@@ -18,6 +21,13 @@ import {
 } from "./fatinStudentUi";
 
 type Preload = { skillId: number; chunk: SessionChunk | null; session: SessionContext };
+
+// Rappel (règle ou exemple) affiché en plein écran via les boutons "قاعدة"/
+// "مثال" du bandeau, ou "أعد القاعدة" après une mauvaise réponse. L'image
+// n'est connue que lorsqu'on dispose du chunk complet (cache local ou
+// requête à la demande) ; le feedback de /answer/ ne renvoie que le texte
+// de la règle, donc `image` reste `null` dans ce cas précis.
+type Reminder = { title: string; content: string; image: string | null };
 
 type Sheet =
   | { kind: "correct" }
@@ -72,7 +82,18 @@ export default function FatinLearnSession() {
   const [loaded, setLoaded] = useState(false);
   const [answer, setAnswer] = useState("");
   const [sheet, setSheet] = useState<Sheet | null>(null);
-  const [ruleReminder, setRuleReminder] = useState<string | null>(null);
+  const [reminder, setReminder] = useState<Reminder | null>(null);
+  // Mémorise la règle et l'exemple (texte + image) dès qu'ils sont affichés,
+  // pour permettre d'y revenir via les étapes "قاعدة"/"مثال" du bandeau
+  // même après être passé à la suite. Si la skill est ouverte alors que la
+  // règle/l'exemple a déjà été vu(e) lors d'une session précédente
+  // (rule_seen/example_seen côté Backend), ce cache local est vide : on va
+  // alors le chercher à la demande via l'API (lecture seule, ouverte à tout
+  // utilisateur authentifié) plutôt que de dépendre du Decision Engine qui
+  // ne le sert plus spontanément.
+  const [ruleChunk, setRuleChunk] = useState<Reminder | null>(null);
+  const [exampleChunk, setExampleChunk] = useState<Reminder | null>(null);
+  const [loadingReminder, setLoadingReminder] = useState<"rule" | "example" | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const startedAt = useRef(Date.now());
@@ -85,11 +106,43 @@ export default function FatinLearnSession() {
     setSession(context);
     setAnswer("");
     setShowHint(false);
-    setRuleReminder(null);
+    setReminder(null);
+    if (next?.chunk_type === "rule") setRuleChunk({ title: "القاعدة", content: next.content, image: next.image });
+    else if (next?.chunk_type === "example") setExampleChunk({ title: "مثال", content: next.content, image: next.image });
     setLoaded(true);
     startedAt.current = Date.now();
     setElapsed(0);
   }, []);
+
+  // Affiche la règle/l'exemple mis en cache, ou va le chercher si
+  // l'onboarding de cette skill est déjà passé (rule_seen/example_seen) et
+  // qu'on ne l'a donc jamais reçu pendant cette session.
+  const showReminder = useCallback(
+    (type: "rule" | "example") => {
+      const cache = type === "rule" ? ruleChunk : exampleChunk;
+      const setCache = type === "rule" ? setRuleChunk : setExampleChunk;
+      if (cache) {
+        setReminder(cache);
+        return;
+      }
+      setLoadingReminder(type);
+      api
+        .get(API_ENDPOINTS.skills.chunks, { params: { skill: skillId, chunk_type: type } })
+        .then(({ data }) => {
+          const found = unwrapList<SessionChunk>(data)[0];
+          if (found) {
+            const entry = { title: type === "rule" ? "القاعدة" : "مثال", content: found.content, image: found.image };
+            setCache(entry);
+            setReminder(entry);
+          } else {
+            message.warning(type === "rule" ? "لا توجد قاعدة مسجّلة لهذه المهارة." : "لا يوجد مثال مسجّل لهذه المهارة.");
+          }
+        })
+        .catch((error) => message.error(apiErrorText(error)))
+        .finally(() => setLoadingReminder(null));
+    },
+    [ruleChunk, exampleChunk, skillId],
+  );
 
   const { mutate: fetchNext } = nextAction;
   const loadNext = useCallback(() => {
@@ -116,6 +169,9 @@ export default function FatinLearnSession() {
   useEffect(() => {
     setSheet(null);
     setLoaded(false);
+    setRuleChunk(null);
+    setExampleChunk(null);
+    setLoadingReminder(null);
     pendingRedirect.current = null;
     if (preload && preload.skillId === skillId) showChunk(preload.chunk, preload.session);
     else loadNext();
@@ -191,12 +247,26 @@ export default function FatinLearnSession() {
                 ))}
               </div>
               <div className="mt-1 flex justify-between text-[11px]">
-                {STEPS.map((label, index) => (
-                  <span key={`${label}-${index}`} className={index === steps.current ? "font-extrabold" : ""}>
-                    {label}
-                    {steps.done[index] ? " ✓" : ""}
-                  </span>
-                ))}
+                {STEPS.map((label, index) => {
+                  const type = index === 0 ? "rule" : index === 1 ? "example" : null;
+                  return type ? (
+                    <button
+                      key={`${label}-${index}`}
+                      type="button"
+                      onClick={() => showReminder(type)}
+                      disabled={loadingReminder === type}
+                      className={`underline decoration-dotted underline-offset-2 disabled:opacity-60 ${index === steps.current ? "font-extrabold" : ""}`}
+                    >
+                      {loadingReminder === type ? "..." : label}
+                      {steps.done[index] ? " ✓" : ""}
+                    </button>
+                  ) : (
+                    <span key={`${label}-${index}`} className={index === steps.current ? "font-extrabold" : ""}>
+                      {label}
+                      {steps.done[index] ? " ✓" : ""}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -214,17 +284,22 @@ export default function FatinLearnSession() {
           <>
             <div className="rounded-2xl bg-[#FFF4D6] px-4 py-3 text-[15px]">
               <b className="text-[#8A5A00]">المطلوب الآن: </b>
-              {ruleReminder
-                ? "راجع القاعدة ثم عُد إلى التمرين."
+              {reminder
+                ? reminder.title === "القاعدة"
+                  ? "راجع القاعدة ثم عُد إلى التمرين."
+                  : "راجع المثال ثم عُد إلى التمرين."
                 : isPractice
                   ? options.length ? INSTRUCTION.practice : INSTRUCTION.practice_free
                   : INSTRUCTION[chunk.chunk_type] ?? INSTRUCTION.rule}
             </div>
 
-            {ruleReminder ? (
+            {reminder ? (
               <section className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
-                <div className="text-[13px] text-[#4C6A63]">القاعدة</div>
-                <p className="mt-2 whitespace-pre-line text-lg leading-relaxed" dir="auto">{ruleReminder}</p>
+                <div className="text-[13px] text-[#4C6A63]">{reminder.title}</div>
+                <p className="mt-2 whitespace-pre-line text-lg leading-relaxed" dir="auto">{reminder.content}</p>
+                {reminder.image && (
+                  <img src={reminder.image} alt="صورة توضيحية" className="mx-auto mt-3 max-h-56 rounded-xl border border-[#E7F2ED] object-contain" />
+                )}
               </section>
             ) : isPractice ? (
               <section className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
@@ -263,11 +338,29 @@ export default function FatinLearnSession() {
                 )}
               </section>
             ) : (
-              <section className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
-                <div className="text-[13px] text-[#4C6A63]">{chunk.title || CHUNK_TITLE[chunk.chunk_type]}</div>
-                <p className="mt-2 whitespace-pre-line text-lg leading-relaxed" dir="auto">{chunk.content}</p>
+              <section className="rounded-2xl bg-white p-5 shadow-[0_1px_6px_rgba(0,0,0,0.06)]">
+                <div className="flex items-center gap-2 text-[13px] font-bold text-[#4C6A63]">
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-[#E7F2ED] text-[#0F5C47]" aria-hidden>
+                    {chunk.chunk_type === "rule" ? "✓" : "★"}
+                  </span>
+                  {chunk.title || CHUNK_TITLE[chunk.chunk_type]}
+                </div>
+                {chunk.content.split("\n").filter((line) => line.trim()).length > 1 ? (
+                  <ul className="mt-3 space-y-2" dir="auto">
+                    {chunk.content.split("\n").filter((line) => line.trim()).map((line, index) => (
+                      <li key={index} className="flex items-start gap-2.5 text-lg leading-relaxed">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E0A526]" aria-hidden />
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 whitespace-pre-line text-lg leading-relaxed" dir="auto">{chunk.content}</p>
+                )}
                 {chunk.image && (
-                  <img src={chunk.image} alt={chunk.title || "صورة توضيحية"} className="mx-auto mt-3 max-h-56 rounded-xl border border-[#E7F2ED] object-contain" />
+                  <div className="mt-4 overflow-hidden rounded-xl border border-[#E7F2ED] bg-[#FBFDFC]">
+                    <img src={chunk.image} alt={chunk.title || "صورة توضيحية"} className="mx-auto max-h-72 w-full object-contain" />
+                  </div>
                 )}
               </section>
             )}
@@ -290,7 +383,7 @@ export default function FatinLearnSession() {
               </section>
             )}
 
-            {isPractice && session?.hint && !ruleReminder && (
+            {isPractice && session?.hint && !reminder && (
               showHint ? (
                 <div className="rounded-2xl border-[1.5px] border-dashed border-[#B9776A] bg-white px-4 py-3 text-sm">
                   تلميح: {session.hint}
@@ -309,8 +402,8 @@ export default function FatinLearnSession() {
             <SecondaryButton className="w-full" onClick={() => navigate(mapPath)}>
               العودة إلى الخريطة
             </SecondaryButton>
-          ) : ruleReminder ? (
-            <PrimaryButton className="w-full" onClick={() => setRuleReminder(null)}>
+          ) : reminder ? (
+            <PrimaryButton className="w-full" onClick={() => setReminder(null)}>
               عودة إلى التمرين
             </PrimaryButton>
           ) : isPractice ? (
@@ -371,7 +464,11 @@ export default function FatinLearnSession() {
               <SecondaryButton
                 className="flex-1"
                 onClick={() => {
-                  setRuleReminder(sheet.result.feedback?.rule ?? null);
+                  const rule = sheet.result.feedback?.rule ?? "";
+                  // Le feedback de /answer/ ne renvoie que le texte de la règle :
+                  // on réutilise l'image mise en cache si elle correspond à la
+                  // même règle, pour ne pas perdre l'illustration déjà connue.
+                  setReminder({ title: "القاعدة", content: rule, image: ruleChunk?.content === rule ? ruleChunk.image : null });
                   setSheet(null);
                   setAnswer("");
                 }}

@@ -11,6 +11,7 @@ type FatinModalProps = {
   cancelText?: string;
   loading?: boolean;
   wide?: boolean;
+  disableOk?: boolean;
 };
 
 export default function FatinModal({
@@ -24,6 +25,7 @@ export default function FatinModal({
   cancelText = "إلغاء",
   loading,
   wide,
+  disableOk,
 }: FatinModalProps) {
   if (!open) return null;
 
@@ -47,7 +49,7 @@ export default function FatinModal({
         <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-start">
           <button
             type="button"
-            disabled={loading}
+            disabled={loading || disableOk}
             onClick={onOk}
             className="rounded-full bg-[#0F5C47] px-5 py-2.5 text-sm font-extrabold text-white disabled:opacity-60"
           >

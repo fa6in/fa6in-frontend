@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FiRepeat, FiUploadCloud } from "react-icons/fi";
 import { API_ENDPOINTS } from "../../api/endpoints";
 import {
   useContentLessons,
@@ -20,6 +21,8 @@ import StepSkills from "./Content/StepSkills";
 import StepPrerequisites from "./Content/StepPrerequisites";
 import StepChunks from "./Content/StepChunks";
 import StepPublish from "./Content/StepPublish";
+import PublishUnitBar from "./Content/PublishUnitBar";
+import MoveLessonsModal from "./Content/MoveLessonsModal";
 
 type Filter = "all" | "published" | "draft";
 
@@ -79,6 +82,7 @@ function UnitList({ onOpen, onImport }: { onOpen: (unit: CUnit | null, step: num
   const [filter, setFilter] = useState<Filter>("all");
   const [subject, setSubject] = useState<number | "all">("all");
   const [removeTarget, setRemoveTarget] = useState<CUnit | null>(null);
+  const [moveLessonsOpen, setMoveLessonsOpen] = useState(false);
 
   const openNew = useCallback(() => onOpen(null, 0), [onOpen]);
   const published = units.filter((unit) => unit.is_published).length;
@@ -131,10 +135,17 @@ function UnitList({ onOpen, onImport }: { onOpen: (unit: CUnit | null, step: num
           ))}
           <button
             type="button"
-            onClick={onImport}
-            className="rounded-full border border-[#0F5C47] px-3 py-1.5 text-sm font-bold text-[#0F5C47]"
+            onClick={() => setMoveLessonsOpen(true)}
+            className="flex items-center gap-1.5 rounded-full border border-[#0F5C47] px-3 py-1.5 text-sm font-bold text-[#0F5C47]"
           >
-            استيراد
+            <FiRepeat aria-hidden /> نقل دروس بين الوحدات
+          </button>
+          <button
+            type="button"
+            onClick={onImport}
+            className="flex items-center gap-1.5 rounded-full border border-[#0F5C47] px-3 py-1.5 text-sm font-bold text-[#0F5C47]"
+          >
+            <FiUploadCloud aria-hidden /> استيراد
           </button>
         </div>
       </div>
@@ -218,6 +229,8 @@ function UnitList({ onOpen, onImport }: { onOpen: (unit: CUnit | null, step: num
       >
         <p className="text-sm text-[#4C6A63]">ستُحذف دروسها وأهدافها ومهاراتها وقطعها نهائيًا.</p>
       </FatinModal>
+
+      {moveLessonsOpen && <MoveLessonsModal units={units} onClose={() => setMoveLessonsOpen(false)} />}
     </div>
   );
 }
@@ -250,7 +263,15 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
   if (current === 0) {
     body = <StepUnit unitId={unitId} units={units} onCancel={toList} onSaved={(id) => go({ unit: id, lesson: lessonId, step: 1 })} />;
   } else if (current === 1) {
-    body = <StepLesson unitId={unitId!} lessonId={lessonId} onBack={() => toStep(0)} onSelect={(id) => go({ unit: unitId, lesson: id, step: 2 })} />;
+    body = (
+      <StepLesson
+        unitId={unitId!}
+        lessonId={lessonId}
+        onBack={() => toStep(0)}
+        onPick={(id) => go({ unit: unitId, lesson: id, step: 1 })}
+        onSelect={(id) => go({ unit: unitId, lesson: id, step: 2 })}
+      />
+    );
   } else if (!lesson) {
     body = loadingLessons ? <Loading /> : <EmptyNote>الدرس غير موجود. اختر درسًا من الخطوة 2.</EmptyNote>;
   } else if (current === 2) {
@@ -279,11 +300,14 @@ function Editor({ unitId, lessonId, step, go }: EditorProps) {
         <button type="button" onClick={toList} className="text-sm font-bold text-[#0F5C47]">
           → وحداتي
         </button>
-        {lesson && (
-          <span className="rounded-full bg-white px-3 py-1 text-xs text-[#4C6A63]">
-            الدرس: <b className="text-[#12302B]" dir="ltr">{lesson.code}</b> · {lesson.title}
-          </span>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {lesson && (
+            <span className="rounded-full bg-white px-3 py-1 text-xs text-[#4C6A63]">
+              الدرس: <b className="text-[#12302B]" dir="ltr">{lesson.code}</b> · {lesson.title}
+            </span>
+          )}
+          <PublishUnitBar unitId={unitId} />
+        </div>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.06)] sm:p-5">
